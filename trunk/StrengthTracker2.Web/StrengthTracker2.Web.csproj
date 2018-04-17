@@ -1,0 +1,1187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{37349C5E-6F6E-498B-91B0-723BFDF1C0CB}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>StrengthTracker2.Web</RootNamespace>
+    <AssemblyName>StrengthTracker2.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=6.2.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.6.2.2\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Dapper">
+      <HintPath>..\packages\Dapper.1.50.2\lib\net45\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="DapperExtensions">
+      <HintPath>..\packages\DapperExtensions.1.5.0\lib\net45\DapperExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Kendo.Mvc">
+      <HintPath>..\lib\KENDOUIMVC\2016.2.607.545\Kendo.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.SqlServer.ConnectionInfo, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Microsoft SQL Server\120\SDK\Assemblies\Microsoft.SqlServer.ConnectionInfo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Management.Sdk.Sfc, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Microsoft SQL Server\120\SDK\Assemblies\Microsoft.SqlServer.Management.Sdk.Sfc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Smo, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Microsoft SQL Server\120\SDK\Assemblies\Microsoft.SqlServer.Smo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="StructureMap">
+      <HintPath>..\packages\structuremap.3.0.2.115\lib\net40\StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap.Net4">
+      <HintPath>..\packages\structuremap.3.0.2.115\lib\net40\StructureMap.Net4.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20710.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.0.0\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Providers">
+      <HintPath>..\packages\Microsoft.AspNet.Providers.Core.1.2\lib\net40\System.Web.Providers.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.3.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.3.0\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AssessmentController.cs" />
+    <Compile Include="Controllers\AthleteController.cs" />
+    <Compile Include="Controllers\ChartController.cs" />
+    <Compile Include="Controllers\CoachController.cs" />
+    <Compile Include="Controllers\CustomerLocationController.cs" />
+    <Compile Include="Controllers\CustomerRegistraionController.cs" />
+    <Compile Include="Controllers\RegistrationController.cs" />
+    <Compile Include="Controllers\SecurityController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\UserDataVisibilityController.cs" />
+    <Compile Include="Controllers\WorkoutController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\Common.cs" />
+    <Compile Include="Helpers\DateTimeHelpers.cs" />
+    <Compile Include="Helpers\ExpandoJSONConverter.cs" />
+    <Compile Include="Helpers\BooleanModelBinder.cs" />
+    <Compile Include="Helpers\IMapperService.cs" />
+    <Compile Include="Helpers\MapperService.cs" />
+    <Compile Include="Helpers\ProjectTempValues.cs" />
+    <Compile Include="App_Start\AutoMapperConfiguration.cs" />
+    <Compile Include="Models\Admin\AddExerciseToProgramViewModel.cs" />
+    <Compile Include="Models\Admin\DWSessionViewModel.cs" />
+    <Compile Include="Models\Admin\TempoModel.cs" />
+    <Compile Include="Models\AssessmentViewModel.cs" />
+    <Compile Include="Models\ChangePasswordMailModel.cs" />
+    <Compile Include="Models\Coach\AssessmentExerciseModel.cs" />
+    <Compile Include="Models\AthleteViewModel.cs" />
+    <Compile Include="Models\BarChartDataModel.cs" />
+    <Compile Include="Models\ClientModel.cs" />
+    <Compile Include="Models\Coach\AssesmentProfileViewModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\Coach\AthleteProfileViewModel.cs" />
+    <Compile Include="Models\Coach\CoachDashboardModel.cs" />
+    <Compile Include="Models\CustomerActivationModel.cs" />
+    <Compile Include="Models\CustomerContactViewModel.cs" />
+    <Compile Include="Models\CustomerLocationRoleViewModel.cs" />
+    <Compile Include="Models\CustomerRegistrationViewModel.cs" />
+    <Compile Include="Models\CustomerViewModel.cs" />
+    <Compile Include="Models\ExerciseTempoModel.cs" />
+    <Compile Include="Models\ExerciseViewModel.cs" />
+    <Compile Include="Models\KendoColumnViewModel.cs" />
+    <Compile Include="Models\LocationContactViewModel.cs" />
+    <Compile Include="Models\LocationHistoryViewModel.cs" />
+    <Compile Include="Models\LocationViewModel.cs" />
+    <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\PricingHistoryViewModel.cs" />
+    <Compile Include="Models\ProgramExerciseModel.cs" />
+    <Compile Include="Models\ProgramInfoModel.cs" />
+    <Compile Include="Models\ProgramListViewModel.cs" />
+    <Compile Include="Models\RegistrationLinkMailModel.cs" />
+    <Compile Include="Models\Registration\UserRegistrationViewModel.cs" />
+    <Compile Include="Models\ResetPassword.cs" />
+    <Compile Include="Models\ReturnObjectModel.cs" />
+    <Compile Include="Models\RoleDetailsViewModel.cs" />
+    <Compile Include="Models\SelectListViewModel.cs" />
+    <Compile Include="Models\Registration\UserRegistrationModel.cs" />
+    <Compile Include="Models\TeamViewModel.cs" />
+    <Compile Include="Models\UserHistoryViewModel.cs" />
+    <Compile Include="Models\UserViewModel.cs" />
+    <Compile Include="Models\WorkoutSummaryViewModel.cs" />
+    <Compile Include="Models\Workout\AthleteLoginViewModel.cs" />
+    <Compile Include="Models\Workout\WorkoutSessionInfoViewModel.cs" />
+    <Compile Include="Models\Workout\WrokoutSessionModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\animo\animateanimo.css" />
+    <Content Include="Content\animo\animo.js" />
+    <Content Include="Content\animo\animo.min.js" />
+    <Content Include="Content\app.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\common.css" />
+    <Content Include="Content\DataTables\css\autoFill.bootstrap.css" />
+    <Content Include="Content\DataTables\css\autoFill.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\autoFill.bootstrap4.css" />
+    <Content Include="Content\DataTables\css\autoFill.bootstrap4.min.css" />
+    <Content Include="Content\DataTables\css\autoFill.dataTables.css" />
+    <Content Include="Content\DataTables\css\autoFill.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\autoFill.foundation.css" />
+    <Content Include="Content\DataTables\css\autoFill.foundation.min.css" />
+    <Content Include="Content\DataTables\css\autoFill.jqueryui.css" />
+    <Content Include="Content\DataTables\css\autoFill.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\autoFill.semanticui.css" />
+    <Content Include="Content\DataTables\css\autoFill.semanticui.min.css" />
+    <Content Include="Content\DataTables\css\buttons.bootstrap.css" />
+    <Content Include="Content\DataTables\css\buttons.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\buttons.bootstrap4.css" />
+    <Content Include="Content\DataTables\css\buttons.bootstrap4.min.css" />
+    <Content Include="Content\DataTables\css\buttons.dataTables.css" />
+    <Content Include="Content\DataTables\css\buttons.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\buttons.foundation.css" />
+    <Content Include="Content\DataTables\css\buttons.foundation.min.css" />
+    <Content Include="Content\DataTables\css\buttons.jqueryui.css" />
+    <Content Include="Content\DataTables\css\buttons.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\buttons.semanticui.css" />
+    <Content Include="Content\DataTables\css\buttons.semanticui.min.css" />
+    <Content Include="Content\DataTables\css\colReorder.bootstrap.css" />
+    <Content Include="Content\DataTables\css\colReorder.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\colReorder.bootstrap4.css" />
+    <Content Include="Content\DataTables\css\colReorder.bootstrap4.min.css" />
+    <Content Include="Content\DataTables\css\colReorder.dataTables.css" />
+    <Content Include="Content\DataTables\css\colReorder.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\colReorder.foundation.css" />
+    <Content Include="Content\DataTables\css\colReorder.foundation.min.css" />
+    <Content Include="Content\DataTables\css\colReorder.jqueryui.css" />
+    <Content Include="Content\DataTables\css\colReorder.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\colReorder.semanticui.css" />
+    <Content Include="Content\DataTables\css\colReorder.semanticui.min.css" />
+    <Content Include="Content\DataTables\css\dataTables.bootstrap.css" />
+    <Content Include="Content\DataTables\css\dataTables.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\dataTables.bootstrap4.css" />
+    <Content Include="Content\DataTables\css\dataTables.bootstrap4.min.css" />
+    <Content Include="Content\DataTables\css\dataTables.foundation.css" />
+    <Content Include="Content\DataTables\css\dataTables.foundation.min.css" />
+    <Content Include="Content\DataTables\css\dataTables.jqueryui.css" />
+    <Content Include="Content\DataTables\css\dataTables.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\dataTables.material.css" />
+    <Content Include="Content\DataTables\css\dataTables.material.min.css" />
+    <Content Include="Content\DataTables\css\dataTables.semanticui.css" />
+    <Content Include="Content\DataTables\css\dataTables.semanticui.min.css" />
+    <Content Include="Content\DataTables\css\dataTables.uikit.css" />
+    <Content Include="Content\DataTables\css\dataTables.uikit.min.css" />
+    <Content Include="Content\DataTables\css\fixedColumns.bootstrap.css" />
+    <Content Include="Content\DataTables\css\fixedColumns.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\fixedColumns.bootstrap4.css" />
+    <Content Include="Content\DataTables\css\fixedColumns.bootstrap4.min.css" />
+    <Content Include="Content\DataTables\css\fixedColumns.dataTables.css" />
+    <Content Include="Content\DataTables\css\fixedColumns.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\fixedColumns.foundation.css" />
+    <Content Include="Content\DataTables\css\fixedColumns.foundation.min.css" />
+    <Content Include="Content\DataTables\css\fixedColumns.jqueryui.css" />
+    <Content Include="Content\DataTables\css\fixedColumns.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\fixedColumns.semanticui.css" />
+    <Content Include="Content\DataTables\css\fixedColumns.semanticui.min.css" />
+    <Content Include="Content\DataTables\css\fixedHeader.bootstrap.css" />
+    <Content Include="Content\DataTables\css\fixedHeader.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\fixedHeader.bootstrap4.css" />
+    <Content Include="Content\DataTables\css\fixedHeader.bootstrap4.min.css" />
+    <Content Include="Content\DataTables\css\fixedHeader.dataTables.css" />
+    <Content Include="Content\DataTables\css\fixedHeader.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\fixedHeader.foundation.css" />
+    <Content Include="Content\DataTables\css\fixedHeader.foundation.min.css" />
+    <Content Include="Content\DataTables\css\fixedHeader.jqueryui.css" />
+    <Content Include="Content\DataTables\css\fixedHeader.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\fixedHeader.semanticui.css" />
+    <Content Include="Content\DataTables\css\fixedHeader.semanticui.min.css" />
+    <Content Include="Content\DataTables\css\jquery.dataTables.css" />
+    <Content Include="Content\DataTables\css\jquery.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\jquery.dataTables_themeroller.css" />
+    <Content Include="Content\DataTables\css\keyTable.bootstrap.css" />
+    <Content Include="Content\DataTables\css\keyTable.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\keyTable.bootstrap4.css" />
+    <Content Include="Content\DataTables\css\keyTable.bootstrap4.min.css" />
+    <Content Include="Content\DataTables\css\keyTable.dataTables.css" />
+    <Content Include="Content\DataTables\css\keyTable.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\keyTable.foundation.css" />
+    <Content Include="Content\DataTables\css\keyTable.foundation.min.css" />
+    <Content Include="Content\DataTables\css\keyTable.jqueryui.css" />
+    <Content Include="Content\DataTables\css\keyTable.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\keyTable.semanticui.css" />
+    <Content Include="Content\DataTables\css\keyTable.semanticui.min.css" />
+    <Content Include="Content\DataTables\css\responsive.bootstrap.css" />
+    <Content Include="Content\DataTables\css\responsive.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\responsive.bootstrap4.css" />
+    <Content Include="Content\DataTables\css\responsive.bootstrap4.min.css" />
+    <Content Include="Content\DataTables\css\responsive.dataTables.css" />
+    <Content Include="Content\DataTables\css\responsive.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\responsive.foundation.css" />
+    <Content Include="Content\DataTables\css\responsive.foundation.min.css" />
+    <Content Include="Content\DataTables\css\responsive.jqueryui.css" />
+    <Content Include="Content\DataTables\css\responsive.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\responsive.semanticui.css" />
+    <Content Include="Content\DataTables\css\responsive.semanticui.min.css" />
+    <Content Include="Content\DataTables\css\rowGroup.bootstrap.css" />
+    <Content Include="Content\DataTables\css\rowGroup.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\rowGroup.bootstrap4.css" />
+    <Content Include="Content\DataTables\css\rowGroup.bootstrap4.min.css" />
+    <Content Include="Content\DataTables\css\rowGroup.dataTables.css" />
+    <Content Include="Content\DataTables\css\rowGroup.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\rowGroup.foundation.css" />
+    <Content Include="Content\DataTables\css\rowGroup.foundation.min.css" />
+    <Content Include="Content\DataTables\css\rowGroup.jqueryui.css" />
+    <Content Include="Content\DataTables\css\rowGroup.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\rowGroup.semanticui.css" />
+    <Content Include="Content\DataTables\css\rowGroup.semanticui.min.css" />
+    <Content Include="Content\DataTables\css\rowReorder.bootstrap.css" />
+    <Content Include="Content\DataTables\css\rowReorder.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\rowReorder.bootstrap4.css" />
+    <Content Include="Content\DataTables\css\rowReorder.bootstrap4.min.css" />
+    <Content Include="Content\DataTables\css\rowReorder.dataTables.css" />
+    <Content Include="Content\DataTables\css\rowReorder.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\rowReorder.foundation.css" />
+    <Content Include="Content\DataTables\css\rowReorder.foundation.min.css" />
+    <Content Include="Content\DataTables\css\rowReorder.jqueryui.css" />
+    <Content Include="Content\DataTables\css\rowReorder.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\rowReorder.semanticui.css" />
+    <Content Include="Content\DataTables\css\rowReorder.semanticui.min.css" />
+    <Content Include="Content\DataTables\css\scroller.bootstrap.css" />
+    <Content Include="Content\DataTables\css\scroller.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\scroller.bootstrap4.css" />
+    <Content Include="Content\DataTables\css\scroller.bootstrap4.min.css" />
+    <Content Include="Content\DataTables\css\scroller.dataTables.css" />
+    <Content Include="Content\DataTables\css\scroller.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\scroller.foundation.css" />
+    <Content Include="Content\DataTables\css\scroller.foundation.min.css" />
+    <Content Include="Content\DataTables\css\scroller.jqueryui.css" />
+    <Content Include="Content\DataTables\css\scroller.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\scroller.semanticui.css" />
+    <Content Include="Content\DataTables\css\scroller.semanticui.min.css" />
+    <Content Include="Content\DataTables\css\select.bootstrap.css" />
+    <Content Include="Content\DataTables\css\select.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\select.bootstrap4.css" />
+    <Content Include="Content\DataTables\css\select.bootstrap4.min.css" />
+    <Content Include="Content\DataTables\css\select.dataTables.css" />
+    <Content Include="Content\DataTables\css\select.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\select.foundation.css" />
+    <Content Include="Content\DataTables\css\select.foundation.min.css" />
+    <Content Include="Content\DataTables\css\select.jqueryui.css" />
+    <Content Include="Content\DataTables\css\select.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\select.semanticui.css" />
+    <Content Include="Content\DataTables\css\select.semanticui.min.css" />
+    <Content Include="Content\DataTables\images\details_close.png" />
+    <Content Include="Content\DataTables\images\details_open.png" />
+    <Content Include="Content\DataTables\images\sort_asc.png" />
+    <Content Include="Content\DataTables\images\sort_asc_disabled.png" />
+    <Content Include="Content\DataTables\images\sort_both.png" />
+    <Content Include="Content\DataTables\images\sort_desc.png" />
+    <Content Include="Content\DataTables\images\sort_desc_disabled.png" />
+    <Content Include="Content\DataTables\swf\flashExport.swf" />
+    <Content Include="Content\fontawesome\css\font-awesome.css" />
+    <Content Include="Content\fontawesome\css\font-awesome.min.css" />
+    <Content Include="Content\fontawesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\kendo.common.min.css" />
+    <Content Include="Content\kendo.silver.min.css" />
+    <Content Include="Content\StrengthTracker2\strengthtracker.common.css" />
+    <Content Include="Content\StrengthTracker2\CustomerLocation.css" />
+    <Content Include="Content\StrengthTracker2\UserDataVisibility.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\themes\base\jquery.ui.accordion.css" />
+    <Content Include="Content\themes\base\jquery.ui.all.css" />
+    <Content Include="Content\themes\base\jquery.ui.autocomplete.css" />
+    <Content Include="Content\themes\base\jquery.ui.base.css" />
+    <Content Include="Content\themes\base\jquery.ui.button.css" />
+    <Content Include="Content\themes\base\jquery.ui.core.css" />
+    <Content Include="Content\themes\base\jquery.ui.datepicker.css" />
+    <Content Include="Content\themes\base\jquery.ui.dialog.css" />
+    <Content Include="Content\themes\base\jquery.ui.progressbar.css" />
+    <Content Include="Content\themes\base\jquery.ui.resizable.css" />
+    <Content Include="Content\themes\base\jquery.ui.selectable.css" />
+    <Content Include="Content\themes\base\jquery.ui.slider.css" />
+    <Content Include="Content\themes\base\jquery.ui.tabs.css" />
+    <Content Include="Content\themes\base\jquery.ui.theme.css" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\minified\jquery-ui.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.accordion.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.autocomplete.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.button.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.core.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.datepicker.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.dialog.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.progressbar.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.resizable.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.selectable.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Content\animo\LICENSE" />
+    <Content Include="Content\fontawesome\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\fontawesome\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\fontawesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\fontawesome\fonts\FontAwesome.otf" />
+    <Content Include="Content\fontawesome\less\bordered-pulled.less" />
+    <Content Include="Content\fontawesome\less\core.less" />
+    <Content Include="Content\fontawesome\less\fixed-width.less" />
+    <Content Include="Content\fontawesome\less\font-awesome.less" />
+    <Content Include="Content\fontawesome\less\icons.less" />
+    <Content Include="Content\fontawesome\less\larger.less" />
+    <Content Include="Content\fontawesome\less\list.less" />
+    <Content Include="Content\fontawesome\less\mixins.less" />
+    <Content Include="Content\fontawesome\less\path.less" />
+    <Content Include="Content\fontawesome\less\rotated-flipped.less" />
+    <Content Include="Content\fontawesome\less\spinning.less" />
+    <Content Include="Content\fontawesome\less\stacked.less" />
+    <Content Include="Content\fontawesome\less\variables.less" />
+    <Content Include="Content\fontawesome\scss\font-awesome.scss" />
+    <Content Include="Content\fontawesome\scss\_bordered-pulled.scss" />
+    <Content Include="Content\fontawesome\scss\_core.scss" />
+    <Content Include="Content\fontawesome\scss\_fixed-width.scss" />
+    <Content Include="Content\fontawesome\scss\_icons.scss" />
+    <Content Include="Content\fontawesome\scss\_larger.scss" />
+    <Content Include="Content\fontawesome\scss\_list.scss" />
+    <Content Include="Content\fontawesome\scss\_mixins.scss" />
+    <Content Include="Content\fontawesome\scss\_path.scss" />
+    <Content Include="Content\fontawesome\scss\_rotated-flipped.scss" />
+    <Content Include="Content\fontawesome\scss\_spinning.scss" />
+    <Content Include="Content\fontawesome\scss\_stacked.scss" />
+    <Content Include="Content\fontawesome\scss\_variables.scss" />
+    <Content Include="Images\01.jpg" />
+    <Content Include="Images\02.jpg" />
+    <Content Include="Images\ajax_loader_large.gif" />
+    <Content Include="Images\favicon.png" />
+    <Content Include="Images\logo-single.png" />
+    <Content Include="Images\logo.png" />
+    <Content Include="Images\saqs-headerlogo.png" />
+    <Content Include="Images\user\01.jpg" />
+    <Content Include="Images\user\02.jpg" />
+    <Content Include="Images\user\03.jpg" />
+    <Content Include="Images\user\04.jpg" />
+    <Content Include="Images\user\05.jpg" />
+    <Content Include="Images\user\06.jpg" />
+    <Content Include="Images\user\07.jpg" />
+    <Content Include="Images\user\08.jpg" />
+    <Content Include="Images\user\09.jpg" />
+    <Content Include="Images\user\10.jpg" />
+    <Content Include="Images\user\11.jpg" />
+    <Content Include="Images\user\12.jpg" />
+    <Content Include="Images\user\13.jpg" />
+    <Content Include="MailTemplates\MailSettings.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Compile Include="Models\Admin\DashboardGridDataModel.cs" />
+    <Content Include="Scripts\bootstrap\css\bootstrap-multiselect.css" />
+    <Content Include="Scripts\bootstrap\css\bootstrap-theme.css.map" />
+    <Content Include="Scripts\bootstrap\css\bootstrap.css.map" />
+    <Content Include="Scripts\bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Scripts\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Scripts\bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="MailTemplates\ClientResetPassword.cshtml" />
+    <Content Include="MailTemplates\ClientForgotUserName.cshtml" />
+    <Content Include="MailTemplates\ClientRegistration.cshtml" />
+    <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
+    <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
+    <Content Include="Scripts\DataTables\autoFill.bootstrap4.js" />
+    <Content Include="Scripts\DataTables\autoFill.bootstrap4.min.js" />
+    <Content Include="Scripts\DataTables\autoFill.foundation.js" />
+    <Content Include="Scripts\DataTables\autoFill.foundation.min.js" />
+    <Content Include="Scripts\DataTables\autoFill.jqueryui.js" />
+    <Content Include="Scripts\DataTables\autoFill.jqueryui.min.js" />
+    <Content Include="Scripts\DataTables\autoFill.semanticui.js" />
+    <Content Include="Scripts\DataTables\autoFill.semanticui.min.js" />
+    <Content Include="Scripts\DataTables\buttons.bootstrap.js" />
+    <Content Include="Scripts\DataTables\buttons.bootstrap.min.js" />
+    <Content Include="Scripts\DataTables\buttons.bootstrap4.js" />
+    <Content Include="Scripts\DataTables\buttons.bootstrap4.min.js" />
+    <Content Include="Scripts\DataTables\buttons.colVis.js" />
+    <Content Include="Scripts\DataTables\buttons.colVis.min.js" />
+    <Content Include="Scripts\DataTables\buttons.flash.js" />
+    <Content Include="Scripts\DataTables\buttons.flash.min.js" />
+    <Content Include="Scripts\DataTables\buttons.foundation.js" />
+    <Content Include="Scripts\DataTables\buttons.foundation.min.js" />
+    <Content Include="Scripts\DataTables\buttons.html5.js" />
+    <Content Include="Scripts\DataTables\buttons.html5.min.js" />
+    <Content Include="Scripts\DataTables\buttons.jqueryui.js" />
+    <Content Include="Scripts\DataTables\buttons.jqueryui.min.js" />
+    <Content Include="Scripts\DataTables\buttons.print.js" />
+    <Content Include="Scripts\DataTables\buttons.print.min.js" />
+    <Content Include="Scripts\DataTables\buttons.semanticui.js" />
+    <Content Include="Scripts\DataTables\buttons.semanticui.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.autoFill.js" />
+    <Content Include="Scripts\DataTables\dataTables.autoFill.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.bootstrap.js" />
+    <Content Include="Scripts\DataTables\dataTables.bootstrap.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.bootstrap4.js" />
+    <Content Include="Scripts\DataTables\dataTables.bootstrap4.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.buttons.js" />
+    <Content Include="Scripts\DataTables\dataTables.buttons.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.colReorder.js" />
+    <Content Include="Scripts\DataTables\dataTables.colReorder.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.fixedColumns.js" />
+    <Content Include="Scripts\DataTables\dataTables.fixedColumns.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.fixedHeader.js" />
+    <Content Include="Scripts\DataTables\dataTables.fixedHeader.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.foundation.js" />
+    <Content Include="Scripts\DataTables\dataTables.foundation.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.jqueryui.js" />
+    <Content Include="Scripts\DataTables\dataTables.jqueryui.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.keyTable.js" />
+    <Content Include="Scripts\DataTables\dataTables.keyTable.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.material.js" />
+    <Content Include="Scripts\DataTables\dataTables.material.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.responsive.js" />
+    <Content Include="Scripts\DataTables\dataTables.responsive.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.rowGroup.js" />
+    <Content Include="Scripts\DataTables\dataTables.rowGroup.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.rowReorder.js" />
+    <Content Include="Scripts\DataTables\dataTables.rowReorder.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.scroller.js" />
+    <Content Include="Scripts\DataTables\dataTables.scroller.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.select.js" />
+    <Content Include="Scripts\DataTables\dataTables.select.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.semanticui.js" />
+    <Content Include="Scripts\DataTables\dataTables.semanticui.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.uikit.js" />
+    <Content Include="Scripts\DataTables\dataTables.uikit.min.js" />
+    <Content Include="Scripts\DataTables\jquery.dataTables.js" />
+    <Content Include="Scripts\DataTables\jquery.dataTables.min.js" />
+    <Content Include="Scripts\DataTables\responsive.bootstrap.js" />
+    <Content Include="Scripts\DataTables\responsive.bootstrap.min.js" />
+    <Content Include="Scripts\DataTables\responsive.bootstrap4.js" />
+    <Content Include="Scripts\DataTables\responsive.bootstrap4.min.js" />
+    <Content Include="Scripts\DataTables\responsive.foundation.js" />
+    <Content Include="Scripts\DataTables\responsive.foundation.min.js" />
+    <Content Include="Scripts\DataTables\responsive.jqueryui.js" />
+    <Content Include="Scripts\DataTables\responsive.jqueryui.min.js" />
+    <Content Include="Scripts\DataTables\responsive.semanticui.js" />
+    <Content Include="Scripts\DataTables\responsive.semanticui.min.js" />
+    <Content Include="Content\DataTables\css\semanticui.scss" />
+    <Content Include="Content\DataTables\css\mixins.scss" />
+    <Content Include="Content\DataTables\css\common.scss" />
+    <Content Include="MailTemplates\ActivateAthlete.cshtml" />
+    <Content Include="MailTemplates\RegistrationLink.cshtml" />
+    <Content Include="MailTemplates\PersonalTrainerRegistration.cshtml" />
+    <Content Include="MailTemplates\PersonalTrainerRegistrationIntimation.cshtml" />
+    <Content Include="MailTemplates\PersonalTrainerActivation.cshtml" />
+    <Content Include="MailTemplates\ActivateCustomer.cshtml" />
+    <Content Include="MailTemplates\PersonalTrainerDeactivation.cshtml" />
+    <Content Include="MailTemplates\DeactivateCustomer.cshtml" />
+    <Content Include="MailTemplates\IndividualAthleteRegistration.cshtml" />
+    <Content Include="MailTemplates\IndividualAthleteRegistrationIntimation.cshtml" />
+    <Content Include="MailTemplates\OrganizationRegistration.cshtml" />
+    <Content Include="MailTemplates\OrganizationRegistrationIntimation.cshtml" />
+    <None Include="Scripts\jquery-1.8.2.intellisense.js" />
+    <Content Include="Images\saqs-logo3.png" />
+    <Content Include="Scripts\app.js" />
+    <Content Include="Scripts\bootstrap\css\bootstrap-theme.css" />
+    <Content Include="Scripts\bootstrap\css\bootstrap-theme.min.css" />
+    <Content Include="Scripts\bootstrap\css\bootstrap.css" />
+    <Content Include="Scripts\bootstrap\css\bootstrap.min.css" />
+    <Content Include="Scripts\bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Scripts\bootstrap\js\bootstrap-multiselect.js" />
+    <Content Include="Scripts\bootstrap\js\bootstrap-multiselect.min.js" />
+    <Content Include="Scripts\bootstrap\js\bootstrap.js" />
+    <Content Include="Scripts\bootstrap\js\bootstrap.min.js" />
+    <Content Include="Scripts\chosen\chosen-sprite%402x.png" />
+    <Content Include="Scripts\chosen\chosen-sprite.png" />
+    <Content Include="Scripts\chosen\chosen.jquery.min.js" />
+    <Content Include="Scripts\chosen\chosen.min.css" />
+    <Content Include="Scripts\datepicker\css\datepicker.css" />
+    <Content Include="Scripts\datepicker\js\bootstrap-datepicker.js" />
+    <Content Include="Scripts\flot\jquery.flot.axislabels.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1\AUTHORS.txt" />
+    <Content Include="Scripts\jquery-ui-1.12.1\external\jquery\jquery.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1\images\ui-icons_444444_256x240.png" />
+    <Content Include="Scripts\jquery-ui-1.12.1\images\ui-icons_555555_256x240.png" />
+    <Content Include="Scripts\jquery-ui-1.12.1\images\ui-icons_777620_256x240.png" />
+    <Content Include="Scripts\jquery-ui-1.12.1\images\ui-icons_777777_256x240.png" />
+    <Content Include="Scripts\jquery-ui-1.12.1\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Scripts\jquery-ui-1.12.1\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Scripts\jquery-ui-1.12.1\index.html" />
+    <Content Include="Scripts\jquery-ui-1.12.1\jquery-ui.css" />
+    <Content Include="Scripts\jquery-ui-1.12.1\jquery-ui.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1\jquery-ui.min.css" />
+    <Content Include="Scripts\jquery-ui-1.12.1\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1\jquery-ui.structure.css" />
+    <Content Include="Scripts\jquery-ui-1.12.1\jquery-ui.structure.min.css" />
+    <Content Include="Scripts\jquery-ui-1.12.1\jquery-ui.theme.css" />
+    <Content Include="Scripts\jquery-ui-1.12.1\jquery-ui.theme.min.css" />
+    <Content Include="Scripts\jquery-ui-1.12.1\LICENSE.txt" />
+    <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery.maskedinput.js" />
+    <Content Include="Scripts\mustang\css\barIndicator\bar-indicator.css" />
+    <Content Include="Scripts\mustang\css\blog.css" />
+    <Content Include="Scripts\mustang\css\bootstrap.min.css" />
+    <Content Include="Scripts\mustang\css\c3\c3.css" />
+    <Content Include="Scripts\mustang\css\calendar\custom-calendar.css" />
+    <Content Include="Scripts\mustang\css\calendar\fullcalendar.min.css" />
+    <Content Include="Scripts\mustang\css\chart.css" />
+    <Content Include="Scripts\mustang\css\common.css" />
+    <Content Include="Scripts\mustang\css\datatables\autoFill.bs.min.css" />
+    <Content Include="Scripts\mustang\css\datatables\dataTables.bs.min.css" />
+    <Content Include="Scripts\mustang\css\datatables\fixedHeader.bs.css" />
+    <Content Include="Scripts\mustang\css\datepicker.css" />
+    <Content Include="Scripts\mustang\css\dragula\dragula.css" />
+    <Content Include="Scripts\mustang\css\dragula\dragula.min.css" />
+    <Content Include="Scripts\mustang\css\gallery.css" />
+    <Content Include="Scripts\mustang\css\loading.css" />
+    <Content Include="Scripts\mustang\css\login.css" />
+    <Content Include="Scripts\mustang\css\main.css" />
+    <Content Include="Scripts\mustang\css\newsfeed.css" />
+    <Content Include="Scripts\mustang\css\pricing.css" />
+    <Content Include="Scripts\mustang\css\theme-brown.css" />
+    <Content Include="Scripts\mustang\css\theme-facebook.css" />
+    <Content Include="Scripts\mustang\css\theme-green.css" />
+    <Content Include="Scripts\mustang\css\theme-grey.css" />
+    <Content Include="Scripts\mustang\css\theme-instagram.css" />
+    <Content Include="Scripts\mustang\css\theme-maroon.css" />
+    <Content Include="Scripts\mustang\css\theme-violet.css" />
+    <Content Include="Scripts\mustang\css\validations\bootstrapValidator.css" />
+    <Content Include="Scripts\mustang\css\validations\bootstrapValidator.min.css" />
+    <Content Include="Scripts\mustang\css\wysiwyg-editor\editor.css" />
+    <Content Include="Scripts\mustang\fonts\font-awesome.css" />
+    <Content Include="Scripts\mustang\fonts\font-awesome.min.css" />
+    <Content Include="Scripts\mustang\fonts\fontawesome-webfont.svg" />
+    <Content Include="Scripts\mustang\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Scripts\mustang\fonts\icomoon\demo.css" />
+    <Content Include="Scripts\mustang\fonts\icomoon\demo.html" />
+    <Content Include="Scripts\mustang\fonts\icomoon\icomoon.css" />
+    <Content Include="Scripts\mustang\fonts\icomoon\icomoon.svg" />
+    <Content Include="Scripts\mustang\fonts\icomoon\style.css" />
+    <Content Include="Scripts\mustang\js\barIndicator\barIndicator.js" />
+    <Content Include="Scripts\mustang\js\barIndicator\custom-barIndicator.js" />
+    <Content Include="Scripts\mustang\js\bootstrap.min.js" />
+    <Content Include="Scripts\mustang\js\c3\c3.min.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-area-spline.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-bar-area-TeamVolumeIntensity.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-bar-area.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-bar-one.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-bar.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-domain.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-domestic.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-donut.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-global-local.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-img-fonts.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-line-TeamSessionRPE.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-line.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-pie-four.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-pie-three.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-pie-two.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-pie.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-scatter-plot.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-server-requests.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-spline.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-stacked-bar.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-step-graph.js" />
+    <Content Include="Scripts\mustang\js\c3\custom-step.js" />
+    <Content Include="Scripts\mustang\js\calendar\custom-calendar.js" />
+    <Content Include="Scripts\mustang\js\calendar\fullcalendar.min.js" />
+    <Content Include="Scripts\mustang\js\chart-js\chart.js" />
+    <Content Include="Scripts\mustang\js\chart-js\chart.min.js" />
+    <Content Include="Scripts\mustang\js\chart-js\custom.js" />
+    <Content Include="Scripts\mustang\js\common.js" />
+    <Content Include="Scripts\mustang\js\d3.min.js" />
+    <Content Include="Scripts\mustang\js\datatables\autoFill.bootstrap.min.js" />
+    <Content Include="Scripts\mustang\js\datatables\autoFill.min.js" />
+    <Content Include="Scripts\mustang\js\datatables\custom-datatables.js" />
+    <Content Include="Scripts\mustang\js\datatables\dataTables.bootstrap.min.js" />
+    <Content Include="Scripts\mustang\js\datatables\dataTables.min.js" />
+    <Content Include="Scripts\mustang\js\datatables\dataTables.tableTools.js" />
+    <Content Include="Scripts\mustang\js\datatables\fixedHeader.min.js" />
+    <Content Include="Scripts\mustang\js\dragula\custom-dragula.js" />
+    <Content Include="Scripts\mustang\js\dragula\dragula.js" />
+    <Content Include="Scripts\mustang\js\dragula\dragula.min.js" />
+    <Content Include="Scripts\mustang\js\flot\custom\area.js" />
+    <Content Include="Scripts\mustang\js\flot\custom\combine-chart-compare.js" />
+    <Content Include="Scripts\mustang\js\flot\custom\combine-chart.js" />
+    <Content Include="Scripts\mustang\js\flot\custom\donut.js" />
+    <Content Include="Scripts\mustang\js\flot\custom\horizontal.js" />
+    <Content Include="Scripts\mustang\js\flot\custom\line.js" />
+    <Content Include="Scripts\mustang\js\flot\custom\multi-bar-chart.js" />
+    <Content Include="Scripts\mustang\js\flot\custom\pie.js" />
+    <Content Include="Scripts\mustang\js\flot\custom\profile-area.js" />
+    <Content Include="Scripts\mustang\js\flot\custom\realtime.js" />
+    <Content Include="Scripts\mustang\js\flot\custom\rectangular-pie.js" />
+    <Content Include="Scripts\mustang\js\flot\custom\scatter.js" />
+    <Content Include="Scripts\mustang\js\flot\custom\stacked-area.js" />
+    <Content Include="Scripts\mustang\js\flot\custom\stacked-horizontal.js" />
+    <Content Include="Scripts\StrengthTracker2\Assessment.js" />
+    <Content Include="Scripts\StrengthTracker2\athletesLeaderboardGrid.js" />
+    <Content Include="Scripts\StrengthTracker2\Charts\ActiveAthletesByTeamChart.js" />
+    <Content Include="Scripts\StrengthTracker2\Charts\AthletesBySportChart.js" />
+    <Content Include="Scripts\StrengthTracker2\Charts\ActiveAthletesBySportChart.js" />
+    <Content Include="Scripts\StrengthTracker2\Charts\AthletesStatusChart.js" />
+    <Content Include="Scripts\StrengthTracker2\Charts\CustomerLocationChart.js" />
+    <Content Include="Scripts\mustang\js\flot\custom\vertical.js" />
+    <Content Include="Scripts\mustang\js\flot\jquery.flot.categories.js" />
+    <Content Include="Scripts\mustang\js\flot\jquery.flot.min.js" />
+    <Content Include="Scripts\mustang\js\flot\jquery.flot.pie.min.js" />
+    <Content Include="Scripts\mustang\js\flot\jquery.flot.resize.min.js" />
+    <Content Include="Scripts\mustang\js\flot\jquery.flot.stack.min.js" />
+    <Content Include="Scripts\mustang\js\flot\jquery.flot.stackbars.js" />
+    <Content Include="Scripts\mustang\js\flot\jquery.flot.time.min.js" />
+    <Content Include="Scripts\mustang\js\flot\jquery.flot.tooltip.min.js" />
+    <Content Include="Scripts\mustang\js\gallery\baguetteBox.js" />
+    <Content Include="Scripts\mustang\js\gallery\customBaguetteBox.js" />
+    <Content Include="Scripts\mustang\js\gallery\plugins.js" />
+    <Content Include="Scripts\mustang\js\jquery-ui.min.js" />
+    <Content Include="Scripts\mustang\js\jquery.easing.1.3.js" />
+    <Content Include="Scripts\mustang\js\jquery.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\africa-mill.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\au-mill.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\custom-map.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\custom\custom-denmark.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\custom\map-africa.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\custom\map-europe.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\custom\map-usa-two.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\custom\regions-selection.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\custom\resions-with-labels.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\custom\usa-profile.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\custom\world-map-gdp.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\custom\world-map-markers.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\custom\world-map.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\de-merc.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\dk-mill.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\europe-mill.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\gdp-data.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\jquery-jvectormap-2.0.3.min.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\usa.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\us_aea.js" />
+    <Content Include="Scripts\mustang\js\jvectormap\world-mill-en.js" />
+    <Content Include="Scripts\mustang\js\moment.min.js" />
+    <Content Include="Scripts\mustang\js\scrollup.min.js" />
+    <Content Include="Scripts\mustang\js\themeSwitcher.js" />
+    <Content Include="Scripts\mustang\js\validations\bootstrapValidator.min.js" />
+    <Content Include="Scripts\mustang\js\validations\custom-validator.js" />
+    <Content Include="Scripts\mustang\js\wysiwyg-editor\editor.js" />
+    <Content Include="Scripts\persist-min.js" />
+    <Content Include="Scripts\StrengthTracker2\Athletes.js" />
+    <Content Include="Scripts\StrengthTracker2\Charts\ChartSharedCode.js" />
+    <Content Include="Scripts\StrengthTracker2\Charts\TeamProgramVolumeIntensityChart.js" />
+    <Content Include="Scripts\StrengthTracker2\Charts\TeamSessionRPEChart.js" />
+    <Content Include="Scripts\StrengthTracker2\countryScript.js" />
+    <Content Include="Scripts\StrengthTracker2\State.js" />
+    <Content Include="Scripts\StrengthTracker2\CustomerLocation.js" />
+    <Content Include="Scripts\StrengthTracker2\customers.js" />
+    <Content Include="Scripts\datetimepicker\css\bootstrap-datetimepicker.css" />
+    <Content Include="Scripts\datetimepicker\css\bootstrap-datetimepicker.min.css" />
+    <Content Include="Scripts\datetimepicker\js\bootstrap-datetimepicker.min.js" />
+    <Content Include="Scripts\fastclick\fastclick.js" />
+    <Content Include="Scripts\filestyle\bootstrap-filestyle.min.js" />
+    <Content Include="Scripts\flot\excanvas.min.js" />
+    <Content Include="Scripts\flot\jquery.flot.categories.min.js" />
+    <Content Include="Scripts\flot\jquery.flot.min.js" />
+    <Content Include="Scripts\flot\jquery.flot.pie.min.js" />
+    <Content Include="Scripts\flot\jquery.flot.resize.min.js" />
+    <Content Include="Scripts\flot\jquery.flot.symbol.js" />
+    <Content Include="Scripts\flot\jquery.flot.time.min.js" />
+    <Content Include="Scripts\flot\jquery.flot.tooltip.min.js" />
+    <Content Include="Scripts\jquery-1.11.0.js" />
+    <Content Include="Scripts\jquery-1.11.0.min.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1\package.json" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\kendo.all.min.js" />
+    <Content Include="Scripts\knockout-2.2.0.debug.js" />
+    <Content Include="Scripts\knockout-2.2.0.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\moment\lang\ar-ma.js" />
+    <Content Include="Scripts\moment\lang\ar.js" />
+    <Content Include="Scripts\moment\lang\bg.js" />
+    <Content Include="Scripts\moment\lang\br.js" />
+    <Content Include="Scripts\moment\lang\bs.js" />
+    <Content Include="Scripts\moment\lang\ca.js" />
+    <Content Include="Scripts\moment\lang\cs.js" />
+    <Content Include="Scripts\moment\lang\cv.js" />
+    <Content Include="Scripts\moment\lang\cy.js" />
+    <Content Include="Scripts\moment\lang\da.js" />
+    <Content Include="Scripts\moment\lang\de.js" />
+    <Content Include="Scripts\moment\lang\el.js" />
+    <Content Include="Scripts\moment\lang\en-au.js" />
+    <Content Include="Scripts\moment\lang\en-ca.js" />
+    <Content Include="Scripts\moment\lang\en-gb.js" />
+    <Content Include="Scripts\moment\lang\eo.js" />
+    <Content Include="Scripts\moment\lang\es.js" />
+    <Content Include="Scripts\moment\lang\et.js" />
+    <Content Include="Scripts\moment\lang\eu.js" />
+    <Content Include="Scripts\moment\lang\fa.js" />
+    <Content Include="Scripts\moment\lang\fi.js" />
+    <Content Include="Scripts\moment\lang\fo.js" />
+    <Content Include="Scripts\moment\lang\fr-ca.js" />
+    <Content Include="Scripts\moment\lang\fr.js" />
+    <Content Include="Scripts\moment\lang\gl.js" />
+    <Content Include="Scripts\moment\lang\he.js" />
+    <Content Include="Scripts\moment\lang\hi.js" />
+    <Content Include="Scripts\moment\lang\hr.js" />
+    <Content Include="Scripts\moment\lang\hu.js" />
+    <Content Include="Scripts\moment\lang\hy-am.js" />
+    <Content Include="Scripts\moment\lang\id.js" />
+    <Content Include="Scripts\moment\lang\is.js" />
+    <Content Include="Scripts\moment\lang\it.js" />
+    <Content Include="Scripts\moment\lang\ja.js" />
+    <Content Include="Scripts\moment\lang\ka.js" />
+    <Content Include="Scripts\moment\lang\ko.js" />
+    <Content Include="Scripts\moment\lang\lb.js" />
+    <Content Include="Scripts\moment\lang\lt.js" />
+    <Content Include="Scripts\moment\lang\lv.js" />
+    <Content Include="Scripts\moment\lang\mk.js" />
+    <Content Include="Scripts\moment\lang\ml.js" />
+    <Content Include="Scripts\moment\lang\mr.js" />
+    <Content Include="Scripts\moment\lang\ms-my.js" />
+    <Content Include="Scripts\moment\lang\nb.js" />
+    <Content Include="Scripts\moment\lang\ne.js" />
+    <Content Include="Scripts\moment\lang\nl.js" />
+    <Content Include="Scripts\moment\lang\nn.js" />
+    <Content Include="Scripts\moment\lang\pl.js" />
+    <Content Include="Scripts\moment\lang\pt-br.js" />
+    <Content Include="Scripts\moment\lang\pt.js" />
+    <Content Include="Scripts\moment\lang\ro.js" />
+    <Content Include="Scripts\moment\lang\rs.js" />
+    <Content Include="Scripts\moment\lang\ru.js" />
+    <Content Include="Scripts\moment\lang\sk.js" />
+    <Content Include="Scripts\moment\lang\sl.js" />
+    <Content Include="Scripts\moment\lang\sq.js" />
+    <Content Include="Scripts\moment\lang\sv.js" />
+    <Content Include="Scripts\moment\lang\ta.js" />
+    <Content Include="Scripts\moment\lang\th.js" />
+    <Content Include="Scripts\moment\lang\tl-ph.js" />
+    <Content Include="Scripts\moment\lang\tr.js" />
+    <Content Include="Scripts\moment\lang\tzm-la.js" />
+    <Content Include="Scripts\moment\lang\tzm.js" />
+    <Content Include="Scripts\moment\lang\uk.js" />
+    <Content Include="Scripts\moment\lang\uz.js" />
+    <Content Include="Scripts\moment\lang\vn.js" />
+    <Content Include="Scripts\moment\lang\zh-cn.js" />
+    <Content Include="Scripts\moment\lang\zh-tw.js" />
+    <Content Include="Scripts\moment\min\langs.js" />
+    <Content Include="Scripts\moment\min\langs.min.js" />
+    <Content Include="Scripts\moment\min\moment-with-langs.js" />
+    <Content Include="Scripts\moment\min\moment-with-langs.min.js" />
+    <Content Include="Scripts\moment\min\moment.min.js" />
+    <Content Include="Scripts\pages.js" />
+    <Content Include="Scripts\slider\css\slider.css" />
+    <Content Include="Scripts\slider\js\bootstrap-slider.js" />
+    <Content Include="Scripts\slimscroll\jquery.slimscroll.min.js" />
+    <Content Include="Scripts\sparklines\jquery.sparkline.min.js" />
+    <Content Include="Scripts\storejson2.min.js" />
+    <Content Include="Scripts\StrengthTracker2\Common.js" />
+    <Content Include="Scripts\StrengthTracker2\KTGMobileCommon.js" />
+    <Content Include="Scripts\StrengthTracker2\Charts\RegistrationByDateChart.js" />
+    <Content Include="Scripts\StrengthTracker2\Roles.js" />
+    <Content Include="Scripts\StrengthTracker2\User.js" />
+    <Content Include="Scripts\StrengthTracker2\UserDataVisibility.js" />
+    <Content Include="Scripts\StrengthTracker2\WorkoutOverview.js" />
+    <Content Include="Scripts\underscore-min.js" />
+    <Content Include="Scripts\verimail\verimail.jquery.js" />
+    <Content Include="Scripts\verimail\verimail.jquery.min.js" />
+    <Content Include="Scripts\_references.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Admin\Program.cshtml" />
+    <Content Include="Views\Admin\_Layout.cshtml" />
+    <Content Include="Views\Admin\Users.cshtml" />
+    <Content Include="Views\Admin\Exercises.cshtml" />
+    <Content Include="Views\Admin\Customers.cshtml" />
+    <Content Include="Views\Admin\AuditLog.cshtml" />
+    <Content Include="Views\Admin\ManageProgram.cshtml" />
+    <Content Include="Views\Admin\ProgramExercises.cshtml" />
+    <Content Include="Views\Admin\AddExerciseToProgram.cshtml" />
+    <Content Include="Views\Admin\Dashboard.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ForgotUsername.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Scripts\slider\less\slider.less" />
+    <Content Include="Views\Coach\Index.cshtml" />
+    <Content Include="Views\Coach\_Layout.cshtml" />
+    <Content Include="Scripts\moment\LICENSE" />
+    <Content Include="Views\Coach\Schedule.cshtml" />
+    <Content Include="Views\Coach\Holiday.cshtml" />
+    <Content Include="Views\Coach\Capacity.cshtml" />
+    <Content Include="Views\Workout\Login.cshtml" />
+    <Content Include="Views\Workout\DailyWorkoutSession.cshtml" />
+    <Content Include="Views\Security\Roles.cshtml" />
+    <Content Include="Views\Admin\Athletes.cshtml" />
+    <Content Include="Views\Athlete\_Layout.cshtml" />
+    <Content Include="Views\Athlete\Dashboard.cshtml" />
+    <Content Include="Views\Coach\Dashboard.cshtml" />
+    <Content Include="Views\Athlete\Profile.cshtml" />
+    <Content Include="Views\Admin\Pricing.cshtml" />
+    <Content Include="Views\Admin\Profile.cshtml" />
+    <Content Include="Views\Coach\Profile.cshtml" />
+    <Content Include="Views\Admin\Locations.cshtml" />
+    <Content Include="Views\Workout\LoginNew.cshtml" />
+    <Content Include="Views\Admin\Sports.cshtml" />
+    <Content Include="Views\Admin\Position.cshtml" />
+    <Content Include="Views\Coach\AthleteProfile.cshtml" />
+    <Content Include="Views\Coach\AthleteDashboard.cshtml" />
+    <Content Include="Views\Athlete\DashboardNew.cshtml" />
+    <Content Include="Views\Admin\UOM.cshtml" />
+    <Content Include="Views\Admin\AthleteDashboard.cshtml" />
+    <Content Include="Views\Admin\AthleteProfile.cshtml" />
+    <Content Include="Views\Admin\MovementTypes.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Customer\Customers.cshtml" />
+    <Content Include="Views\Customer\_Layout.cshtml" />
+    <Content Include="Views\Admin\Roles.cshtml" />
+    <Content Include="Views\Account\InvalidCustomer.cshtml" />
+    <Content Include="Views\Registration\TKGForm.cshtml" />
+    <Content Include="Views\Registration\_Layout.cshtml" />
+    <Content Include="Views\Registration\tkgthankyou.cshtml" />
+    <Content Include="Views\Registration\View.cshtml" />
+    <Content Include="Views\Admin\ProgramDWSession.cshtml" />
+    <Content Include="Views\Workout\InvalidCustomer.cshtml" />
+    <Content Include="Views\Coach\InitialAssessment.cshtml" />
+    <Content Include="Scripts\mustang\css\.DS_Store" />
+    <Content Include="Scripts\mustang\css\.sass-cache\40c04069eaaa5fc73436185fed71c008d1b3930e\main.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\40c04069eaaa5fc73436185fed71c008d1b3930e\newsfeed.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\40c04069eaaa5fc73436185fed71c008d1b3930e\theme-brick.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\40c04069eaaa5fc73436185fed71c008d1b3930e\theme-brown.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\40c04069eaaa5fc73436185fed71c008d1b3930e\theme-facebook.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\40c04069eaaa5fc73436185fed71c008d1b3930e\theme-green.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\40c04069eaaa5fc73436185fed71c008d1b3930e\theme-grey.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\40c04069eaaa5fc73436185fed71c008d1b3930e\theme-instagram.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\40c04069eaaa5fc73436185fed71c008d1b3930e\theme-violet.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\40c04069eaaa5fc73436185fed71c008d1b3930e\theme.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\658fc1f2a66fb948fc758b196c0dc4b590b2c4e6\main.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\a1d8f0d1ada3c4f347ce0e18eb1544a07055ff75\main.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\a1d8f0d1ada3c4f347ce0e18eb1544a07055ff75\theme-blue.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\a1d8f0d1ada3c4f347ce0e18eb1544a07055ff75\theme-brown.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\a1d8f0d1ada3c4f347ce0e18eb1544a07055ff75\theme-facebook.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\a1d8f0d1ada3c4f347ce0e18eb1544a07055ff75\theme-green.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\a1d8f0d1ada3c4f347ce0e18eb1544a07055ff75\theme-grey.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\a1d8f0d1ada3c4f347ce0e18eb1544a07055ff75\theme-instagram.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\a1d8f0d1ada3c4f347ce0e18eb1544a07055ff75\theme-maroon.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\a1d8f0d1ada3c4f347ce0e18eb1544a07055ff75\theme-violet.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\c13f2155ef0d53c1716d1c68b177da45dcc9cac6\main.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\c13f2155ef0d53c1716d1c68b177da45dcc9cac6\theme-brown.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\c13f2155ef0d53c1716d1c68b177da45dcc9cac6\theme-green.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\c13f2155ef0d53c1716d1c68b177da45dcc9cac6\theme-grey.scssc" />
+    <Content Include="Scripts\mustang\css\.sass-cache\c13f2155ef0d53c1716d1c68b177da45dcc9cac6\theme-instagram.scssc" />
+    <Content Include="Scripts\mustang\css\barIndicator\.DS_Store" />
+    <Content Include="Scripts\mustang\css\c3\.DS_Store" />
+    <Content Include="Scripts\mustang\css\calendar\.DS_Store" />
+    <Content Include="Scripts\mustang\css\dragula\.DS_Store" />
+    <Content Include="Scripts\mustang\css\login.scss" />
+    <Content Include="Scripts\mustang\css\main.css.map" />
+    <Content Include="Scripts\mustang\css\main.scss" />
+    <Content Include="Scripts\mustang\css\newsfeed.scss" />
+    <Content Include="Scripts\mustang\css\theme-brown.scss" />
+    <Content Include="Scripts\mustang\css\theme-facebook.scss" />
+    <Content Include="Scripts\mustang\css\theme-green.scss" />
+    <Content Include="Scripts\mustang\css\theme-grey.scss" />
+    <Content Include="Scripts\mustang\css\theme-instagram.scss" />
+    <Content Include="Scripts\mustang\css\theme-maroon.scss" />
+    <Content Include="Scripts\mustang\css\theme-violet.scss" />
+    <Content Include="Scripts\mustang\fonts\.DS_Store" />
+    <Content Include="Scripts\mustang\fonts\fontawesome-webfont.eot" />
+    <Content Include="Scripts\mustang\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Scripts\mustang\fonts\fontawesome-webfont.woff" />
+    <Content Include="Scripts\mustang\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Scripts\mustang\fonts\FontAwesome.otf" />
+    <Content Include="Scripts\mustang\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Scripts\mustang\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Scripts\mustang\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Scripts\mustang\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Scripts\mustang\fonts\icomoon\.DS_Store" />
+    <Content Include="Scripts\mustang\fonts\icomoon\icomoon.eot" />
+    <Content Include="Scripts\mustang\fonts\icomoon\icomoon.ttf" />
+    <Content Include="Scripts\mustang\fonts\icomoon\icomoon.woff" />
+    <Content Include="Scripts\mustang\fonts\opensans\.DS_Store" />
+    <Content Include="Scripts\mustang\fonts\opensans\opensans-bold-webfont.woff" />
+    <Content Include="Scripts\mustang\fonts\opensans\opensans-bold-webfont.woff2" />
+    <Content Include="Scripts\mustang\fonts\opensans\opensans-light-webfont.woff" />
+    <Content Include="Scripts\mustang\fonts\opensans\opensans-light-webfont.woff2" />
+    <Content Include="Scripts\mustang\fonts\opensans\opensans-regular-webfont.woff" />
+    <Content Include="Scripts\mustang\fonts\opensans\opensans-regular-webfont.woff2" />
+    <Content Include="Scripts\mustang\fonts\opensans\opensans-semibold-webfont.woff" />
+    <Content Include="Scripts\mustang\fonts\opensans\opensans-semibold-webfont.woff2" />
+    <Content Include="Scripts\mustang\js\.DS_Store" />
+    <Content Include="Scripts\mustang\js\barIndicator\.DS_Store" />
+    <Content Include="Scripts\mustang\js\c3\.DS_Store" />
+    <Content Include="Scripts\mustang\js\calendar\.DS_Store" />
+    <Content Include="Scripts\mustang\js\dragula\.DS_Store" />
+    <Content Include="Scripts\mustang\js\flot\.DS_Store" />
+    <Content Include="Scripts\mustang\js\flot\custom\.DS_Store" />
+    <Content Include="Scripts\mustang\js\jvectormap\.DS_Store" />
+    <Content Include="Scripts\mustang\js\wysiwyg-editor\.DS_Store" />
+    <Content Include="Views\Athlete\Home.cshtml" />
+    <Content Include="Views\Athlete\_MobileLayout.cshtml" />
+    <Content Include="Views\Athlete\WorkoutOverview.cshtml" />
+    <Content Include="Views\Athlete\ViewExercise.cshtml" />
+    <Content Include="Views\Athlete\ModifyExercise.cshtml" />
+    <Content Include="Views\Athlete\ViewWorkout.cshtml" />
+    <Content Include="Views\Athlete\WorkoutSummary.cshtml" />
+    <Content Include="Views\Athlete\ManageAccount.cshtml" />
+    <Content Include="Views\Admin\Schedules.cshtml" />
+    <Content Include="Views\Athlete\_WorkoutOverview.cshtml" />
+    <Content Include="Views\Athlete\_Home.cshtml" />
+    <Content Include="Views\Admin\_LayoutNew.cshtml" />
+    <Content Include="Views\Admin\DashboardNew.cshtml" />
+    <Content Include="Views\Admin\ManageUsers.cshtml" />
+    <Content Include="Views\Admin\ManageRoles.cshtml" />
+    <Content Include="Views\Account\LoginNew.cshtml" />
+    <Content Include="Views\Coach\DashboardNew.cshtml" />
+    <Content Include="Views\Coach\_LayoutNew.cshtml" />
+    <Content Include="Views\Shared\_LayoutNew.cshtml" />
+    <Content Include="Views\Coach\Tabular.cshtml" />
+    <Content Include="Views\Athlete\WorkoutProgress.cshtml" />
+    <Content Include="Views\Admin\ManageTeams.cshtml" />
+    <Content Include="Views\Admin\Teams.cshtml" />
+    <Content Include="Views\Admin\CoachDashboardNew.cshtml" />
+    <Content Include="Views\Shared\NavigationBar.cshtml" />
+    <Content Include="Views\Admin\Assessment.cshtml" />
+    <Content Include="Views\Admin\UserDataVisibility.cshtml" />
+    <Content Include="Views\Admin\UserHistory.cshtml" />
+    <Content Include="Views\Admin\AthleteAssessment.cshtml" />
+    <Content Include="Views\Registration\JDoeForm.cshtml" />
+    <Content Include="Views\Registration\jdoethankyou.cshtml" />
+    <Content Include="Views\Admin\Welcome.cshtml" />
+    <Content Include="Views\CustomerRegistration\PersonalTrainer.cshtml" />
+    <Content Include="Views\Registration\PersonalTrainer.cshtml" />
+    <Content Include="Views\Registration\PersonalTrainerThankyou.cshtml" />
+    <Content Include="Views\CustomerRegistration\TKGThankyouPE.cshtml" />
+    <Content Include="Views\Admin\PersonalTrainerProfileSection.cshtml" />
+    <Content Include="Views\CustomerRegistration\IndividualAthlete.cshtml" />
+    <Content Include="Views\CustomerRegistration\TrialIndividualAthlete.cshtml" />
+    <Content Include="Views\CustomerRegistration\TrialPersonalTrainer.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Views\Chart\" />
+    <Folder Include="Views\CustomerLocation\" />
+    <Folder Include="Views\Tools\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MyProgrammer.Core\MyProgrammer.Core.csproj">
+      <Project>{212cdf48-eb3f-4442-bcb7-5997d9fb09ee}</Project>
+      <Name>MyProgrammer.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StrengthTracker2.Common\StrengthTracker2.Common.csproj">
+      <Project>{26272678-1E3A-4310-8097-4EB739DBC3D8}</Project>
+      <Name>StrengthTracker2.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StrengthTracker2.Core\StrengthTracker2.Core.csproj">
+      <Project>{48f1ba03-e18b-4fb4-ac8d-a6ac554e4f8e}</Project>
+      <Name>StrengthTracker2.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StrengthTracker2.DependencyResolution\StrengthTracker2.DependencyResolution.csproj">
+      <Project>{3fca9f61-98fb-4fa8-90fa-dfd5d0446ef8}</Project>
+      <Name>StrengthTracker2.DependencyResolution</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StrengthTracker2.Persistence\StrengthTracker2.Persistence.csproj">
+      <Project>{572941c3-164a-4288-afde-dfc703abf030}</Project>
+      <Name>StrengthTracker2.Persistence</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:2719/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

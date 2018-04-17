@@ -1,0 +1,5 @@
+D:\SVN\KTG\trunk\StrengthTracker2.Core\bin\Debug\StrengthTracker2.Core.dll
+D:\SVN\KTG\trunk\StrengthTracker2.Core\bin\Debug\StrengthTracker2.Core.pdb
+D:\SVN\KTG\trunk\StrengthTracker2.Core\obj\Debug\StrengthTracker2.Core.csprojResolveAssemblyReference.cache
+D:\SVN\KTG\trunk\StrengthTracker2.Core\obj\Debug\StrengthTracker2.Core.dll
+D:\SVN\KTG\trunk\StrengthTracker2.Core\obj\Debug\StrengthTracker2.Core.pdb

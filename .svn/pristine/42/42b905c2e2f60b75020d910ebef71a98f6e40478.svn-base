@@ -1,0 +1,323 @@
+﻿using System;
+using System.Linq;
+using System.Web.Mvc;
+using System.Configuration;
+
+using StructureMap;
+
+using MyProgrammer.Core.Services;
+using StrengthTracker2.Common;
+using StrengthTracker2.Core.DataTypes;
+using StrengthTracker2.Core.Repository.Contracts.Customers;
+using StrengthTracker2.Core.Repository.Contracts.TKGMaster;
+using StrengthTracker2.Core.Repository.Contracts.Account;
+using StrengthTracker2.Core.Repository.Contracts.ProgramManagement;
+using StrengthTracker2.Core.Repository.Contracts.Registration;
+using StrengthTracker2.Core.Repository.Entities.Actors;
+using StrengthTracker2.Core.Repository.Entities.Customers;
+using StrengthTracker2.Core.Repository.Entities.ProgramManagement;
+using StrengthTracker2.Core.Repository.Entities.TKGMaster;
+using StrengthTracker2.Web.Models;
+using StrengthTracker2.Web.Models.Registration;
+using StrengthTracker2.Web.Helpers;
+
+
+namespace StrengthTracker2.Web.Controllers
+{
+    public class CustomerRegistrationController : Controller
+    {
+        private readonly ICustomerManagementRepository customerRepository = ObjectFactory.GetInstance<ICustomerManagementRepository>();
+        private readonly ICustomerMasterMgmtRepository customerMasterRepository = ObjectFactory.GetInstance<ICustomerMasterMgmtRepository>();
+        private readonly IApplicationServerManagementRepository applicationServerManagementRepository = ObjectFactory.GetInstance<IApplicationServerManagementRepository>();
+        private readonly IDatabaseServerManagementRepository databaseServerManagementRepository = ObjectFactory.GetInstance<IDatabaseServerManagementRepository>();
+        private readonly IMailService mailService = ObjectFactory.GetInstance<IMailService>();
+        private readonly IState _stateService = ObjectFactory.GetInstance<IState>();
+        private readonly ICustomerLocationMgmtRepository _locationRepository = ObjectFactory.GetInstance<ICustomerLocationMgmtRepository>();
+        private readonly IMapperService _mapperService = new MapperService();
+        private readonly IAccount _iAccount = ObjectFactory.GetInstance<IAccount>();
+        private readonly IRegistrationManager _registrationService = ObjectFactory.GetInstance<IRegistrationManager>();
+        private readonly ISportsManagementRepository _sportService = ObjectFactory.GetInstance<ISportsManagementRepository>();
+
+        public ActionResult PersonalTrainer()
+        {
+            string customerName = "tkg"; //As we know this form is only for registering customers to TKG
+            CustomerMaster customer = customerMasterRepository.GetCustomerInfo(customerName);
+
+            if (customer != null)
+            {
+                Session["CustomerName"] = customer.CustomerName;
+                Session["CustomerConnStr"] = customer.CustomerConnStr;
+                Session["CustomerObj"] = customer;
+                Session["PersonalPrefix"] = Convert.ToString(ConfigurationManager.AppSettings["PersonalPrefix"]);
+                return View();
+            }
+            return RedirectToAction("InvalidCustomer", "Account");
+        }
+
+        public ActionResult TrialPersonalTrainer()
+        {
+            string customerName = "tkg"; //As we know this form is only for registering customers to TKG
+            CustomerMaster customer = customerMasterRepository.GetCustomerInfo(customerName);
+
+            if (customer != null)
+            {
+                Session["CustomerName"] = customer.CustomerName;
+                Session["CustomerConnStr"] = customer.CustomerConnStr;
+                Session["CustomerObj"] = customer;
+                Session["PersonalPrefix"] = Convert.ToString(ConfigurationManager.AppSettings["PersonalPrefix"]);
+                return View();
+            }
+            return RedirectToAction("InvalidCustomer", "Account");
+        }
+
+        public ActionResult IndividualAthlete()
+        {
+            string customerName = "tkg"; //As we know this form is only for registering customers to TKG
+            CustomerMaster customer = customerMasterRepository.GetCustomerInfo(customerName);
+
+            if (customer != null)
+            {
+                Session["CustomerName"] = customer.CustomerName;
+                Session["CustomerConnStr"] = customer.CustomerConnStr;
+                Session["CustomerObj"] = customer;
+                Session["PersonalPrefix"] = Convert.ToString(ConfigurationManager.AppSettings["PersonalPrefix"]);
+                Session["CustomerImage"] = "../images/noimage.jpg";
+
+                var model = new UserRegistrationViewModel
+                {
+                    States = _stateService.ListStates().OrderBy(s => s.Abbreviation).ToList(),
+                    Locations = _locationRepository.ListAllLocations()
+                };
+
+                return View(model);
+            }
+            return RedirectToAction("InvalidCustomer", "Account");
+        }
+
+        public ActionResult TrialIndividualAthlete()
+        {
+            string customerName = "tkg"; //As we know this form is only for registering customers to TKG
+            CustomerMaster customer = customerMasterRepository.GetCustomerInfo(customerName);
+
+            if (customer == null) return RedirectToAction("InvalidCustomer", "Account");
+
+            Session["CustomerName"] = customer.CustomerName;
+            Session["CustomerConnStr"] = customer.CustomerConnStr;
+            Session["CustomerObj"] = customer;
+            Session["PersonalPrefix"] = Convert.ToString(ConfigurationManager.AppSettings["PersonalPrefix"]);
+            Session["CustomerImage"] = "../images/noimage.jpg";
+
+            var model = new UserRegistrationViewModel
+            {
+                States = _stateService.ListStates().OrderBy(s => s.Abbreviation).ToList(),
+                Locations = _locationRepository.ListAllLocations()
+            };
+
+            return View(model);
+        }
+
+        public ActionResult CheckShortName(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return Json(new ReturnObjectModel() {Status = ReturnStatus.Err}, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new ReturnObjectModel()
+                { Status = customerMasterRepository.CheckShortName(name) ? ReturnStatus.OK : ReturnStatus.Err }
+                , JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost]
+        public ActionResult Register([System.Web.Http.FromBody]CustomerRegistrationViewModel customerModel)
+        {
+            ReturnObjectModel ro = new ReturnObjectModel
+            {
+                Message = "Customer Registration failed",
+                Status = ReturnStatus.Err
+            };
+
+            var appServer = applicationServerManagementRepository.ListAllApplicationServers().FirstOrDefault();
+            var dbServer = databaseServerManagementRepository.ListAllDatabaseServers().FirstOrDefault();
+
+            var customer = new Customer()
+            {
+                OrganizationName = customerModel.OrganizationName,
+                Category = (CustomerCategoryType) customerModel.Category,
+
+                Address = customerModel.Address,
+                State = customerModel.State.ToString(),
+                City = customerModel.City,
+                Country = customerModel.Country,
+                ZIPCode = customerModel.ZIPCode,
+
+                ContactFirstName = customerModel.ContactFirstName,
+                ContactLastName = customerModel.ContactLastName,
+                ContactEmail = customerModel.ContactEmail,
+                CustomerPhone = customerModel.ContactPhone,
+                ContactPhone = customerModel.ContactPhone,
+
+                BillingAddress = customerModel.BillingAddress,
+                BillingState = customerModel.BillingState.ToString(),
+                BillingCity = customerModel.BillingCity,
+                BillingCountry = customerModel.BillingCountry,
+                BillingZIPCode = customerModel.ZIPCode,
+
+                ApplicationServerId = appServer.ApplicationServerId,
+                DatabaseServerId = dbServer.DatabaseServerId,
+                Website = customerModel.CompanyWebSite,
+                SameAddAsAbove = customerModel.SameAddAsAbove,
+                IsDeleted = false,
+                IsActive = customerModel.IsFreeTrial > 0,
+                FreeTrialStartDate = customerModel.IsFreeTrial> 0 ? DateTime.Today : DateTime.MinValue,
+                FreeTrialEndDate = customerModel.IsFreeTrial > 0
+                    ? DateTime.Today.AddDays(int.Parse(ConfigurationManager.AppSettings["PersonalTrainerTrialDays"])) 
+                    : DateTime.MinValue
+            };
+
+            int customerID = customerRepository.SaveCustomerInfo(customer);
+            if (customerID <= 0) return Json(ro, JsonRequestBehavior.AllowGet);
+
+            //var customerName = customerModel.OrganizationName.Replace(" ", "").ToLower();
+            var customerName = customerModel.ShortName.Replace(" ", "").ToLower();
+            string newCustomerConnStr = Convert.ToString(ConfigurationManager.AppSettings["DBConnStr"]).Replace(":custname:", customerName);
+            string newCustomerRegnURL = ConfigurationManager.AppSettings["PersonalTrainerRegnURL"] + customerName;
+
+            CustomerMaster cm = customerMasterRepository.AddCustomerMaster(new Core.Repository.Entities.TKGMaster.CustomerMaster()
+            {
+                Category = (int)CustomerCategoryType.PersonalTrainer,
+                IsSuperAdmin = false,
+                IsActive = true,
+                CustomerAttachmentPath = "",
+                CustomerIDinTKG = customerID,
+                CustomerDisplayName = customerModel.OrganizationName,
+                CustomerName = customerName,
+                CustomerConnStr = newCustomerConnStr,
+                RegistrationURL = newCustomerRegnURL
+            });
+
+            if (cm != null)
+            {
+                mailService.SendMail(customerModel,
+                    "PersonalTrainerRegistration", customerModel.ContactEmail, "",
+                    "Thankyou for Registration", Server.MapPath("~/MailTemplates"), null);
+
+                mailService.SendMail(customerModel,
+                    "PersonalTrainerRegistrationIntimation", Convert.ToString(ConfigurationManager.AppSettings["AdminEmail"]), Convert.ToString(ConfigurationManager.AppSettings["AdminEmailCC"]),
+                    "Personal Trainer Registeration", Server.MapPath("~/MailTemplates"), null);
+
+                ro.Status = ReturnStatus.Redirect;
+                ro.Message = "Customer registered successfully" + "|" + customerID;
+            }
+
+            return Json(ro, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult RegisterIndividualAthlete([System.Web.Http.FromBody] UserRegistrationModel customerModel)
+        {
+            var ro = new ReturnObjectModel
+            {
+                Message = "Individual Athlete Registration failed",
+                Status = ReturnStatus.Err
+            };
+
+            if (_iAccount.UserExists(customerModel.UserName, customerModel.Email))
+            {
+                ro.Message = "Registration failed. User with such username/email exists!";
+                ro.Status = ReturnStatus.Err;
+                return Json(ro, JsonRequestBehavior.AllowGet);
+            }
+
+            var customer = _mapperService.Map<UserRegistrationModel, Customer>(customerModel);
+            customer.IsActive = true;
+            customer.IsDeleted = false;
+
+            if(customerModel.FreeEvaluationTime > 0)
+                customer.FreeTrialStartDate = DateTime.Today;
+            if(customerModel.FreeEvaluationTime > 0)
+                customer.FreeTrialEndDate =  DateTime.Today.AddDays(int.Parse(ConfigurationManager.AppSettings["IndividualAthleteTrialDays"]));
+
+            customer.Category = CustomerCategoryType.Individual;
+            customer.Address = ""; // TODO: temporary solution as far as we haven't address on form
+
+            // TODO: Next 4 lines is not necessary by logic and there is only as workaround (!) for some strange things happened aside.
+            var appServer = applicationServerManagementRepository.ListAllApplicationServers().FirstOrDefault();
+            var dbServer = databaseServerManagementRepository.ListAllDatabaseServers().FirstOrDefault();
+            customer.ApplicationServerId = appServer.ApplicationServerId;
+            customer.DatabaseServerId = dbServer.DatabaseServerId;
+
+            int customerId = customerRepository.SaveCustomerInfo(customer);
+            if (customerId > 0)
+            {
+                var contact = _mapperService.Map<UserRegistrationModel, Contact>(customerModel);
+                var user = _mapperService.Map<UserRegistrationModel, User>(customerModel);
+
+                contact.AddressOne = contact.AddressOne == null ? "" : contact.AddressOne;
+
+                user.ContactInformation = contact;
+                user.ContactInformation.Country = 1;
+                var sport = new Sport
+                {
+                    isActive = false,
+                    Name = customerModel.SportsName
+                };
+                user.Sport = sport;
+                user.SportID = _sportService.SaveOrGetSportId(sport);
+
+                var registration = new Registration()
+                {
+                    LocationId = customerModel.LocationID,
+                    DateAndTimeOfInterest = DateTime.Now,
+                    FranchiseEmailContact = false,
+                    MainFranchiseContact = false,
+                    FranchiseId = 9
+                };
+
+                if (customerModel.DOBIsBefore94)
+                {
+                    user.DOB = new DateTime(DateTime.Now.Year - 25, 1, 1);
+                }
+                else
+                {
+                    // TODO: temporary, fail on db level.
+                    user.DOB = DateTime.Now.AddYears(100);
+                }
+                user.IsPending = true;
+                user.TeamID = 1; //TODO: hardcoded TeamID
+                user.Password = SecurityUtility.EncryptText(ProjectTempValues.TemporaryPassword); //TODO: Temporary solution. Later to add a new field for unencrypted password
+                user.IsIndividualAthlete = true; //Used for only TKG. Please mark it as FALSE for all other customers
+                user.IsAccountEnabled = true;
+                user.ShowWelcome = true;
+
+
+                var userDetails = new UserDetails();
+                userDetails.Users.Add(user);
+                userDetails.RegistrationInfo = registration;
+                userDetails.Contacts.Add(contact);
+
+                
+                _registrationService.Register(userDetails);
+                
+                mailService.SendMail(customerModel,
+                    "IndividualAthleteRegistration", customerModel.Email, "",
+                    "Thankyou for Registration", Server.MapPath("~/MailTemplates"), null);
+
+                mailService.SendMail(customerModel,
+                    "IndividualAthleteRegistrationIntimation", Convert.ToString(ConfigurationManager.AppSettings["AdminEmail"]), Convert.ToString(ConfigurationManager.AppSettings["AdminEmailCC"]),
+                    "Individual Athlete Registeration", Server.MapPath("~/MailTemplates"), null);
+
+                ro.Status = ReturnStatus.Redirect;
+                ro.Message = "Customer registered successfully" + "|" + customerId;
+            }
+
+            return Json(ro, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult TKGThankyouPE()
+        {
+            return View();
+        }
+    }
+}

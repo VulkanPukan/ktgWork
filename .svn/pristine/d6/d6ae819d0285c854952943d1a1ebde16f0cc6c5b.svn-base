@@ -1,0 +1,341 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Exercises";
+    Layout = "~/Views/Admin/_Layout.cshtml";
+}
+<style>
+    .k-grid .k-alt {
+        background-color: #fafbfc; /* specify the alternate background-color */
+    }
+
+    .k-grid  .k-grid-header  .k-header {
+    white-space: normal;
+}
+
+    #exercisesGrid .k-grid-content, #exercisesGrid tr td:last-child {
+    overflow:visible;
+    }
+  
+    #exercisesGrid .k-grid-header {
+        padding-right: 0 !important;
+    }
+    #dvSiteFooter {
+        top: 50px !important;
+    }
+</style>
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+@*<link rel="stylesheet" href="../content/kendo.default.min.css" />*@
+@*<link rel="stylesheet" href="styles/kendo.default.mobile.min.css" />*@
+
+        <div class="main-content">
+            <h3>Exercises</h3>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="">
+                        <div class="panel-body">
+                            <div id="exercisesgridcontainer">
+                                <div class="clearfix">
+                                    <div class="pull-right">
+                                        <button type="button" onclick="ShowAddExercises();" class="btn btn-primary pull-right mb-sm"> <em class="fa fa-plus-circle fa-fw mr-sm"></em>Add Exercise</button>
+                                    </div>
+                                </div>
+                            <div id="exercisesGrid" style="margin-top:8px;" class="clearfix"></div>
+                                 <div id="excercisePager"></div>
+                            </div>
+                            <div id="EditExercises" style="display:none;">
+                                <div class="">
+                                    <div class="panel-heading">Edit Exercise</div>
+                                    <div class="panel-body">
+                                        <form class="form-horizontal">
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">Name*</label>
+                                                <div class="col-lg-10">
+                                                    <input type="text" placeholder="Name" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">Description*</label>
+                                                <div class="col-lg-10">
+                                                    <textarea style="height:102px;" id="taExerciseDesc2" rows="4" cols="49" maxlength="12000"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">Movement Type*</label>
+                                                <div class="col-lg-10">
+                                                    @*<input type="text" placeholder="Movement Type" class="form-control">*@
+                                                    <select class="form-control">
+                                                        <option selected="selected">Select Movement Type</option>
+                                                        <option>Acceleration</option>
+                                                        <option>Core</option>
+                                                        <option>Quickness</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">Body Weight%*</label>
+                                                <div class="col-lg-10">
+                                                    <input type="text" placeholder="Body Weight%" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="pull-right">
+                                                    <button type="submit" class="btn btn-sm btn-default">Cancel</button>
+                                                    <button type="submit" onclick="ShowExercisesGrid();" class="btn btn-primary btn-sm">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="AddExercises" style="display: none;">
+
+                                <div class="">
+                                    <div class="panel-heading">Add Exercise</div>
+                                    <div class="panel-body">
+                                        <form class="form-horizontal">
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">Name*</label>
+                                                <div class="col-lg-10">
+                                                    <input type="text" placeholder="Name" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">Description*</label>
+                                                <div class="col-lg-10">
+                                                    <textarea style="height:102px;" id="taExerciseDesc" rows="4" cols="49" maxlength="12000"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">Movement Type*</label>
+                                                <div class="col-lg-10">
+                                                    @*<input type="text" placeholder="Movement Type" class="form-control">*@
+                                                    <select class="form-control">
+                                                        <option selected="selected">Select Movement Type</option>
+                                                        <option>Acceleration</option>
+                                                        <option>Core</option>
+                                                        <option>Quickness</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">Body Weight%*</label>
+                                                <div class="col-lg-10">
+                                                    <input type="text" placeholder="Body Weight%" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="pull-right">
+                                                    <button type="submit" class="btn btn-sm btn-default">Cancel</button>
+                                                    <button type="submit" onclick="ShowExercisesGrid();" class="btn btn-primary btn-sm">Add</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+<!-- START Copy program modal-->
+<div id="copyExercises" tabindex="-1" role="dialog" aria-labelledby="copyExercisesLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="copyProgramLabel" class="modal-title">Copy Exercise</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel-default">
+                    <div class="panel-heading">Details</div>
+                    <div class="">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">From</label>
+                                <div class="col-lg-9">
+                                    <label class="control-label" style="text-align:left;">2 Circle / 4 Quads</label>
+                                </div>                                
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Name*</label>
+                                <div class="col-lg-9">
+                                    <input type="text" placeholder="New Exercise Name" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Description*</label>
+                                <div class="col-lg-9">
+                                    <input type="text" placeholder="New Exercise Description" class="form-control">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END copy program modal-->
+<!-- START confirm deletion modal-->
+<div id="confirmDeletion" tabindex="-1" role="dialog" aria-labelledby="confirmDeletionLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmDeletionLabel" class="modal-title">Confirm Deletion</h4>
+            </div>
+            <div class="modal-body">
+                Delete Exercise?
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-primary">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END confirm deletion modal-->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+
+    @*<link href="http://cdn.kendostatic.com/2013.1.319/styles/kendo.common.min.css" rel="stylesheet" type="text/css"/>
+    <link href="http://cdn.kendostatic.com/2013.1.319/styles/kendo.default.min.css" rel="stylesheet" type="text/css"/>*@
+    <script src="../Scripts/kendo.all.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+    
+
+        var excercisedataSource = new kendo.data.DataSource({
+            data:[
+               { Name: "2 Circle / 4 Quads", Description: '<a target="_blank" href="http://youtube.com">http://youtube.com</a>', MovementType: "Quickness", BodyWeight: "0"},
+               { Name: "3 Circle / 4 Quads", Description: "3 Circle / 4 Quads", MovementType: "Quickness", BodyWeight: "20" },
+               { Name: "4 Circle / 4 Quads", Description: "4 Circle / 4 Quads", MovementType: "Quickness", BodyWeight: "0"},
+               { Name: "5 Circle / 4 Quads", Description: "5 Circle / 4 Quads", MovementType: "Quickness", BodyWeight: "0" }
+            ],
+            pageSize: 10
+        });
+
+        $("#liConfig").addClass("active");
+        
+      
+            $('#liConfig ul').removeClass();
+            $('#liConfig ul').addClass('nav collapse in');
+      
+       
+
+        $("#exercisesGrid").kendoGrid({
+            selectable: "multiple cell",
+            allowCopy: true,
+            //height: 550,
+            scrollable: true,
+            sortable: true,
+            filterable: false,
+            
+            //pageable: {
+            //    input: true,
+            //    numeric: false
+            //},
+            columns: [
+                {
+                    field: "Name",
+                    template: '<a href="javascript:void(0)" onclick="ShowEditExercises();">#=Name#</a>'
+                },
+                {
+                    field: "Description",
+                    width: "200px", attributes: {
+                        style: 'white-space: nowrap '
+                    },
+                    template: '#=Description#'
+                },
+                { field: "MovementType", title: "Movement Type" },
+                { field: "BodyWeight", title: "Body Weight%" },
+                //{
+                //   field: "Copy",
+                //   width: "90px",
+                //   template: '<a href="javascript:void(0)" onclick="ShowCopyExercisePopup();">Copy</a>',
+                //   attributes: {
+                //                style: 'white-space: nowrap '
+                //                }
+                //},
+                //{
+                //    field: "Delete",
+                //    width: "90px",
+                //    template: '<a href="javascript:void(0)" onclick="ShowDeleteConfirmationPopup();">Delete</a>',
+                //    attributes: {
+                //        style: 'white-space: nowrap '
+                //    }
+                //}//,
+                {
+                    field: "Actions",
+                    title: "Actions",
+                    width: "180px",
+                    template: '<div class="btn-group mb-sm">' +
+                        '<button type="button" data-toggle="dropdown" class="btn btn-default">Select…</button>' +
+                        '<button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">' +
+                        '<span class="caret"></span>' +
+                        '</button>' +
+                        '<ul role="menu" class="dropdown-menu" style="min-width:102px !important;">' +
+                        '<li><a href="javascript:void(0);" onclick="ShowCopyExercisePopup();">Copy</a></li>' +
+                        '<li><a href="javascript:void(0);" onclick="ShowDeleteConfirmationPopup();">Delete</a></li>' +
+                        '</ul>' +
+                        '</div>',
+                }
+            ],
+            dataSource: excercisedataSource
+        });
+        excercisedataSource.read();
+        $("#excercisePager").kendoPager({
+            autoBind: true,
+            dataSource: excercisedataSource
+        });
+
+        $("#exercisessGrid").kendoTooltip({
+            filter: "td:nth-child(2)", //this filter selects the second column's cells
+            position: "right",
+            content: function (e) {
+                var dataItem = $("#exercisessGrid").data("kendoGrid").dataItem(e.target.closest("tr"));
+                var content = dataItem.Description;
+                return content;
+            }
+        }).data("kendoTooltip");
+        function ShowCopyExercisePopup(){
+            $('#copyExercises').modal('show');
+        }
+        function ShowDeleteConfirmationPopup() {
+            $('#confirmDeletion').modal('show');
+        }
+
+        function ShowEditExercises() {
+            $("#exercisesgridcontainer").hide();
+            $("#AddExercises").hide();
+            $("#taExerciseDesc2").kendoEditor({
+                resizable: {
+                    content: true,
+                    toolbar: true
+                }
+            });
+            $("#EditExercises").show();
+        }
+
+        function ShowAddExercises() {
+            $("#exercisesgridcontainer").hide();
+            $("#EditExercises").hide();
+            $("#taExerciseDesc").kendoEditor({
+                resizable: {
+                    content: true,
+                    toolbar: true
+                }
+            });
+            $("#AddExercises").show();
+        }
+
+        function ShowExercisesGrid() {
+            $("#exercisesgridcontainer").show();
+            $("#EditExercises").hide();
+            $("#AddExercises").hide();
+        }
+
+    </script>
+}

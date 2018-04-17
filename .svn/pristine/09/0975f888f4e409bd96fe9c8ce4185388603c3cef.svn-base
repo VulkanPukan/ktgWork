@@ -1,0 +1,13 @@
+﻿<p>Hi,</p>
+
+<p>@Model.CompleteName has sent you link for registration. Please click on the link and register.</p>
+
+@Model.RegistrationLink
+
+<p>If you have any problems, please contact sales@allsportsprofitness.com</p>
+
+<br />
+
+<p>This message is for informational purposes only. Please do not reply to this email.</p>
+
+<p>Thank You.</p>

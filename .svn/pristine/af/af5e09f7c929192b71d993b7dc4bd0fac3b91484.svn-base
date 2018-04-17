@@ -1,0 +1,285 @@
+﻿@{
+    ViewBag.Title = "Register with John";
+	Layout = "~/Views/Registration/_Layout.cshtml";
+}
+<form id="frmRegisterAthlete">
+    <div id="login-wrapper" style="width:680px;min-height:660px;">
+        <div id="login_header">
+	        <img src="~/images/logo-single.png" class="logo" alt="Strength Tracker" style="max-width:max-content;float:none !important;" />
+	    </div>
+        <h5 style="margin-top:0px !important;padding-top:5px !important;">Sign up with John Doe.</h5>
+        <div style="float:right;width:19.7%;">* Required fields</div>
+        <br />
+        <br />
+        <div id="inputs">
+            <input type="hidden" id="hdnAthleteID" value="0" />
+            <input type="hidden" name="userType" id="hdnUserType" value="3" />
+            <div class="form-block">
+                <input type="text" name="firstName" placeholder="First Name *" mandatory id="txtAthleteFirstName" style="float:left;width:45%;">
+            </div>
+            <div class="form-block">
+                <input type="text" name="lastName" placeholder="Last Name *" mandatory id="txtAthleteLastName" style="float:right;width:45%;">
+            </div>
+            <div class="form-block">
+                <input type="text" name="userName" placeholder="User Name *" mandatory id="txtAthleteSecondaryEmail" style="float:left;width:45%;">
+            </div>
+            <div class="form-block">
+                <input name="email" type="email" placeholder="Email *" mandatory id="txtAthleteEmail" style="float:right;width:45%;">
+            </div>
+            <div class="form-block">
+                <input name="addressOne" type="text" placeholder="Address1" id="txtAthleteAddress1" style="float:left;width:45%;" />
+            </div>
+            <div class="form-block">
+                <input  name="addressTwo" type="text" placeholder="Address2" id="txtAthleteAddress2" style="float:right;width:45%;"/>
+            </div>
+            <div class="form-block">
+                <input name="city" placeholder="City" type="text" id="txtAthleteCity" style="float:left;width:45%;" onblur="ChangeTab('ddlAthleteState');"/>
+            </div>
+            <div class="form-block">
+                <input type="text" name="ZipCode" placeholder="ZIP Code" id="txtAthleteZip" style = "float:right;width:18%;" onblur="ChangeTab('txtAthletePhone');" />
+                <div style="padding: 0px;">
+			        @Html.DropDownList("stateID", new SelectList(Model.States, "ID", "Abbreviation"), "Select a state", new { @style = "float:right;width:25%;padding:10px 10px;height:42px;margin-right:12px;border:thin solid #bed2e5;color:#000000;", @name = "state", @id="ddlAthleteState", @onblur="ChangeTab('txtAthleteZip');"})
+		        </div>
+            </div>
+            <div class="form-block">
+                <input type="text" name="phoneNumber" placeholder="Phone No" id="txtAthletePhone" style="float:left;width:45%;">
+            </div>
+            <div class="form-block">
+                <select name="Gender" mandatory id="ddlAthleteGender" style = "float:right;width:45%;border:thin solid #bed2e5;height:42px;padding:10px 0 10px 10px;" onblur="ChangeTab('DOBIsBefore94');">
+                    <option selected="selected" value="0">Select Gender *</option>
+                    <option value="1">Male</option>
+                    <option value="2">Female</option>
+                </select>
+            </div>
+            <div class="form-block">
+                <input type="text" name="sportsName" placeholder="Sport" id="txtAthleteSport" style="float:right;width:45%;margin-top:10px;" onblur="ChangeTab('ddlAthleteLocation');">
+            </div>
+            <div class="form-block"><!-- For some reason drop down has to be placed after the text box for select to be displayed on left. Same as Gender -->
+                <select name="DOBIsBefore94" mandatory id="DOBIsBefore94" style= "float:left;width:45%;border:thin solid #bed2e5;height:42px;padding:10px 0 10px 10px;" onblur="ChangeTab('txtAthleteSport');">
+                    <option selected="selected" value="0">Select Birth Year *</option>
+                    <option value="2">After 1994</option>
+                    <option value="1">Before 1994</option>
+                </select>
+            </div>
+            <div class="form-block">
+                &nbsp;
+            </div>
+            <div class="form-block">
+                @Html.DropDownList("location", new SelectList(Model.Locations, "ID", "LocationName"), "Select location *", new { @mandatory="mandatory", @id = "ddlAthleteLocation", @onchange="GetEvaluationTime();", @style = "margin-top:10px;float:left;width:45%;padding:10px 10px;height:42px;margin-right:12px;border:thin solid #bed2e5;" })
+            </div>
+            <div class="form-block">
+                <input type="text" name="Grade" placeholder="Grade" id="txtAthleteGrade" style = "float:right;width:45%;border:thin solid #bed2e5;height:42px;padding:10px 0 10px 10px;" onkeypress="return isNumber(event);" />
+            </div>
+            <input id="btnSubmitAlthlete" type="submit" value="Sign me up" style="width:55%;margin-top:350px;">
+        </div>
+        <div id="login_footer" style="text-align:center;">
+            <p>By clicking on 'Sign me up' above, you confirm that you accept the <a href="#">Terms of Use.</a></p>
+		</div>
+    </div>
+</form>
+@section Scripts {
+	<script src="~/Scripts/jquery.maskedinput.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		//var programs = @Html.Raw(Json.Encode(ViewBag.Programs));
+		$(document).ready(function() {
+			//$("#ddlAthleteProgram").empty();
+			//for (var i = 0; i < programs.length; i++) {
+			//	if (i == 5) {
+			//		$("#ddlAthleteProgram").append('<option selected="selected" value=' +
+			//			programs[i].ProgramID +
+			//			'>' +
+			//			programs[i].Name +
+			//			'</option>');
+			//	} else {
+			//		$("#ddlAthleteProgram").append('<option value=' + programs[i].ProgramID + '>' + programs[i].Name + '</option>');
+			//	}
+			//}
+			$('#txtAthleteDOB').mask("99/99/9999", { placeholder: "MM/DD/YYYY", clearIfNotMatch: true });
+			$('#txtAthleteZip').mask("99999");
+			$("#txtAthletePhone").mask("(999) 999-9999");
+			//ChangeDOBIs();
+
+			$("#btnSubmitAlthlete").click(function (e) {
+			    e.preventDefault();
+			    if (ValidateAthleteProfile()) {
+			        loading_img(true);
+					$.ajax({
+						type: "POST",
+						url: "../Registration/RegisterAthleteForJdoe",
+						data: $("#frmRegisterAthlete").serialize(),
+						success: function (result) {
+						    if (result != null) {
+						        if (result.Status == 1) {
+						            window.location.href = "../Registration/jdoethankyou";
+						        }
+						        else {
+                                    loading_img(false);
+                                    alert(result.Message);
+						        }
+						    }
+						},
+						error: function (xhr, ajaxOptions, thrownError) {
+							loading_img(false);
+						    alert(xhr.status);
+							alert(thrownError);
+						}
+					});
+				}
+			});
+		});
+
+		function ScheduleWithManager() {
+			if ($("#FreeEvaluationTime").val() === "3") {
+				$("#spnInfoIcon").show();
+			} else {
+				$("#spnInfoIcon").hide();
+			}
+		}
+
+		function ShowProfileDiv() {
+			$("#profileDiv").show();
+			$("#ChangePasswordDiv").hide();
+		}
+
+		$("input[type='image']").click(function() {
+			$("input[id='my_file']").click();
+		});
+
+		function ChangeDOBIs() {
+			$('#txtAthleteDOB').val('');
+			if ($("#DOBIsBefore94").val() === "1") {
+				$("#txtAthleteDOB").addClass("form-control mr col-lg-6");
+				$("#txtAthleteDOB").css("width", "41.3%");
+				$("#txtAthleteDOB").css("padding", "10px");
+				$("#AgeRangeForAdults").show();
+				$("#ageRange").css("float", "left");
+				$("#ageRange").css("margin-right", "10px");
+				$("#ageRange").css("margin-left", "5px");
+				$("#ageRange").show();
+				$("#ageRange").css("display", "inline-block");
+				$("#txtAthleteDOB").attr("placeholder", "MM/DD");
+				$('#txtAthleteDOB').mask("99/99", { placeholder: "MM/DD", clearIfNotMatch: true });
+			} else {
+				$("#txtAthleteDOB").addClass("form-control");
+				$("#ageRange").hide();
+				$("#AgeRangeForAdults").hide();
+				$("#txtAthleteDOB").css("width", "");
+				$("#txtAthleteDOB").css("padding", "");
+				$("#txtAthleteDOB").attr("placeholder", "MM/DD/YYYY");
+				$('#txtAthleteDOB').mask("99/99/9999", { placeholder: "MM/DD/YYYY", clearIfNotMatch: true });
+			}
+			//class="" placeholder="MM/DD/YYYY" style="width:45%;padding:10px;"
+		}
+
+		function GetEvaluationTime() {
+			if ($(ddlAthleteLocation).val() === "1") {
+				$("#ddlAthleteFreeEval").empty();
+				setTimeout(function() {
+						$("#ddlAthleteFreeEval").append('<option value ="0">Select Free Evaluation Time</option>');
+						$("#ddlAthleteFreeEval").append('<option value ="1">Monday 10 am</option>');
+						$("#ddlAthleteFreeEval").append('<option value ="2">Thursday 10 am</option>');
+						$("#ddlAthleteFreeEval").append('<option value ="3">Saturday 10 am</option>');
+					},
+					1000);
+
+			} else if ($(ddlAthleteLocation).val() === "2") {
+				$("#ddlAthleteFreeEval").empty();
+				setTimeout(function() {
+						$("#ddlAthleteFreeEval").append('<option value ="0">Select Free Evaluation Time</option>');
+						$("#ddlAthleteFreeEval").append('<option value ="4">Tuesday 9 am</option>');
+						$("#ddlAthleteFreeEval").append('<option value ="5">Wednesday 11 am</option>');
+						$("#ddlAthleteFreeEval").append('<option value ="6">Friday 11:30 am</option>');
+					},
+					1000);
+			} else {
+				$("#ddlAthleteFreeEval").empty();
+			}
+		}
+
+		function GetEvaluationDate() {
+			if ($(ddlAthleteFreeEval).val() === "1") {
+				$("#ddlAthleteFreeEvalDate").empty();
+				setTimeout(function() {
+						$("#ddlAthleteFreeEvalDate").append('<option value ="0">Select Free Evaluation Date</option>');
+						$("#ddlAthleteFreeEvalDate").append('<option value ="1">05/01/2017</option>');
+						$("#ddlAthleteFreeEvalDate").append('<option value ="2">05/08/2017</option>');
+						$("#ddlAthleteFreeEvalDate").append('<option value ="3">05/15/2017</option>');
+					},
+					1000);
+
+			} else if ($(ddlAthleteFreeEval).val() === "2") {
+				$("#ddlAthleteFreeEvalDate").empty();
+				setTimeout(function() {
+						$("#ddlAthleteFreeEvalDate").append('<option value ="0">Select Free Evaluation Date</option>');
+						$("#ddlAthleteFreeEvalDate").append('<option value ="1">05/04/2017</option>');
+						$("#ddlAthleteFreeEvalDate").append('<option value ="2">05/11/2017</option>');
+						$("#ddlAthleteFreeEvalDate").append('<option value ="3">05/18/2017</option>');
+					},
+					1000);
+			} else if ($(ddlAthleteFreeEval).val() === "3") {
+				$("#ddlAthleteFreeEvalDate").empty();
+				setTimeout(function() {
+						$("#ddlAthleteFreeEvalDate").append('<option value ="0">Select Free Evaluation Date</option>');
+						$("#ddlAthleteFreeEvalDate").append('<option value ="1">04/29/2017</option>');
+						$("#ddlAthleteFreeEvalDate").append('<option value ="2">05/06/2017</option>');
+						$("#ddlAthleteFreeEvalDate").append('<option value ="3">05/13/2017</option>');
+					},
+					1000);
+			} else if ($(ddlAthleteFreeEval).val() === "4") {
+				$("#ddlAthleteFreeEvalDate").empty();
+				setTimeout(function() {
+						$("#ddlAthleteFreeEvalDate").append('<option value ="0">Select Free Evaluation Date</option>');
+						$("#ddlAthleteFreeEvalDate").append('<option value ="1">05/02/2017</option>');
+						$("#ddlAthleteFreeEvalDate").append('<option value ="2">05/09/2017</option>');
+						$("#ddlAthleteFreeEvalDate").append('<option value ="3">05/16/2017</option>');
+					},
+					1000);
+			} else if ($(ddlAthleteFreeEval).val() === "5") {
+				$("#ddlAthleteFreeEvalDate").empty();
+				setTimeout(function() {
+						$("#ddlAthleteFreeEvalDate").append('<option value ="0">Select Free Evaluation Date</option>');
+						$("#ddlAthleteFreeEvalDate").append('<option value ="1">05/03/2017</option>');
+						$("#ddlAthleteFreeEvalDate").append('<option value ="2">05/10/2017</option>');
+						$("#ddlAthleteFreeEvalDate").append('<option value ="3">05/17/2017</option>');
+					},
+					1000);
+			} else if ($(ddlAthleteFreeEval).val() === "6") {
+				$("#ddlAthleteFreeEvalDate").empty();
+				setTimeout(function() {
+						$("#ddlAthleteFreeEvalDate").append('<option value ="0">Select Free Evaluation Date</option>');
+						$("#ddlAthleteFreeEvalDate").append('<option value ="1">04/28/2017</option>');
+						$("#ddlAthleteFreeEvalDate").append('<option value ="2">05/05/2017</option>');
+						$("#ddlAthleteFreeEvalDate").append('<option value ="3">05/12/2017</option>');
+					},
+					1000);
+			} else {
+				$("#ddlAthleteFreeEvalDate").empty();
+			}
+		}
+
+		function ValidateAthleteProfile() {
+		    var isModelStateValid = true;
+			$('*[mandatory]').each(function(i, el) {
+				var val = $(el).val();
+				if (($(el).is('select') && val == 0) || (!$(el).val())) {
+					isModelStateValid = false;
+					$(el).css({ "border-color": "#ff0000" });
+				} else {
+					$(el).css({ "border-color": "#dbd9d9" });
+				}
+			});
+			return isModelStateValid;
+		}
+		function ChangeTab(ctrl) {
+		    $("#" + ctrl).focus();
+		}
+		function isNumber(evt) {
+		    evt = (evt) ? evt : window.event;
+		    var charCode = (evt.which) ? evt.which : evt.keyCode;
+		    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+		        return false;
+		    }
+		    return true;
+		}
+	</script>
+}

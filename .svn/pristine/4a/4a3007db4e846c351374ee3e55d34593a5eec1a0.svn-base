@@ -1,0 +1,365 @@
+﻿using System;
+using System.Globalization;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+using StructureMap;
+using StrengthTracker2.Core.Repository.Contracts.Workout;
+using StrengthTracker2.Core.Repository.Contracts.AthleteManagement;
+using StrengthTracker2.Core.Repository.Contracts.ProgramManagement;
+using StrengthTracker2.Core.Repository.Contracts.Account;
+
+using StrengthTracker2.Web.Helpers;
+using StrengthTracker2.Web.Models;
+using StrengthTracker2.Web.Models.Workout;
+using StrengthTracker2.Core.Repository.Entities.Actors;
+using StrengthTracker2.Core.Repository.Entities.WorkoutManagement;
+using StrengthTracker2.Core.Repository.Contracts.TKGMaster;
+using StrengthTracker2.Core.Repository.Entities.TKGMaster;
+using StrengthTracker2.Web.Models.Admin;
+
+namespace StrengthTracker2.Web.Controllers
+{
+    public class WorkoutController : Controller
+    {
+        private IAthleteManagementRepository _iAthleteManagementRepository;
+        private IPositionMgmtRepository _iPositionMgmtRepository;
+        private IAccount _iAccount;
+        private IProgramManagementRepository _iProgramManagementRepository;
+        private IWorkoutManagement _iWorkoutManagement;
+        private ICustomerMasterMgmtRepository _iCustomerMgmt;
+
+        public WorkoutController()
+        {
+            _iAthleteManagementRepository = ObjectFactory.GetInstance<IAthleteManagementRepository>();
+            _iProgramManagementRepository = ObjectFactory.GetInstance<IProgramManagementRepository>();
+            _iPositionMgmtRepository = ObjectFactory.GetInstance<IPositionMgmtRepository>();
+            _iWorkoutManagement = ObjectFactory.GetInstance<IWorkoutManagement>();
+
+            _iAccount = ObjectFactory.GetInstance<IAccount>();
+            _iCustomerMgmt = ObjectFactory.GetInstance<ICustomerMasterMgmtRepository>();
+        }
+
+        //[Route("workout/session")]
+        public ActionResult DailyWorkoutSession()
+        {
+            var user = (User)Session["WorkoutUser"];
+
+            var athlete = _iAthleteManagementRepository.GetAthleteInfoByID(user.UserId);
+
+            var ap = _iAccount.GetFullUserInfoByUserID(user.UserId, true, true, true).Assessments.FirstOrDefault();
+
+            var pos = _iPositionMgmtRepository.ListPositionBySportID(athlete.SportID)
+                        .Where(p => p.ID == athlete.PositionID)
+                        .FirstOrDefault();
+
+            var program = _iProgramManagementRepository.GetProgrambyID(athlete.Program.Id);
+
+            // TODO: add check what session we chouled select in case of > 1 sessions present.
+            var workoutStatus = _iWorkoutManagement.GetUserWorkoutStatus(athlete.Program.Id, athlete.UserId).FirstOrDefault();
+            var tempWorkoutSession = _iWorkoutManagement.GetUserWorkoutSessionInfo(athlete.Program.Id, athlete.UserId).FirstOrDefault(); 
+
+            var target = new AthleteViewModel();
+            target.UserID = athlete.UserId;
+            target.AthleteName = string.Concat(athlete.FirstName, " ", athlete.LastName);
+            target.Email = athlete.UserName;
+            target.UserImagePath = athlete.UserImage.ImagePath;
+            target.IsActive = athlete.IsAccountEnabled;
+            target.School = athlete.SchoolName;
+            target.Phone = athlete.ContactInformation.PhoneNumber;
+            target.Sport = athlete.Sport.Name;
+            target.Program = athlete.Program.Title;
+            target.ProgramID = athlete.Program.Id;
+            target.Objective = athlete.Program.TrainingPhase;
+            target.Weight = ap.BodyMass;
+            target.Height = ap.StandingHeight;
+
+            if (pos != null)
+                target.Position = pos.Name;
+
+            int currentSession = 1;
+
+            if (System.Web.HttpContext.Current.Session["currentSession"] != null)
+            {
+                currentSession = 1;//(int)System.Web.HttpContext.Current.Session["currentSession"];
+                target.Step = "Step 1 Group A";
+            }
+            else
+            {
+                if(workoutStatus != null)
+                {
+                    currentSession = workoutStatus.SessionCompleted < program.TotalSessions ? workoutStatus.SessionCompleted + 1 : 0;
+
+                    System.Web.HttpContext.Current.Session["currentStep"] = workoutStatus.CompletedStep;
+                    System.Web.HttpContext.Current.Session["currentGroup"] = workoutStatus.CompletedGroup;
+
+                    target.Step = string.Format("{0} {1}", workoutStatus.CompletedStep, workoutStatus.CompletedGroup);
+                }
+                else
+                {
+                    target.Step = "Step 1 Group A";
+                }
+
+                System.Web.HttpContext.Current.Session["currentSession"] = currentSession;
+                System.Web.HttpContext.Current.Session["userID"] = user.UserId;
+                System.Web.HttpContext.Current.Session["ProgramID"] = athlete.Program.Id;
+            }
+                
+            target.Session = string.Format("{0} of {1}", currentSession, program.TotalSessions);
+
+            return View(target);
+        }
+
+        /// <summary>
+        /// Get list of exercises in JSON format for (kendoGrid) Exercises table.
+        /// </summary>
+        /// <param name="id">programID</param>
+        /// <returns></returns>
+        public JsonResult GetExercises(int progID, int userID)
+        {
+            //int currentSession = System.Web.HttpContext.Current.Session["currentSession"] == null ? 1 : Convert.ToInt32(System.Web.HttpContext.Current.Session["currentSession"]);
+            //int currentStep = System.Web.HttpContext.Current.Session["currentStep"] == null ? 1 : Convert.ToInt32(System.Web.HttpContext.Current.Session["currentStep"]);
+            //int currentGroup = System.Web.HttpContext.Current.Session["currentGroup"] == null ? 1 : Convert.ToInt32(System.Web.HttpContext.Current.Session["currentGroup"]);
+
+            int currentSession = 1;
+            int currentStep = 1;
+            int currentGroup = 1;
+
+            var specialSchedule = _iProgramManagementRepository.GetProgramInfoWithSchedule((int)progID)
+                .SpecialSchedules
+                .Where(s => s.SessionNum == currentSession);
+
+            var prograDetails = _iProgramManagementRepository.GetProgramExercises((int)progID);
+            var exercises = _iWorkoutManagement.GetSAQStivityDetails(true, true, false, true, true, 0, 0);
+
+            var workoutSessionList = _iWorkoutManagement.GetUserWorkoutSessionInfo(progID, userID);
+
+            var listExercises = new List<ExerciseViewModel>();
+            foreach (var item in specialSchedule)
+            {
+
+                var programExercises = prograDetails.ProgramExercises
+                    .Where(e => e.ProgramID == progID
+                        && e.ExerciseGroupID == item.Group
+                        && e.ExerciseStepID == item.Step);
+
+                if (programExercises == null) continue; // Probably assesment group
+
+                int count = 0;
+                foreach (var pe in programExercises)
+                {
+                    var ex = exercises.exercises.FirstOrDefault(e => e.Id == pe.ID);
+                    var et = prograDetails.ExerciseTempos.FirstOrDefault(t => t.ProgramExerciseID == ex.Id);
+
+                    //string tempo = "";
+                    //switch (et.Tempo)
+                    //{
+                    //    case 1:
+                    //        tempo = "3-0-X-1";
+                    //        break;
+                    //    case 2:
+                    //        tempo = "Slow";
+                    //        break;
+                    //    case 3:
+                    //        tempo = "Medium";
+                    //        break;
+                    //    case 4:
+                    //        tempo = "Fast";
+                    //        break;
+                    //}
+                    string tempo = TempoModel.Tempos.FirstOrDefault(k => k.Value == et.Tempo.ToString()).Key;
+
+                    string[] sets = null;
+                    if (workoutSessionList != null && workoutSessionList.Count > 0)
+                    {
+                        var session = workoutSessionList.FirstOrDefault(e => e.ExerciseID == ex.Id);
+
+                        if (session != null)
+                        {
+                            sets = session.ResponseVals.Split(',');
+                        }
+                        else
+                        {
+                            sets = new string[pe.NumeofSets];
+                            for (int i = 0; i < sets.Length; i++) sets[i] = "";
+                        }
+                    }
+                    else
+                    {
+                        sets = new string[5];
+                        sets[0] = "";
+                        sets[1] = "";
+                        sets[2] = "";
+                        sets[3] = "";
+                        sets[4] = "";
+                    }
+
+                    ExerciseViewModel exercise = new ExerciseViewModel()
+                    {
+                        id = (int)++count,
+                        TodaysExercise = ex.Name,
+                        Tempo = tempo,
+                        RestInterval = et.RestInterval,
+                        TargetLoad = "Load Recalc",
+                        ShowTargetLoad = false,
+                        TargetReps = et.TargetReps,
+                        Set1 = sets.Length > 0 ? sets[0] : null,
+                        Set2 = sets.Length > 1 ? sets[1] : null,
+                        Set3 = sets.Length > 2 ? sets[2] : null,
+                        Set4 = sets.Length > 3 ? sets[3] : null,
+                        Set5 = sets.Length > 4 ? sets[4] : null,
+                        Volume = 0
+                    };
+
+                    listExercises.Add(exercise);                
+                }
+            }
+            return this.Json(listExercises, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult ConfirmSession(int userID)
+        {
+            int currentSession = (int)System.Web.HttpContext.Current.Session["currentSession"];
+
+            System.Web.HttpContext.Current.Session["currentSession"] = currentSession + 1;
+
+            return RedirectToAction("DailyWorkoutSession", new { userID  = userID} );
+        }
+
+        [HttpPost]
+        public ActionResult UpdateSession(ExerciseViewModel result)
+        {
+            int currentSession = (int)System.Web.HttpContext.Current.Session["currentSession"];
+            int currentStep = (int)System.Web.HttpContext.Current.Session["currentStep"];
+            int currentGroup = (int)System.Web.HttpContext.Current.Session["currentGroup"];
+
+            var workoutSession = _iWorkoutManagement.GetUserWorkoutSessionInfo(result.ProgramID, result.UserID).FirstOrDefault();
+            if (workoutSession == null)
+            {
+                workoutSession = new UserWorkoutSessionInfo()
+                {
+                    UserID = result.UserID,
+                    ProgramID = result.ProgramID,
+                    ResponseVals = result.Set1, // Assume that we are going from 1 to 5 Set. So for new recordThis need validation on frontend.
+                    SessionID = currentSession,
+                    Step = currentStep,
+                    Group = currentGroup,
+                    ModifiedDate = DateTime.Now
+                };
+            }
+            else
+            {
+                string[] sets = workoutSession.ResponseVals.Split(',');
+
+                if (!string.IsNullOrEmpty(result.Set1)) sets[0] = result.Set1;
+                if (!string.IsNullOrEmpty(result.Set2)) sets[1] = result.Set2;
+                if (!string.IsNullOrEmpty(result.Set3)) sets[2] = result.Set3;
+                if (!string.IsNullOrEmpty(result.Set4)) sets[3] = result.Set4;
+                if (!string.IsNullOrEmpty(result.Set5)) sets[4] = result.Set5;
+
+                workoutSession.ResponseVals = string.Join(",", sets);
+                workoutSession.ModifiedDate = DateTime.Now;
+            }
+
+            if (_iWorkoutManagement.UpdateWorkoutSessionInfo(workoutSession))
+            {
+                return RedirectToAction("DailyWorkoutSession", new { userID = result.UserID });
+            }
+
+            
+            return View("Error");
+        }
+
+        /// <summary>
+        /// Accepts customer name as querystring and sets the session
+        /// </summary>
+        /// <param name="id">customer name</param>
+        /// <returns></returns>
+        [Route("{id=tkg}/workout/loginnew/")]
+        public ActionResult LoginNew(string id)
+        {
+            HttpCookie custCookie = null;
+            if (!string.IsNullOrEmpty(id))
+            {
+                custCookie = Request.Cookies["customerCookie"];
+
+                if (custCookie != null)
+                {
+                    //Add not equal check if the customer is not the same as in cookie
+                    id = Server.HtmlEncode(custCookie.Value);
+                }
+
+                var customer = _iCustomerMgmt.GetCustomerInfo(id);
+                if (customer != null)
+                {
+                    if (customer.CustomerName != null && customer.CustomerName != "")
+                    {
+                        custCookie = new HttpCookie("customerCookie");
+                        custCookie.Value = customer.CustomerName;
+
+                        Response.Cookies.Add(custCookie);
+
+                        Session["CustomerName"] = customer.CustomerName;
+                        Session["CustomerConnStr"] = customer.CustomerConnStr;
+                        Session["CustomerObj"] = customer;
+
+                        var model = new AthleteLoginViewModel();
+                        model.Users = new List<UserViewModel>();
+                        model.CurrentUser = (User)Session["AuthenticatedUser"];
+
+                        var list = _iAthleteManagementRepository.ListAllAthletes();
+                        list = list.Where(a => a.IsAccountEnabled == true).ToList();
+                        foreach (var item in list)
+                        {
+                            var target = new UserViewModel();
+                            target.UserId = item.UserId;
+                            target.FirstName = item.FirstName;
+                            target.LastName = item.LastName;
+                            target.ProfilePicture = item.UserImage.ImagePath;
+                            model.Users.Add(target);
+                        }
+
+                        return View(model);
+                    }
+
+                    return RedirectToAction("InvalidCustomer", "Account");
+                }
+            }
+
+            return RedirectToAction("InvalidCustomer", "Account");
+        }
+
+        [Route("workout/postlogin")]
+        public ActionResult LoginPost(int userId, string monthName, int dayNumber)
+        {
+            if (userId > 0 && monthName != null)
+            {
+                int month = DateTime.ParseExact(monthName, "MMMM", CultureInfo.CurrentCulture).Month;
+                if (dayNumber > 0 && month > 0)
+                {
+                    User user = _iAccount.GetUserDetailsbyIDandDOB(userId, dayNumber, month);
+                    if (user != null)
+                    {
+                        Session["WorkoutUser"] = user;
+
+                        var userDetails = _iAccount.GetUserInfoByID(user.UserId);
+                        if(userDetails != null)
+                        {
+                            Session["WorkoutUserDetails"] = userDetails;
+                        }
+
+                        var cookie = Helpers.Common.SetFormsAuthenticationCookie(user.UserName);
+                        Response.Cookies.Add(cookie);
+
+                        return Json(Url.Action("DailyWorkoutSession", "Workout"));
+                    }
+                }
+            }
+
+            return View();
+        }
+
+    }
+}

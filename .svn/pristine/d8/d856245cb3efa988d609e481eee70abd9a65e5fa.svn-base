@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Athlete/_Home.cshtml";
+}
+
+	<!-- Main container starts -->
+	<div class="main-container">
+		<!-- Row starts -->
+		<div class="row gutter" style="margin-right:0px">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				@*<a href="@Url.Action("ViewExercise", null, new { exerciseId=1, controller = "Athlete" }, Request.Url.Scheme)" class="block-80 red-bg">*@
+                <a href="@Url.Action("WorkoutOverview", null, new { controller = "Athlete" }, Request.Url.Scheme)" class="block-80 red-bg">
+					<i class="icon-accessibility text-white"></i>
+					<h5>Start My Workout</h5>
+				</a>
+			</div>
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<a href="@Url.Action("WorkoutProgress", null, new { controller = "Athlete" }, Request.Url.Scheme)" class="block-80 blue-bg">
+               
+					<i class="icon-line-graph"></i>
+					<h5>View My Progress</h5>
+				</a>
+			</div>
+			<div  class="col-md-12 col-sm-12 col-xs-12">
+				<a href="@Url.Action("ManageAccount", "Athlete")" class="block-80 yellow-bg">
+					<i class="icon-user3"></i>
+					<h5>Manage My Account</h5>
+				</a>
+			</div>
+		 	<div class="col-md-12 col-sm-12 col-xs-12">
+				<a href="Javascript:void(0);" onclick='Logout("@Url.Action("Logout", "Account")");' class="block-80 orange-bg">
+					<i class="icon-settings_power text-white"></i>
+					<h5>Logout</h5>
+				</a>
+			</div>
+		</div>
+		<!-- Row ends -->
+	</div>
+	

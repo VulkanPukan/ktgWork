@@ -1,0 +1,860 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Clients";
+    Layout = "~/Views/Coach/_LayoutNew.cshtml";
+}
+<style>
+    #coachGrid .k-grid-content, #coachGrid tr td:last-child {
+        overflow: visible;
+    }
+
+    #coachGrid .k-grid-content, #coachGrid tr td:last-child {
+        overflow: visible;
+    }
+
+    #coachGrid .k-grid-header {
+        padding-right: 0 !important;
+    }
+
+    #coachGrid .btn {
+        background-color: #ffffff !important;
+        border: 1px solid #e3ebf4 !important;
+    }
+</style>
+
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+<link href="~/Scripts/datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+<div class="top-bar clearfix">
+    <div class="container-fluid">
+        <div class="row gutter">
+            <div class="col-md-12 col-sm-6 col-xs-12">
+                <h3 class="page-title" style="float:left;">Athletes</h3> <div style="float:right;font-size:small;line-height:20px;margin-top:5px;margin-right:18px;"><ul><li><i class="fa fa-circle" aria-hidden="true" style="color:green;"></i> Active</li><li><i class="fa fa-circle" aria-hidden="true" style="color:red;"></i> Deactivated</li><li><i class="fa fa-circle" aria-hidden="true" style="color:orange;"></i> Pending</li></ul></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-container">
+    <div class="row gutter">
+        <div class="col-lg-12" style="padding-right:0px;padding-left:0px;">
+            <div class="panel-default">
+                <div class="panel-body" style="background-color:#f5f8fb !important">
+                    <div id="coachgridcontainer">
+                        <div id="divSaveClearFilters" style="text-align:right;margin-bottom:10px; margin-top: -20px;">
+                            <button type="button" class="btn btn-info" onclick="FilterSave();">
+                                <em class="fa fa-plus-circle fa-fw mr-sm"></em>Make Default
+                            </button>
+                            <button type="button" class="btn btn-danger" onclick="FilterClear();">
+                                Clear
+                            </button>
+                        </div>
+                        <div id="dvAthleteMessage" style="color: green;font-size: medium;margin-left: 380px;font-weight: bold;display:none;"></div>
+                        <div id="dvAthleteFilter" class="panel panel-default" style="border: 1px solid #e3ebf4 !important;">
+                            <div class="panel-body">
+                                <form role="form" class="form-inline">
+                                    <div class="form-group">
+                                        <label class="control-label">Filter Athletes By</label>
+                                        <br>
+                                        <div class="input-group">
+                                            <select onchange="FilterChange();" style="width: 200px;" id="lstFilterOptions" name="account" class="form-control">
+                                                <option value="">All Clients</option>
+                                                <option value="1">Free Assessment Date</option>
+                                                <option value="2">DW Date</option>
+                                                <option value="3">Pay Later</option>
+                                                <option value="4">Unscheduled Registration</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Select Date</label>
+                                        <br>
+                                        <div id="programDatepicker" style="width: 160px;" class="input-group date datetimepicker1">
+                                            <input id="startdate" type="text" readonly="readonly" class="form-control">
+                                            <span class="input-group-addon">
+                                                <span class="fa-calendar fa"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Start Time</label>
+                                        <br>
+                                        <div>
+                                            <div data-pick-date="false" style="width: 160px;" class="datetimepicker input-group date">
+                                                <input type="text" id="txtWorkoutFromTime" readonly="readonly" class="form-control" placeholder="Start Time">
+                                                <span class="input-group-addon">
+                                                    <span class="fa fa-clock-o"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">End Time</label>
+                                        <br>
+                                        <div class="location_list">
+                                            <div data-pick-date="false" style="width: 160px;" class="datetimepicker input-group date">
+                                                <input type="text" id="txtWorkoutToTime" readonly="readonly" class="form-control" placeholder="End Time">
+                                                <span class="input-group-addon">
+                                                    <span class="fa fa-clock-o"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Select Location</label>
+                                        <br>
+                                        <div class="input-group">
+                                            <select onchange="FilterChange();" id="lstLocation" name="Location" class="form-control"></select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Athlete Status</label>
+                                        <br>
+                                        <div class="input-group">
+                                            <select onchange="FilterChange();" id="lstAthleteStatus" name="Location" class="form-control" style="width:200px;">
+                                                <option value="">All</option>
+                                                <option value="Active" selected="selected">Active</option>
+                                                <option value="Deactivated">Deactivated</option>
+                                                <option value="Pending">Pending</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group pull-right">
+                                        <label class="control-label"></label>
+                                        <br>
+                                        <div class="location_list">
+                                            <input id="searchtext" type="text" placeholder="Search..." class="form-control" style="width: 120px;display:none;" autocomplete="off">
+                                        </div>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                        </div>
+                        <div id="coachGrid" style="margin-top: 8px;" class="clearfix"></div>
+                        <div id="coachPager"></div>
+                    </div>
+                    <div id="renewusers" style="display: none;">
+                        <div class="panel panel-light">
+                            <div class="panel-heading">
+                                <div class="pull-right" style="color:#ffffff">
+                                    * Required fields
+                                </div>
+                                <h4 class="panel-title">Client Activation</h4>
+                            </div>
+                            <div class="panel-body">
+                                <form class="form-horizontal">
+                                    <div class="form-group col-lg-6">
+                                        <label class="col-lg-5 control-label">Select Program</label>
+                                        <div class="col-lg-7">
+                                            <select name="SelectProgram" class="form-control m-b">
+                                                <option value="38">Normal Program</option>
+                                                <option value="18">Prog Day Time1</option>
+                                                <option value="61">ProgTest</option>
+                                                <option value="1">Serious Athlete Program</option>
+                                                <option value="49">Volleyball Explosive Power - Strength</option>
+                                                <option value="50">VolleyBall Test</option>
+                                                <option value="51">VolleyBall1</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label class="col-lg-5 control-label">Price</label>
+                                        <div class="col-lg-7">
+                                            <input placeholder="Price" value="180.00" readonly="readonly" class="form-control">
+                                        </div>
+                                    </div>
+                                    @*<div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">Select Track</label>
+                                            <div class="col-lg-7">
+                                                <select name="SelectTrack" class="form-control m-b">
+                                                    <option value="69">Track1</option>
+                                                    <option value="70">Track2</option>
+                                                </select>
+                                            </div>
+                                        </div>*@
+                                    <div class="form-group col-lg-6">
+                                        <label class="col-lg-5 control-label">Start Date *</label>
+                                        <div class="col-lg-7">
+                                            <div class="input-group date datetimepicker1">
+                                                <input type="text" readonly="readonly" class="form-control">
+                                                <span class="input-group-addon">
+                                                    <span class="fa-calendar fa"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label class="col-lg-5 control-label">Payment Mode</label>
+                                        <div class="col-lg-7">
+                                            <select name="PaymentMode" class="form-control m-b">
+                                                <option value="1">Cash Paid in Store</option>
+                                                <option value="2">Credit Card Paid in Store</option>
+                                                <option selected="selected" value="3">N/A</option>
+                                                @*<option value="3">Check Paid in Store</option>*@
+                                                @*<option value="4">Self Paid Online</option>*@
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label class="col-lg-5 control-label">Select Schedule</label>
+                                        <div class="col-lg-7">
+                                            <select name="SelectSchedule" class="form-control m-b">
+                                                <option value="2,4,6">Tue-Thu-Sat</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label class="col-lg-5 control-label">Workout Timing</label>
+                                        <div class="col-lg-7">
+                                            <select name="WorkoutTiming" class="form-control m-b">
+                                                <option value="10:00">10:00</option>
+                                                <option value="11:00">11:00</option>
+                                                <option value="12:00">12:00</option>
+                                                <option value="13:00">13:00</option>
+                                                <option value="14:00">14:00</option>
+                                                <option value="15:00">15:00</option>
+                                                <option value="16:00">16:00</option>
+                                                <option value="17:00">17:00</option>
+                                                <option value="18:00">18:00</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <label class="col-lg-5 control-label"></label>
+                                        <div class="col-lg-7">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label class="col-lg-5 control-label"></label>
+                                        <div class="col-lg-7">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <div class="col-lg-2">&nbsp;</div>
+                                        <div class="col-lg-10">
+                                            <div class="pull-right">
+                                                <button type="button" onclick="ShowcoachGrid();" class="btn btn-sm btn-danger">Cancel</button>
+                                                <button type="button" onclick="ShowcoachGrid();" class="btn btn-info btn-sm">Pay Later</button>
+                                                <button type="button" onclick="ShowcoachGrid();" class="btn btn-success btn-sm">Activate Client</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="historicalassesment" style="display: none;">
+                        <div class="">
+                            <div class="panel-heading bb">
+                                <label style="font-weight:normal;display: inline-block;max-width: 100%;margin-bottom: 5px;color:white;">Historical Assessments</label>
+                                <div class="required pull-right"><label style="margin-right:35px !important;color:white;">StrengthTracker Quotient:</label><span id="spnAverageQuotient" style="color:white"></span></div>
+                            </div>
+                            <div class="panel-body">
+
+                                <form class="form-horizontal">
+                                    <div class="form-group col-lg-12">
+                                        <div class="form-group col-lg-3 pull-left">
+                                            <select name="SelectAssessmentNumber" onchange="ChangeSessionNumber();" id="SelectAssessmentNumber" class="form-control m-b">
+                                                <option value="1">Initial Assessment</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12" style="padding-right:10px;width:102% !important;">
+                                        <div id="historicalAssessmentGrid" style="overflow: visible !important;" class="clearfix"></div>
+                                        <input type="hidden" id="hdHistAssessmentUserID" />
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <button type="button" onclick="ShowcoachGrid();" class="btn btn-sm btn-info pull-right">Go Back</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmDeletion" tabindex="-1" role="dialog" aria-labelledby="confirmDeletionLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmDeletionLabel" class="modal-title">Confirm Deletion</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        Delete Athlete?
+                        <input type="hidden" id="hdAthleteForDel" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="DeleteAthlete();">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmActivationModal" tabindex="-1" role="dialog" aria-labelledby="confirmActivationLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmActivationModalLabel" class="modal-title">Confirm Status Change</h4>
+            </div>
+            <div class="modal-body">
+                <div id="dvDeactivate" style="display:none;">
+                    Update user status?
+                </div>
+                <div id="dvActivate">
+                    <table>
+                        <tr>
+                            <td style="padding-right:10px;">Program</td>
+                            <td style="padding-bottom:10px;"><select id="lstActiveProgram" class="form-control"></select></td>
+                        </tr>
+                        <tr>
+                            <td style="padding-right:10px;">Activation Date</td>
+                            <td><input type="text" id="txtAthleteActivationDate" class="form-control" placeholder="MM/DD/YYYY"></td>
+                        </tr>
+                    </table>
+                </div>
+                <input type="hidden" id="hdUserCurrentStatus" />
+                <input type="hidden" id="hdstatusUserID" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <input type="button" class="btn btn-primary" value="Update" onclick="UpdateUserStatus();" />
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmActivation" tabindex="-1" role="dialog" aria-labelledby="confirmActivationLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmActivationLabel" class="modal-title">Confirm Updation</h4>
+            </div>
+            <div class="modal-body">
+                Update athlete status?
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-primary">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script src="../Scripts/kendo.all.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.2/jquery.cookie.js"></script>
+    <script src="~/Scripts/moment/min/moment.min.js"></script>
+    @*<script src="~/Scripts/moment/min/moment-with-langs.min.js"></script>*@
+    <script src="~/Scripts/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/jquery.maskedinput.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+        $(function () {
+            $('.datetimepicker1').datetimepicker({
+                disabledHours: true,
+                format: 'MM/DD/YYYY'
+            });
+            $('.datetimepicker1').on('dp.change',
+		        function (e) {
+		            //FilterChange();
+		        });
+            $('.datetimepicker').on('dp.change',
+		        function (e) {
+		            //FilterChange();
+		        });
+            $("#searchtext").keyup(function () {
+                //FilterChange();
+            });
+            $('#txtAthleteActivationDate').mask("99/99/9999", { placeholder: "MM/DD/YYYY", clearIfNotMatch: true });
+
+            var locationListItems = "<option value='' selected='selected'>All</option>";
+            $.ajax({
+                url: '@Url.Action("GetLocationsList", "Admin")',
+                type: "POST",
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (data) {
+                    $.each(data, function (index, item) {
+                        console.log(item);
+                        locationListItems += "<option value='" + item.ID + "'>" + item.LocationName + "</option>"
+                    });
+
+                    $("#lstLocation").html(locationListItems);
+                    FilterLoad();
+                    FilterChange();
+                }
+            });
+
+            $.ajax({
+                url: '@Url.Action("GetActiveProgramList", "Coach")',
+                type: "POST",
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (resp) {
+                    $("#lstActiveProgram").empty();
+                    $("#lstActiveProgram").append("<option value='0'>Select Program</option>");
+                    for (var i = 0; i < resp.length; i++) {
+                        $("#lstActiveProgram").append("<option value='" + resp[i].Id + "'>" + resp[i].Title + "</option>");
+                    }
+                }
+            });
+
+            //FilterLoad();
+        });
+
+        var coachdataSource = new kendo.data.DataSource({
+            transport: {
+                read: function (options) {
+                    $.ajax({
+                        type: "GET",
+                        url: "@Url.Action("GetAthletes",  "Coach")",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (result) {
+                            options.success(result.Data);
+                        }
+                    });
+                }
+            },
+            pageSize: 10
+        });
+
+        $("#coachGrid").kendoGrid({
+            //selectable: "multiple cell",
+            allowCopy: true,
+            scrollable: true,
+            sortable: true,
+            filterable: true,
+            //pageable: {
+            //    input: true,
+            //    numeric: false
+            //},
+            columns: [
+                {
+                    field: "",
+                    title: "",
+                    width: 30,
+                    filterable: false,
+                    //template: '#=StatusDisplayIcon#',
+                    template: '#if (PendingStatus == "Active") {# <i class="fa fa-circle" aria-hidden="true" style="color:green;"></i> #} else if (PendingStatus == "Deactivated") {# <i class="fa fa-circle" aria-hidden="true" style="color:red;"></i> #} else if (PendingStatus == "Pending") {# <i class="fa fa-circle" aria-hidden="true" style="color:orange;"></i> #}#',
+                    attributes: {
+                        style: 'white-space: nowrap;text-align:center;'
+                    }
+                },
+                {
+                    field: "ClientName",
+                    title: "Name",
+                    width: 200,
+                    template: '<img src="#=UserImagePath#"  onclick="ShowAthleteProfile(#=UserID#);"  width=45 height=45 style="cursor: pointer;" alt="Image" width=45 height=45 class="img-thumbnail img-circle"> &nbsp;<a href="javascript:void(0)" onclick="ShowAthleteProfile(#=UserID#);">#=AthleteName#</a>',
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                //{
+                //    field: "Email",
+                //    attributes: {
+                //        style: 'white-space: nowrap '
+                //    },
+                //    width: 60,
+                //    template: '<a href="mailto:#=Email#" target="_top">#=Email#</a>'
+                //},
+                //{
+                //    field: "SecondaryEmail",
+                //    title: "Secondary Email",
+                //    width: 80,
+                //    attributes: {
+                //        style: 'white-space: wrap '
+                //    },
+                //    template: '<a href="mailto:#=SecondaryEmail#" target="_top">#=SecondaryEmail#</a>',
+                //},
+                {
+                    field: "Phone",
+                    width: 140,
+                    template: '#= (Phone) ? FormatPhoneNumber(Phone) : "" #',
+                    attributes: {
+                        style: 'white-space: nowrap;text-align:center;'
+                    }
+                },
+                {
+                    field: "Age",
+                    width: "68px",
+                    //template: '#if (Age == "-100") {# <span></span> #}',
+                    attributes: {
+                        style: 'white-space: nowrap;text-align:center;'
+                    }
+                },
+                //{
+                //    field: "School",
+                //    attributes: {
+                //        style: 'white-space: nowrap '
+                //    }
+                //},
+                {
+                    field: "Sport",
+                    width: "150px",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "Program",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "Session",
+                    width: "95px",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                //{
+                //    field: "Track",
+                //    attributes: {
+                //        style: 'white-space: nowrap '
+                //    }
+                //},
+                //{
+                //    field: "Step",
+                //    width: "90px",
+                //    attributes: {
+                //        style: 'white-space: nowrap '
+                //    }
+                //},
+                //{
+                //    field: "EvalDate",
+                //    title: "EvalDate",
+                //    attributes: {
+                //        style: 'white-space: nowrap '
+                //    }
+                //},
+                {
+                    field: "Actions",
+                    title: "Action",
+                    filterable: false,
+                    width: "120px",
+                    template: '<div class="btn-group mb-sm">' +
+                           '<button type="button" data-toggle="dropdown" class="btn" style="padding:6px 8px;">Select…</button>' +
+                           '<button type="button" data-toggle="dropdown" class="btn dropdown-toggle">' +
+                              '<span class="caret"></span>' +
+                           '</button>' +
+                           '<ul role="menu" class="dropdown-menu" style="max-width:110px !important;">' +
+                               '<li><a href="javascript:void(0);" onclick="ShowDeleteConfirmationPopup(#=UserID#);">Delete</a>' +
+                              '</li>' +
+                              '<li><a href="javascript:void(0);" onclick="ShowActivationConfirmationPopup(#=IsActive#, #=UserID#);">' +
+                              '#=DisplayActiveText#</a>' +
+                              '</li>' +
+                              '#if(HasHistoricalAssessment){# ' + '<li style="display:visible" >' + ' #}else{# ' + '<li style="display:none" >' + '#}#<a href="javascript:void(0);" onclick="ShowHistoricalassesment(#=UserID#);">Historical Assesment</a>' +
+                              '</li>' +
+                              '#if(IsInitialAssessmentComplete==false){# ' + '<li style="display:visible" >' + ' #}else{# ' + '<li style="display:none" >' + '#}#<a href="javascript:void(0);" onclick="ShowAssessment(#=UserID#);">Initial Assessment</a>' +
+                              '</li>' +
+                               '<li><a href="javascript:void(0);" onclick="ShowRenewUser();">Renew</a>' +
+                              '</li>' +
+                              '<li><a href="javascript:void(0);" onclick="ShowAthleteProfile(#=UserID#);">View Profile</a></li>' +
+                              '<li><a href="javascript:void(0);" onclick="ShowDashboard(\'#=AthleteName#\');">View Dashboard</a></li>' +
+                           '</ul>' +
+                        '</div>'
+                }
+            ],
+            dataSource: coachdataSource
+        });
+        //coachdataSource.read();
+
+        $("#coachPager").kendoPager({
+            autoBind: true,
+            dataSource: coachdataSource
+        });
+        var historicalAssessmentSource = new kendo.data.DataSource({
+            transport: {
+                read: function (options) {
+                    $.ajax({
+                        type: "GET",
+                        url: "@Url.Action("GetHistoricalAssessmentForUser", "Coach")",
+                        data: { userID: $("#hdHistAssessmentUserID").val(), sessionID: $("#SelectAssessmentNumber").val() },
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        success: function (result) {
+                            $("#spnAverageQuotient").text(result.Data[0].AverageSAQSQuotient);
+                            options.success(result.Data);
+                        }
+                    });
+                }
+            },
+            pageSize: 10
+        });
+        $("#historicalAssessmentGrid").kendoGrid({
+            //selectable: "multiple cell",
+            allowCopy: true,
+            scrollable: true,
+            sortable: true,
+            filterable: true,
+            autoBind: false,
+            //pageable: {
+            //    input: true,
+            //    numeric: false
+            //},
+            columns: [
+                {
+                    field: "MovementType",
+                    title: "Movement Type",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    },
+                    //template: "#=ProgramID#"
+                },
+                {
+                    field: "ExerciseName",
+                    title: "Exercise",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "UOM",
+                    title: "UOM",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "SAQQuotient",
+                    title: "Score",
+                    width: "80px",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                }
+            ],
+            dataSource: historicalAssessmentSource
+        });
+
+        function FilterChange() {
+            var filters = [];
+
+            //clients filter
+            if ($("#lstFilterOptions").val() != '')
+                filters.push({ field: "ClientType", operator: "eq", value: $("#lstFilterOptions").val() });
+
+            //location filter
+            if ($("#lstLocation").val() != '')
+                filters.push({ field: "LocationId", operator: "eq", value: $("#lstLocation").val() });
+
+            //searchtext
+            if ($("#searchtext").val() != '')
+                filters.push({ field: "AthleteName", operator: "contains", value: $("#searchtext").val() });
+
+            if ($("#lstAthleteStatus").val() != '')
+                filters.push({ field: "PendingStatus", operator: "eq", value: $("#lstAthleteStatus").val() });
+
+            //start date
+            if ($("#startdate").val() != '')
+                filters.push({ field: "ClientType", operator: "eq", value: $("#lstFilterOptions").val() });
+
+            if ($("#txtWorkoutFromTime").val() != '')
+                filters.push({ field: "ClientType", operator: "eq", value: $("#lstFilterOptions").val() });
+
+            if ($("#txtWorkoutToTime").val() != '')
+                filters.push({ field: "ClientType", operator: "eq", value: $("#lstFilterOptions").val() });
+
+            if (filters.length == 0)
+                $("#divSaveClearFilters").hide();
+            else
+                $("#divSaveClearFilters").show();
+
+            coachdataSource.filter({
+                logic: "and",
+                filters: filters
+            });
+
+            $("#coachGrid").data("kendoGrid").setDataSource(coachdataSource);
+            $('#coachGrid').data('kendoGrid').refresh();
+        }
+
+        function FilterSave() {
+            var athleteFilter = $("#lstFilterOptions").val();
+            var locationFilter = $("#lstLocation").val();
+            var statusFilter = $("#lstAthleteStatus").val()
+
+            if (athleteFilter) {
+                $.cookie("AthleteFilter", athleteFilter);
+            }
+            if (locationFilter) {
+                $.cookie("LocationFilter", locationFilter);
+            }
+
+            if (statusFilter) {
+                $.cookie("StatusFilter", statusFilter);
+            }
+        }
+
+        function FilterLoad() {
+            var athlete = $.cookie("AthleteFilter");
+            var location = $.cookie("LocationFilter");
+            var status = $.cookie("StatusFilter");
+            $("#lstFilterOptions").val(athlete);
+            $("#lstLocation").val(location);
+            $("#lstAthleteStatus").val(status);
+        }
+
+        function FilterClear() {
+            $.cookie("AthleteFilter", "");
+            $.cookie("LocationFilter", "");
+            $.cookie("StatusFilter", "");
+
+            FilterLoad();
+            FilterChange();
+        }
+
+        function ShowAssessment(userId) {
+            window.location = "../Coach/InitialAssessment/" + userId;
+        }
+
+        function ShowDeleteConfirmationPopup(userID) {
+            $("#hdAthleteForDel").val(userID);
+            $('#confirmDeletion').modal('show');
+        }
+
+        function ShowRenewUser() {
+            $("#coachgridcontainer").hide();
+            $("#renewusers").show();
+            $("#historicalassesment").hide();
+            $("#freeevaluation").hide();
+        }
+
+        function ShowHistoricalassesment(userID) {
+            $("#hdHistAssessmentUserID").val(userID);
+            console.log(userID);
+            $.ajax({
+                url: "@Url.Action("GetHistoricalAssessmentSessionNumbers", "Coach")",
+                type: "POST",
+                async: false,
+                data: { userID: userID },
+                success: function (resp) {
+                    $('#SelectAssessmentNumber').empty();
+                    var sessionID;
+                    if (resp.length > 0) {
+                        for (var i = 0; i < resp.length; i++) {
+                            if (i == 0) {
+                                sessionID = resp[i].AssessmentID;
+                            }
+                            $("#SelectAssessmentNumber").append("<option value='" + resp[i].AssessmentID + "'>" + resp[i].AssessmentName + "</option>");
+                        }
+
+                        $("#SelectAssessmentNumber").value = 1;
+
+                        historicalAssessmentSource.read();
+
+                        $('#historicalAssessmentGrid').data('kendoGrid').refresh();
+                    }
+                    $("#coachgridcontainer").hide();
+                    $("#renewusers").hide();
+                    $("#historicalassesment").show();
+                    $("#freeevaluation").hide();
+                }, error: function () {
+                    alert("Error! Please try again");
+                }
+            });
+        }
+
+        function ShowcoachGrid() {
+            $("#coachgridcontainer").show();
+            $("#renewusers").hide();
+            $("#historicalassesment").hide();
+            $("#freeevaluation").hide();
+        }
+        function ShowActivationConfirmationPopup(isUserActive, userID) {
+            if (isUserActive == true) {
+                $("#dvDeactivate").show();
+                $("#dvActivate").hide();
+            }
+            else {
+                $("#dvDeactivate").hide();
+                $("#dvActivate").show();
+            }
+            $("#hdstatusUserID").val(userID);
+            $("#hdUserCurrentStatus").val(isUserActive);
+            $('#confirmActivationModal').modal('show');
+        }
+
+        function ShowAthleteProfile(athleteID) {
+            window.location.href = "AthleteProfile?UserId=" + athleteID;
+        }
+
+        function ShowDashboard(atheleteName) {
+            window.location.href = "AthleteDashboard?aname=" + atheleteName;
+        }
+        function DeleteAthlete() {
+            $('#confirmDeletion').modal('hide');
+            $.ajax({
+                url: "@Url.Action("DeleteAthleteById", "Admin")",
+                type: "POST",
+                async: false,
+                data: { id: $("#hdAthleteForDel").val() },
+                success: function (result) {
+                    if (result.success == true) {
+                        alert("Athlete deleted successfully");
+                        coachdataSource.read();
+                    }
+                    else {
+                        alert(result.message);
+                    }
+
+                }, error: function () {
+                    alert("Error! Please try again");
+                }
+            });
+        }
+        function ChangeSessionNumber() {
+            historicalAssessmentSource.read();
+        }
+        function UpdateUserStatus() {
+            var athleteStatus = false;
+            var programID = 0;
+
+            if ($("#hdUserCurrentStatus").val() === "false") {
+                athleteStatus = true;
+                programID = $("#lstActiveProgram").val();
+            }
+            $.ajax({
+                url: "@Url.Action("ChangeAthleteStatus", "Coach")",
+                type: "POST",
+                async: false,
+                data: { userId: $("#hdstatusUserID").val(), userStatus: athleteStatus, programID: programID, activationDate: $("#txtAthleteActivationDate").val() },
+                success: function (result) {
+                    if (result.Status == 1) {
+                        $("dvAthleteMessage").show();
+                        $("#dvAthleteMessage").html("Athlete Status changed successfully");
+                        $("dvAthleteMessage").hide(1000);
+                        coachdataSource.read();
+                    }
+                    else {
+                        alert("Athlete Status changed successfully");
+                    }
+                    $('#confirmActivationModal').modal('hide');
+                }, error: function () {
+                    alert("Error! Please try again");
+                    $('#confirmActivationModal').modal('hide');
+                }
+            });
+        }
+        function FormatPhoneNumber(rawPhNum) {
+            var formattedPhNum = rawPhNum.replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, "($1)$2-$3");
+            return formattedPhNum;
+        }
+    </script>
+    <script type="text/javascript" charset="utf-8">
+        $("#liAthlete").addClass("active");
+    </script>
+}
+
+
+

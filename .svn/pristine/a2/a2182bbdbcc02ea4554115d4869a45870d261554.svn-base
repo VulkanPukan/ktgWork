@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Thank You";
+    Layout = "~/Views/Registration/_Layout.cshtml";
+}
+<form id="frmRegisterAthlete">
+    <div id="login-wrapper">
+        <div id="login_header">
+	        <img src="~/images/saqs-headerlogo.png" class="logo" alt="Strength Tracker" style="max-width:max-content;float:none !important;" />
+	    </div>
+        <h5>Thank you for registering with StrengthTracker.  Our Team will review your inputs and activate your account shortly. Customized login details will be sent by email.</h5>
+    </div>
+</form>

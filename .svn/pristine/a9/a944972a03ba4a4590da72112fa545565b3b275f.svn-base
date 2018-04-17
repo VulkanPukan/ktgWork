@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "Manage My Account";
+    Layout = "~/Views/Athlete/_MobileLayout.cshtml";
+}
+<script>
+	$(document).ready(function () {
+	    $.ajax({
+	        url: '../Athlete/GetUserDetails',
+	        success: function (data, textStatus, jqXHR) {
+	            if (data != null) {
+	                $('#txtFirstName').val(data.FirstName);
+	                $('#txtLastName').val(data.LastName);
+	                $('#txtAddress1').val(data.Address1);
+	                $('#txtAddress2').val(data.Address2);
+	            }
+	        }
+	    });
+	});
+</script>
+
+<div class="top-bar clearfix">
+	<!-- Container fluid starts -->
+	<div class="container-fluid">
+		<!-- Row starts -->
+
+		<div class="row gutter">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<div class="workout-btn-group" style="text-align:center;margin-top:20px">
+					<a href="javascript:GoToHome()" class="btn btn-danger" style="padding:7px;width:100px">Cancel</a>
+					<a href="javascript:void(0)" class="btn btn-success" style="padding:7px;width:100px">Save</a>
+				</div>
+                <div style="margin-top: 18px;text-align:right;">
+                    <a href="#" style="text-decoration-line:underline">Change Password</a>
+                </div>
+				<h3 class="page-title" style="text-align:center;white-space:nowrap;margin-top:-10px">Manage My Account</h3>
+			</div>
+		</div>
+		<!-- Row ends -->
+	</div>
+	</div>
+<div>
+	<!-- Container fluid ends -->
+	<div class="container-fluid" style="padding:0px 0px 0px 0px">
+		<div class="main-container" style="padding:20px 5px 20px 5px">
+			<!-- Row starts -->
+			<div class="row gutter">
+				<div class="col-md-12 col-sm-12 col-xs-12" style="padding-bottom:10px">
+					<p><b>First Name:</b></p><input id="txtFirstName" class="form-control input-sm" type="text" value="Joe">
+				</div>
+				<div class="col-md-12 col-sm-12 col-xs-12" style="padding-bottom:10px">
+					<p><b>Last Name:</b></p><input id="txtLastName" class="form-control input-sm" type="text" value="Smith">
+				</div>
+				<div class="col-md-12 col-sm-12 col-xs-12" style="padding-bottom:10px">
+					<p><b>Address:</b></p><input id="txtAddress1" class="form-control input-sm" type="text" value="111 ABC Street">
+				</div>
+				<div class="col-md-12 col-sm-12 col-xs-12" style="padding-bottom:10px">
+					<p><b>Address 2:</b></p><input id="txtAddress2" class="form-control input-sm" type="text" value="Apt. C">
+				</div>
+			</div>
+		</div>
+			<!-- Row ends -->
+	</div>
+</div>
+

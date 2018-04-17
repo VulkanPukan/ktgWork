@@ -1,0 +1,585 @@
+﻿@{
+    Layout = null;
+
+}
+
+<!DOCTYPE html>
+<html lang="en" class="no-ie">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <title>Daily Workout Session</title>
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="@Url.Content("~/content/bootstrap.css")">
+    <!-- Vendor CSS-->
+    <link rel="stylesheet" href="~/content/fontawesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/content/animo/animateanimo.css">
+    <!-- App CSS-->
+    <link rel="stylesheet" href="~/content/app.css">
+    <link rel="stylesheet" href="~/content/common.css">
+
+    <link rel="stylesheet" href="~/content/kendo.common.min.css" />
+    <link rel="stylesheet" href="~/content/kendo.silver.min.css">
+    <link href="~/Scripts/datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="~/Images/favicon.png">
+
+    <script src="~/Scripts/fastclick/fastclick.js" type="application/javascript"></script>
+
+    <style>
+        #dvSiteHeader {
+            width: 98.9% !important;
+        }
+
+        .titlebar {
+            color: #ffffff !important;
+            font-size: 17px;
+            line-height: 19px;
+            padding: 10px 15px !important;
+            padding-top: 20px !important;
+            background-color: #35394b !important;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="wrapper">
+        <nav role="navigation" class="navbar navbar-default navbar-top navbar-fixed-top titlebar" id="dvSiteHeader">
+            <div class="">
+                Strength Tracker
+                <label class="pull-right" style="padding-right:20px;">@DateTime.Now.ToShortDateString()</label>
+            </div>
+        </nav>
+
+        <div class="main-content">
+            <h3></h3>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel-default">
+                        <div class="panel-body">
+                            <div class="panel panel-body panel-default">
+                                <form role="form" class="form-inline">
+                                    <div class="col-lg-8 bg-primary pt pb mt">
+                                        <h4 class="bb mb mb">Daily Workout Session - @Html.Raw(Model.AthleteName)</h4>
+                                        <div class="form-group col-lg-6 mb mt">
+                                            <label class="col-lg-4 control-label">Session:</label>
+                                            <div class="col-lg-8">
+                                                @Html.Raw(Model.Session)
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6 mb mt">
+                                            <label class="col-lg-4 control-label">Program:</label>
+                                            <div class="col-lg-8">
+                                                @Html.Raw(Model.Program)
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6 mb">
+                                            <label class="col-lg-4 control-label">Step:</label>
+                                            <div class="col-lg-8">
+                                                @Html.Raw(Model.Step)
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6 mb">
+                                            <label class="col-lg-4 control-label">Sport/Position:</label>
+                                            <div class="col-lg-8">
+                                                @Html.Raw(Model.Sport) / @Html.Raw(Model.Position)
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-4 control-label">Height/Weight:</label>
+                                            <div class="col-lg-8">
+                                                @Html.Raw(string.Format("{0:0.#}", Model.Height))/@Html.Raw(string.Format("{0:0.#}", Model.Weight))
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-4 control-label">Objective:</label>
+                                            <div class="col-lg-8">
+                                                @Html.Raw(Model.Objective)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 mt">
+                                        <div class="mb">
+                                            <div class="panel-body bg-warning text-center">
+                                                <div class="mb-lg"></div>
+                                                <a style="color:#ffffff;" href="javascript: void(0);" onclick="ShowFinalizeSessionConfirmationPopup();">Finalize Daily Workout Session</a>
+                                                <div class="mb-sm"></div>
+                                            </div>
+                                        </div>
+                                        <div class="">
+                                            <div class="panel-body bg-warning text-center">
+                                                <div class="mb-lg"></div>
+                                                <a id="btnLogout" style="color:#ffffff;" href="@Url.Action("Login","Workout")">Return to exercising (30)</a>
+                                                <div class="mb-sm"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div id="workoutsessionGrid" style="margin-top:8px; overflow:visible !important;" class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- START Notes-->
+        <div id="notesPopup" tabindex="-1" role="dialog" aria-labelledby="notesLabel" aria-hidden="true" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                        <h4 id="notesLabel" class="modal-title">Notes</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-default">
+                            <div class="">
+                                <form class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">Notes</label>
+                                        <div class="col-lg-10">
+                                            <textarea style="height:102px;" id="txtNotes" rows="4" cols="49" maxlength="12000"></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END notes modal-->
+        <!-- START Recalculate Load-->
+        <div id="recalculateLoadPopup" tabindex="-1" role="dialog" aria-labelledby="recalculateLoadLabel" aria-hidden="true" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                        <h4 id="recalculateLoadLabel" class="modal-title">Recalculate Load</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-default">
+                            <div class="">
+                                <form class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">Actual Load</label>
+                                        <div class="col-lg-9">
+                                            <input type="text" placeholder="Actual Load" value="30" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">Actual Reps</label>
+                                        <div class="col-lg-9">
+                                            <input type="text" placeholder="Actual Reps" value="8" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">% 1RM</label>
+                                        <div class="col-lg-9">
+                                            85
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">1 Rep Max</label>
+                                        <div class="col-lg-9">
+                                            35
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">Target Load</label>
+                                        <div class="col-lg-9">
+                                            30
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                        <button type="button" class="btn btn-primary">Calculate Load</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END Recalculate Load-->
+        <!-- START Exercise Info-->
+        <div id="exerciseInfoPopup" tabindex="-1" role="dialog" aria-labelledby="exerciseInfoLabel" aria-hidden="true" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                        <h4 id="exerciseInfoLabel" class="modal-title">Exercise Info</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-default">
+                            <div class="">
+                                <form class="form-horizontal">
+                                    <div class="form-group">
+                                        <div id="exerciseDescription" class="col-lg-9"></div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END Exercise Info-->
+        <!-- START confirm deletion modal-->
+        <div id="confirmFinalizeSession" tabindex="-1" role="dialog" aria-labelledby="confirmFinalizeSessionLabel" aria-hidden="true" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                        <h4 id="confirmFinalizeSessionLabel" class="modal-title">Confirm Session Completion?</h4>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you have finished exercising for the day and have input all your data?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                        <button class="btn btn-primary" type="button" onclick="location.href='@Url.Action("ConfirmSession", "Workout", new { userID = Model.UserID })'">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END confirm deletion modal-->
+    </div>
+    <div class="modal fade" id="wkrOutConfirmModal" style="display:none;height:200px;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="ConfirmLogout();"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
+                <h4 class="modal-title">Workout</h4>
+            </div>
+            <div class="modal-body">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="text-align:center;">
+                            <div id="dvConfirmLogOutMsg">Do you need more time to finish updating the data?</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;">
+                            <button type="button" class="btn btn-primary" id="btnConfirmReset" onclick="ConfirmReset();">Yes</button>
+                            <button type="button" class="btn btn-primary" id="btnConfirmClose" onclick="ConfirmLogout();" style="margin-left: 20px !important">No</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+    </div>
+    </div>
+</div>
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/content/animo/animo.min.js"></script>
+    <script src="~/Scripts/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/chosen/chosen.jquery.min.js"></script>
+    <script src="~/Scripts/filestyle/bootstrap-filestyle.min.js"></script>
+    <script src="~/Scripts/storejson2.min.js"></script>
+    <script src="~/Scripts/slider/js/bootstrap-slider.js"></script>
+    <script src="~/Scripts/sparklines/jquery.sparkline.min.js"></script>
+    <script src="~/Scripts/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.resize.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.pie.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.time.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.categories.min.js"></script>
+    <script src="~/Scripts/app.js"></script>
+    <script src="~/Scripts/pages.js"></script>
+
+    <script src="~/Scripts/kendo.all.min.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
+        var timerCount = 0;
+        var timerPaused = false;
+        function ConfirmLogout() {
+            window.location.href = '@Url.Action("Login", "Workout")';
+        }
+        function ConfirmReset() {
+            timerCount = 0;
+            $("#btnLogout").text("Return to exercising (30)");
+            $("#wkrOutConfirmModal").modal("hide");
+        }
+        $(document).ready(function () {
+            var timerEvnt = setInterval(TimerEvent, 1000);
+        });
+    function TimerEvent() {
+        if (timerPaused === false) {
+            timerCount++;
+            var displayCount;
+            if (timerCount <= 30) {
+                displayCount = 30 - timerCount;
+                $("#btnLogout").text("Return to exercising (" + displayCount + ")");
+            }
+            else {
+                //var confirmClose = confirm("Do you need more time to finish updating the data?");
+                $("#wkrOutConfirmModal").modal("show");
+                @*if (confirmClose === true) {
+                timerCount = 0;
+                $("#btnLogout").text("Log out (30)");
+            }
+            else {
+                window.location.href = '@Url.Action("Logout", "Account")';
+            }*@
+            }
+        }
+    }
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+    $("#workoutsessionGrid").kendoGrid({
+        selectable: "row",
+        allowCopy: false,
+        scrollable: true,
+        sortable: true,
+        filterable: false,
+        editable: true,
+
+        edit: function(e){
+            console.log("Edit object:\n" + e);
+            if(e.model.Set1 === null){
+
+            }
+        },
+        save: function(e) {
+            if (e.values !== "") {
+                if (e.values!== e.model) {
+
+                    e.values.TodaysExercise = e.model.TodaysExercise;
+                    e.values.id = e.model.id;
+                    e.values.UserID = @Model.UserID;
+                    e.values.ProgramID = @Model.ProgramID;
+
+                    $.ajax({
+                        url: '/Workout/UpdateSession',
+                        type: 'POST',
+                        dataType: "json",
+                        contentType: 'application/json',
+                        data: JSON.stringify(e.values)
+                    });
+
+                    console.log("Save event fired for next parameter: ");
+                    console.log(e.values);
+
+                    // next call should be correct way of saving entered data to server but I've used direct ajax call to do it as a workaround.
+                    // commented for further investigation
+                    //this.dataSource.transport.update();
+                }
+            } else {
+                e.preventDefault();
+                console.log("Save event fired - value is empty");
+            }
+        },
+        dataBound: function(){
+            var grid = this;
+            this.tbody.find('tr').each(function () {
+                var item = grid.dataItem(this);
+                kendo.bind(this, item);
+            })
+        },
+        // All templates commented for fields that is editable due to problem
+        // with firing events (change, edit, save, etc) when templated!
+        columns: [
+            {
+                field: "TodaysExercise",
+                title: "Today's Exercise's",
+                width: "200px",
+                template: '#=TodaysExercise# <a href="javascript:ShowExerciseInfoPopup(\'#=Tempo#\')"><span class="fa fa-info-circle"></span></a>'
+            },
+            {
+                field: "Tempo",
+                title: "Tempo"
+            },
+            {
+                field: "RestInterval",
+                title: "Rest Interval"
+            },
+            {
+                field: "TargetLoad",
+                title: "Target Load"
+            },
+            {
+                field: "TargetReps",
+                title: "Target Reps"
+            },
+            {
+                width: "80px",
+                field: "Set1",
+                template: '<input value=\'#=Set1#\' style="width: 50px;text-align:center;" id="txtSet1" onkeypress="return isNumber(event);" />',
+                title: "Set 1"
+            }
+            ,
+            {
+                width: "80px",
+                field: "Set2",
+                template: '<input data-bind="value=\'#=Set2#\'" style="width: 50px;text-align:center;" onkeypress="return isNumber(event);" />',
+                title: "Set 2"
+            }
+            ,
+            {
+                width: "80px",
+                field: "Set3",
+                template: '<input data-bind="value=\'#=Set3#\'" style="width: 50px;text-align:center;" onkeypress="return isNumber(event);" />',
+                title: "Set 3"
+            },
+            {
+                width: "100px",
+                field: "Volume",
+                title: "Volume",
+                footerTemplate: "Total 0"
+            },
+            {
+                width: "90px",
+                //template: '<a href="#">Notes</a>',
+                template: '<a href="javascript:void(0);" onclick="ShowNotesPopup();">Notes</a>',
+                attributes: {
+                    style: 'white-space: nowrap '
+                }
+            }
+        ],
+
+        dataSource: {
+            transport: {
+                read: {
+                    url: "/Workout/GetExercises/?progID=" + @Model.ProgramID + "&userID=" + @Model.UserID,
+                    //data: { "userID" : @Model.UserID, ""}
+                    dataType: "json"
+                },
+                update: {
+                    url: "/Workout/UpdateSession",
+                    type: "post",
+                    dataType: "json"
+                },
+                //parameterMap: function(options, operation) {
+                //    if (operation !== "read" && options.models) {
+                //        return {models: kendo.stringify(options.models)};
+                //    }
+                //}
+            },
+            schema:{
+                model: {
+                    id: "id",
+                    fields: {
+                        id: {
+                            editable: false,
+                            nullable: true
+                        },
+                        TodaysExercise: {
+                            editable: false,
+                            nullable: false
+                        },
+                        Tempo: {
+                            editable: false,
+                            validation: { //set validation rules
+                                required: true
+                            }
+                        },
+                        RestInterval: {
+                            editable: false,
+                            nullable: false
+                        },
+                        TargetLoad: {
+                            editable: false,
+                            nullable: false
+                        },
+                        TargetReps: {
+                            editable: false,
+                            nullable: false
+                        },
+                        Set1: {
+                            editable: true,
+                            nullable: true
+                        },
+                        Set2: {
+                            editable: true,
+                            nullable: true
+                        },
+                        Set3: {
+                            editable: true,
+                            nullable: true
+                        },
+                        Set4: {
+                            editable: true,
+                            nullable: true
+                        },
+                        Set5: {
+                            editable: true,
+                            validation: {
+                                required: true,
+                                min: 1
+                            },
+                            nullable: true
+                        },
+                        UserID: {
+                            editable: false,
+                            nullable: false                            
+                        },
+                        ProgramID: {
+                            editable: false,
+                            nullable: false                            
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    $("#txtNotes").kendoEditor({
+        resizable: {
+            content: true,
+            toolbar: true
+        }
+    });
+
+    function ShowNotesPopup() {
+        $('#notesPopup').modal('show');
+    }
+
+    function ShowRecalculateLoadPopup() {
+        $('#recalculateLoadPopup').modal('show');
+    }
+
+    function ShowExerciseInfoPopup(t) {
+        var grid = $("#workoutsessionGrid").data("kendoGrid");
+        var gridData = grid._data;
+        var selectedRowIndex = grid.select().index();
+        var desc = "Today Exercise: ";
+
+        if(selectedRowIndex >= 0){
+            desc += gridData[selectedRowIndex]["TodaysExercise"] + ' <br> Tempo: ' + t;
+
+            $('#exerciseDescription').empty();
+            $('#exerciseDescription').append(desc);
+            //$('#exerciseDescription').append("<br><a href=\"http://www.bodybuilding.com\">bodybuilding.com</a>");
+
+            $('#exerciseInfoPopup').modal('show');
+        }
+    }
+
+    function ShowFinalizeSessionConfirmationPopup() {
+        $('#confirmFinalizeSession').modal('show');
+    }
+    </script>
+
+</body>
+</html>
+

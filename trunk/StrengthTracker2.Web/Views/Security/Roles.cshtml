@@ -1,0 +1,622 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Roles";
+    Layout = "~/Views/Admin/_LayoutNew.cshtml";
+}
+<style>
+    .k-grid .k-alt {
+        background-color: #fafbfc; /* specify the alternate background-color */
+    }
+
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+    }
+
+    #rolesGrid .k-grid-content, #rolesGrid tr td:last-child {
+        overflow: visible;
+    }
+
+    #rolesGrid .k-grid-header {
+        padding-right: 0 !important;
+    }
+
+    #dvSiteFooter {
+        top: 70px !important;
+    }
+
+    .alignCenter {
+        text-align: center;
+    }
+
+    .activeStatusContainer {
+        float: right;
+        font-size: small;
+        line-height: 20px;
+        margin-top: 5px;
+        margin-right: 18px;
+    }
+</style>
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+<div class="top-bar clearfix">
+    <div class="container-fluid">
+        <div class="row gutter">
+            <div class="col-md-12 col-sm-6 col-xs-12">
+                <h3 id="hPageTitle" class="page-title" style="float:left;">Roles</h3>
+                <div id="activeStatusContainer" class="activeStatusContainer">
+                    <div style="display: inline-flex">
+                        <ul>
+                            <li><i class="fa fa-circle" aria-hidden="true" style="color: green;"></i> Active</li>
+                            <li><i class="fa fa-circle" aria-hidden="true" style="color: red;"></i> Inactive</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-container">
+    <div class="row gutter">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="">
+                <div class="panel-body">
+                    <div id="rolesgridcontainer">
+                        <div id="divSaveClearFilters" style="text-align:right;margin-bottom:10px;display:none;">
+                            <button type="button" class="btn btn-info" onclick="FilterSave();">
+                                <em class="fa fa-plus-circle fa-fw mr-sm"></em>Make Default
+                            </button>
+                            <button type="button" class="btn btn-danger" onclick="FilterClear();">
+                                Clear
+                            </button>
+                        </div>
+
+                        <div class="clearfix">
+                            <label style="text-decoration:underline;"></label>
+                            <form role="form" class="form-inline">
+                                @if (Session["UserRole"] != null)
+                                {
+                                    var userRole = (StrengthTracker2.Core.Repository.Entities.Security.RoleDetails)(Session["UserRole"]);
+                                    var userPermissons = userRole.RolePermissions;
+                                    var canUserAccessRoles = userPermissons.Where(p => p.PermissionID == 6 && p.CanAdd == true).ToList();
+                                    if (canUserAccessRoles != null && canUserAccessRoles.Count > 0)
+                                    {
+                                        <button type="button" onclick="ShowAddRoles();" class="btn btn-primary pull-right  mb-sm" style="margin-top: 20px;">
+                                            <em class="fa fa-plus-circle fa-fw mr-sm"></em>Add Role
+                                        </button>
+                                    }
+                                }
+                                <div class="form-group">
+                                    <label class="control-label">Filter By Status</label>
+                                    <br>
+                                    <div class="input-group">
+                                        <select id="lstRoleStatus" onchange="FilterChange();" name="Status" class="form-control" style="width: 200px;">
+                                            <option selected="selected" value="">All</option>
+                                            <option value="true">Active</option>
+                                            <option value="false">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div id="rolesGrid" style="margin-top: 8px; overflow: visible !important;" class="clearfix"></div>
+                        <div id="rolesPager"></div>
+                    </div>
+                    <div id="EditRoles" style="display:none;">
+                        <div class="">
+                            <div class="panel-heading bb" style="font-weight:normal;color:white;">
+                                <span>Edit Role</span>
+                                <div class="required pull-right" style="float:right;">* Required fields</div>
+                            </div>
+                            <div class="panel-body">
+                                <form class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">Name*</label>
+                                        <div class="col-lg-10">
+                                            <input type="hidden" id="hdRoleID" />
+                                            <input id="txtEditRoleName" type="text" placeholder="Name" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">Description</label>
+                                        <div class="col-lg-10">
+                                            <input id="hdRoleType" type="hidden" />
+                                            <input id="hdRoleActive" type="hidden" />
+                                            <textarea id="txtEditRoleDescription" style="height:102px;" rows="4" cols="49" maxlength="12000"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">&nbsp;</div>
+                                    <div class="row">
+                                        <div class="panel-heading bb mt" style="font-weight:normal;color:white;">
+                                            Permissions
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <div id="rolesEditPermisssionGrid" style="margin-top:15px; overflow:visible !important; width:103%;" class="clearfix "></div>
+                                        <div id="editPermissionPager" style="width:103%;"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6">&nbsp;</div>
+                                    <div class="form-group col-lg-12" style="width:103% !important;">
+                                        <div class="col-lg-5">&nbsp;</div>
+                                        <div class="pull-right">
+                                            <button type="button" onclick="ShowRolesGrid();" class="btn btn-sm btn-default">Cancel</button>
+                                            <button type="button" onclick="UpdateRole();" class="btn btn-success mb-lg">Save</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="AddRoles" style="display:none;">
+                        @using (Ajax.BeginForm("AddEditRoles", "Roles", new AjaxOptions { HttpMethod = "POST", OnSuccess = "addEditRolesResult" }, new { id = "AddEditRolesForm" }))
+                        {
+                            @Html.Hidden("RoleID", -1)
+                            <div class="">
+                                <div class="panel-heading bb" style="font-weight:normal;color:white;">
+                                    <span>Add Role</span>
+                                    <div class="required pull-right" style="float:right;">* Required fields</div>
+                                </div>
+                                <div class="panel-body form-horizontal">
+                                    <form class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-lg-2 control-label">Name*</label>
+                                            <div class="col-lg-10">
+                                                @Html.TextBox("Name", "", new { @id = "txtAddRoleName", @class = "form-control", @placeholder = "Name", @required = "required" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-2 control-label">Description*</label>
+                                            <div class="col-lg-10">
+                                                @Html.TextArea("Description", "", new { @id = "txtAddRoleDescription", @class = "form-control", rows = "4", cols = "49", maxlength = "12000", @placeholder = "Description", @required = "required" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-12">&nbsp;</div>
+                                        <div class="row">
+                                            <div class="panel-heading bb mt" style="font-weight:normal;color:white;">
+                                                Permissions
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-12">
+                                            <div id="rolesAddPermisssionGrid" style="margin-top:15px; overflow:visible !important;width:103%;" class="clearfix"></div>
+                                            <div id="addpermissionPager" style="width:103%;"></div>
+                                        </div>
+                                        <div class="form-group col-lg-6">&nbsp;</div>
+                                        <div class="form-group col-lg-12" style="width:103% !important;">
+                                            <div class="col-lg-5">&nbsp;</div>
+                                            <div class="pull-right">
+                                                <button type="button" onclick="ShowRolesGrid();" class="btn btn-sm btn-default">Cancel</button>
+                                                <input type="button" onclick="return CreateRole()" class="btn btn-success mb-lg" value="Save" />
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmDeletion" tabindex="-1" role="dialog" aria-labelledby="confirmDeletionLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmDeletionLabel" class="modal-title">Confirm Deletion</h4>
+            </div>
+            <div class="modal-body">
+                Delete Role?
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="DeleteRoles();">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmActivation" tabindex="-1" role="dialog" aria-labelledby="confirmActivationLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmActivationLabel" class="modal-title">Confirm Updation</h4>
+            </div>
+            <div class="modal-body">
+                Update Role?
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="UpdateRoleStatus();">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script src="../Scripts/kendo.all.min.js"></script>
+    <script src="~/Scripts/StrengthTracker2/Roles.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $("#liRole").addClass("active");
+        FilterChange();
+
+        var roleDetailsModel = null;
+        var addpermissiondataSource = new kendo.data.DataSource({
+            data: [],
+            pageSize: 15,
+            schema: {
+                model: {
+                    id: "RolePermissionID",
+                    fields: {
+                        RoleID: { editable: false },
+                        PermissionID: { editable: false },
+                        PermissionName: { editable: false },
+                        CanView: { editable: true, type: "boolean" },
+                        CanAdd: { editable: true, type: "boolean" },
+                        CanEdit: { editable: true, type: "boolean" },
+                        CanDelete: { editable: true, type: "boolean" }
+                    }
+                }
+            }
+        });
+        var editpermissiondataSource = new kendo.data.DataSource({
+            data: [],
+            pageSize: 15,
+            schema: {
+                model: {
+                    id: "RolePermissionID",
+                    fields: {
+                        RoleID: { editable: false },
+                        PermissionID: { editable: false },
+                        PermissionName: { editable: false },
+                        CanView: { editable: true, type: "boolean" },
+                        CanAdd: { editable: true, type: "boolean" },
+                        CanEdit: { editable: true, type: "boolean" },
+                        CanDelete: { editable: true, type: "boolean" }
+                    }
+                }
+            }
+        });
+        $("#rolesAddPermisssionGrid").kendoGrid({
+            //selectable: "multiple cell",
+            allowCopy: true,
+            scrollable: true,
+            sortable: true,
+            filterable: false,
+            columns: [
+                {
+                    field: "PermissionName",
+                    title: "Permission Name",
+                },
+                {
+                    field: "CanView",
+                    title: "View",
+                    template: '<input type="checkbox" id="#=RowID#CanView" #if(CanView==true){# checked #}# onchange="ChangeModelData(this,\'CanView\',\'Edit\', #=id#);">',
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "CanAdd",
+                    title: "Add",
+                    template: '<input type="checkbox" id="#=RowID#CanAdd" #if(CanAdd==true){# checked #}# onchange="ChangeModelData(this,\'CanAdd\',\'Edit\');" #=DisableAdd#>',
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                }, {
+                    field: "CanEdit",
+                    title: "Edit",
+                    template: '<input type="checkbox" id="#=RowID#CanEdit" #if(CanEdit==true){# checked #}# onchange="ChangeModelData(this,\'CanEdit\',\'Edit\');" #=DisableEdit#>',
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "CanDelete",
+                    title: "Delete",
+                    template: '<input type="checkbox" id="#=RowID#CanDelete" #if(CanDelete==true){# checked #}# onchange="ChangeModelData(this,\'CanDelete\',\'Edit\');" #=DisableDelete#>',
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                }
+            ],
+            dataSource: addpermissiondataSource
+        });
+        addpermissiondataSource.read();
+
+        $("#addpermissionPager").kendoPager({
+            autoBind: true,
+            dataSource: addpermissiondataSource
+        });
+
+        function ChangeModelData(obj, key, mode) {
+            var grid = null;
+            var model = null;
+            if (mode == "Edit") {
+                grid = $("#rolesEditPermisssionGrid").data("kendoGrid");
+            }
+            else {
+                grid = $("#rolesAddPermisssionGrid").data("kendoGrid");
+            }
+            model = grid.dataItem($(event.target).closest("tr"));
+            if (model == null)
+                return;
+
+
+            switch (key) {
+                case "CanView":
+                    model.CanView = obj.checked;
+                    break;
+                case "CanEdit":
+                    model.CanEdit = obj.checked;
+                    break;
+                case "CanDelete":
+                    model.CanDelete = obj.checked;
+                    break;
+                case "CanAdd":
+                    model.CanAdd = obj.checked;
+                    break;
+            }
+            if (obj.checked) {
+                model.CanView = true;
+                $("#" + model.RowID + "CanView")[0].checked = true;
+            }
+            if (key == "CanView" && obj.checked == false) {
+                model.CanEdit = false;
+                model.CanDelete = false;
+                model.CanAdd = false;
+                $("#" + model.RowID + "CanEdit")[0].checked = false;
+                $("#" + model.RowID + "CanDelete")[0].checked = false;
+                $("#" + model.RowID + "CanAdd")[0].checked = false;
+            }
+
+            //if (key == "CanView") {
+            //    model.CanView = obj.checked;
+            //}
+            //else if (key == "CanEdit") {
+            //    model.CanEdit = obj.checked;
+            //}
+            //else if (key == "CanDelete") {
+            //    model.CanDelete = obj.checked;
+            //}
+            //else if (key == "CanAdd") {
+            //    model.CanAdd = obj.checked;
+            //}
+            model.dirty = true;
+        }
+
+        $("#rolesEditPermisssionGrid").kendoGrid({
+            selectable: "multiple cell",
+            allowCopy: true,
+            scrollable: true,
+            sortable: true,
+            filterable: false,
+            columns: [
+                {
+                    field: "PermissionName",
+                    title: "Permission Name",
+                },
+                {
+                    field: "CanView",
+                    title: "View",
+                    template: '<input type="checkbox" id="#=RowID#CanView" #if(CanView==true){# checked #}# onchange="ChangeModelData(this,\'CanView\',\'Edit\', #=id#);">',
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "CanAdd",
+                    title: "Add",
+                    template: '<input type="checkbox" id="#=RowID#CanAdd" #if(CanAdd==true){# checked #}# onchange="ChangeModelData(this,\'CanAdd\',\'Edit\');" #=DisableAdd#>',
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                }, {
+                    field: "CanEdit",
+                    title: "Edit",
+                    template: '<input type="checkbox" id="#=RowID#CanEdit" #if(CanEdit==true){# checked #}# onchange="ChangeModelData(this,\'CanEdit\',\'Edit\');" #=DisableEdit#>',
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "CanDelete",
+                    title: "Delete",
+                    template: '<input type="checkbox" id="#=RowID#CanDelete" #if(CanDelete==true){# checked #}# onchange="ChangeModelData(this,\'CanDelete\',\'Edit\');" #=DisableDelete#>',
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                }
+            ],
+            dataSource: editpermissiondataSource,
+
+        });
+        editpermissiondataSource.read();
+        $("#editPermissionPager").kendoPager({
+            autoBind: true,
+            dataSource: editpermissiondataSource
+        });
+        function ShowEditRoles(roleID) {
+            $("#rolesgridcontainer").hide();
+            $("#AddRoles").hide();
+            $("#activeStatusContainer").hide();
+            var editor = $("#txtEditRoleDescription").data("kendoEditor");
+            if (editor == undefined) {
+                $("#txtEditRoleDescription").kendoEditor({
+                    resizable: {
+                        content: true
+                    },
+                    tools: []
+                });
+            }
+            $("#EditRoles").show();
+            $.ajax({
+                url: '../Security/GetRoleByID',
+                type: "POST",
+                data: JSON.stringify({ 'roleID': roleID }),
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (result) {
+                    roleDetailsModel = result;
+                    if (result != null && result.Role != null) {
+                        var editor = $("#txtEditRoleDescription").data("kendoEditor");
+                        editor.value(result.Role.RoleDescription);
+                        $("#txtEditRoleName").val(result.Role.RoleName);
+                        $("#hdRoleID").val(result.Role.RoleID);
+                    }
+                    if (result != null && result.RolePermissions != null) {
+                        var sGrid = $("#rolesEditPermisssionGrid").data("kendoGrid").dataSource.data(result.RolePermissions);
+                        $("#rolesEditPermisssionGrid").data("kendoGrid").refresh();
+                    }
+                },
+                error: function (req, status, errorObj) {
+                    alert('Error: Please try again');
+                }
+            });
+        }
+        function ShowAddRoles() {
+            $("#rolesgridcontainer").hide();
+            $("#EditRoles").hide();
+            $("#activeStatusContainer").hide();
+            var editor1 = $("#txtAddRoleDescription").data("kendoEditor");
+            if (editor1 == undefined) {
+                $("#txtAddRoleDescription").kendoEditor({
+                    resizable: {
+                        content: true
+                    },
+                    tools: []
+                });
+            }
+
+            $("#AddRoles").show();
+
+            $.ajax({
+                url: '../Security/GetRoleByID',
+                type: "POST",
+                data: JSON.stringify({ 'roleID': 0 }),
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (result) {
+                    roleDetailsModel = result;
+                    if (result != null && result.Role != null) {
+                        var editor1 = $("#txtAddRoleDescription").data("kendoEditor");
+                        editor1.value(result.Role.RoleDescription);
+                        $("#txtAddRoleName").val(result.Role.RoleName);
+                    }
+                    if (result != null && result.RolePermissions != null) {
+                        var sGrid = $("#rolesAddPermisssionGrid").data("kendoGrid").dataSource.data(result.RolePermissions);
+                        $("#rolesAddPermisssionGrid").data("kendoGrid").refresh();
+                    }
+                },
+                error: function (req, status, errorObj) {
+                    alert('Error: Please try again');
+                }
+            });
+        };
+        function ShowRolesGrid() {
+            $("#rolesgridcontainer").show();
+            $("#EditRoles").hide();
+            $("#AddRoles").hide();
+            $("#activeStatusContainer").show();
+        };
+        function UpdateRole() {
+            if (roleDetailsModel != null && roleDetailsModel.Role != null) {
+                roleDetailsModel.Role.RoleDescription = $("#txtEditRoleDescription").val();
+                roleDetailsModel.Role.RoleName = $("#txtEditRoleName").val();
+                roleDetailsModel.Role.RoleID = $("#hdRoleID").val();
+            }
+            $.each($("#rolesEditPermisssionGrid").data("kendoGrid").dataSource._data, function () {
+                if (this.dirty) { boolDirty = true; }
+            });
+            if (roleDetailsModel != null && roleDetailsModel.RolePermissions != null) {
+                var gData = $("#rolesEditPermisssionGrid").data("kendoGrid").dataSource.data();
+                $.each(gData, function (key, value) {
+                    gDataObj = value;
+                    $.each(roleDetailsModel.RolePermissions, function (key, value) {
+                        if (gDataObj.PermissionID == value.PermissionID) {
+                            roleDetailsModel.RolePermissions[key].CanAdd = gDataObj.CanAdd;
+                            roleDetailsModel.RolePermissions[key].CanEdit = gDataObj.CanEdit;
+                            roleDetailsModel.RolePermissions[key].CanDelete = gDataObj.CanDelete;
+                            roleDetailsModel.RolePermissions[key].CanView = gDataObj.CanView;
+                        }
+                    });
+                });
+            }
+            loading_img(true);
+            $.ajax({
+                url: '@Url.Action("SaveRole", "Security")',
+                type: "POST",
+                data: JSON.stringify({ 'RoleDetails': roleDetailsModel }),
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (result) {
+                    alert(result);
+                    //window.location.reload();
+                },
+                error: function (req, status, errorObj) {
+                    alert('Error: Please try again');
+                }
+            });
+        };
+        function CreateRole() {
+            if (roleDetailsModel != null && roleDetailsModel.Role != null) {
+                roleDetailsModel.Role.RoleDescription = $("#txtAddRoleDescription").val();
+                roleDetailsModel.Role.RoleName = $("#txtAddRoleName").val();
+                roleDetailsModel.Role.RoleID = 0;
+                roleDetailsModel.Role.RoleType = 2;
+                roleDetailsModel.Role.IsActive = false
+            }
+            $.each($("#rolesAddPermisssionGrid").data("kendoGrid").dataSource._data, function () {
+                if (this.dirty) { boolDirty = true; }
+            });
+            if (roleDetailsModel != null && roleDetailsModel.RolePermissions != null) {
+                var gData = $("#rolesAddPermisssionGrid").data("kendoGrid").dataSource.data();
+                $.each(gData, function (key, value) {
+                    gDataObj = value;
+                    $.each(roleDetailsModel.RolePermissions, function (key, value) {
+                        if (gDataObj.PermissionID == value.PermissionID) {
+                            roleDetailsModel.RolePermissions[key].CanAdd = gDataObj.CanAdd;
+                            roleDetailsModel.RolePermissions[key].CanEdit = gDataObj.CanEdit;
+                            roleDetailsModel.RolePermissions[key].CanDelete = gDataObj.CanDelete;
+                            roleDetailsModel.RolePermissions[key].CanView = gDataObj.CanView;
+                        }
+                    });
+                });
+            };
+            loading_img(true);
+            $.ajax({
+                url: '@Url.Action("SaveRole", "Security")',
+                type: "POST",
+                data: JSON.stringify({ 'RoleDetails': roleDetailsModel }),
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (result) {
+                    alert(result);
+                    //window.location.reload();
+                },
+                error: function (req, status, errorObj) {
+                    alert('Error: Please try again');
+                }
+            });
+        };
+
+        function FilterChange() {
+            var filters = [];
+
+            // status filter
+            // we remember that the <select> element has string type of value?
+            if ($("#lstRoleStatus").val() === 'true')
+                filters.push({ field: "IsActive", operator: "eq", value: true });
+            else if ($("#lstRoleStatus").val() === 'false')
+                filters.push({ field: "IsActive", operator: "eq", value: false });
+
+            rolesdataSource.filter({
+                logic: "and",
+                filters: filters
+            });
+
+            $("#rolesGrid").data("kendoGrid").setDataSource(rolesdataSource);
+            $('#rolesGrid').data('kendoGrid').refresh();
+        }
+
+    </script>
+}

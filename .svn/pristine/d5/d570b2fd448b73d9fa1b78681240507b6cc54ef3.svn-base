@@ -1,0 +1,1 @@
+ALTER TABLE [dbo].[User] ADD [IsPending] [bit] NOT NULL DEFAULT 0

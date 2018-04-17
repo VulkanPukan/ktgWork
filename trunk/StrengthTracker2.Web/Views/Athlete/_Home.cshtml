@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>@ViewBag.Title</title>
+    <!-- Bootstrap CSS -->
+    <link href="@Url.Content("~/Scripts/mustang/css/bootstrap.min.css")" rel="stylesheet" />
+    <link href="~/Scripts/mustang/css/common.css" rel="stylesheet" />
+    <!-- Main CSS -->
+    <link href="~/Scripts/mustang/css/main.css" rel="stylesheet" id="themeSwitcher" />
+    <!-- Icomoon Icons CSS -->
+    <link href="~/Scripts/mustang/fonts/icomoon/icomoon.css" rel="stylesheet" />
+
+    <!-- HTML5 shiv and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="js/html5shiv.js"></script>
+        <script src="js/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="~/Content/DataTables/css/fixedColumns.dataTables.min.css" rel="stylesheet" />
+    <link href="~/Content/DataTables/css/fixedHeader.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/DataTables/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/DataTables/css/fixedColumns.bootstrap.min.css" rel="stylesheet" />
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="~/Scripts/mustang/js/jquery.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="~/Scripts/mustang/js/bootstrap.min.js"></script>
+    <!-- jquery ScrollUp JS -->
+    <script src="~/Scripts/mustang/js/scrollup.min.js"></script>
+    <!-- Theme Switcher -->
+    <script src="~/Scripts/mustang/js/themeSwitcher.js"></script>
+    <!-- Common JS -->
+    <script src="~/Scripts/mustang/js/common.js"></script>
+
+    <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/DataTables/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/DataTables/dataTables.fixedColumns.js"></script>
+    <script src="~/Scripts/StrengthTracker2/KTGMobileCommon.js"></script>
+
+    <script>
+        var currentExerciseSetIndex = 0;
+		function GoToHome() {
+			window.location.href = '@Url.Action("Home", null, new { controller = "Athlete" }, Request.Url.Scheme)';
+		}
+		function GoToWorkoutSummary() {
+			window.location.href = '@Url.Action("WorkoutSummary", null, new { controller = "Athlete" }, Request.Url.Scheme)';
+		}
+
+		function GoToMyWorkout() {
+			window.location.href = '@Url.Action("ViewWorkout", null, new { controller = "Athlete" }, Request.Url.Scheme)';
+		}
+		function GoToWorkoutOverview() {
+			window.location.href = '@Url.Action("WorkoutOverview", null, new {controller = "Athlete" }, Request.Url.Scheme)';
+		}
+		function GoToViewWorkout() {
+			window.location.href = '@Url.Action("ViewWorkout", null, new { controller = "Athlete" }, Request.Url.Scheme)';
+		}
+
+        function GoToViewExercise() {
+            var url = '@Url.Action("ViewExercise", "Athlete")?exerciseId=' + (currentExerciseSetIndex + 1);
+            window.location.href = url;
+        }
+
+        function GoToModifyExercise() {
+            var url = '@Url.Action("ModifyExercise", "Athlete")?exerciseId=' + (currentExerciseSetIndex+1);
+            window.location.href = url;
+        }
+
+		function GoToManageAccount() {
+		window.location.href = '@Url.Action("ManageAccount", null, new { controller = "Athlete" }, Request.Url.Scheme)';
+		}
+        function GoToViewExercise() {
+            var url = '@Url.Action("ViewExercise", "Athlete")?exerciseId=1';
+            window.location.href = url;
+        }
+		function GoToViewProgress() {
+		   window.location.href = '@Url.Action("ViewProgress", null, new { controller = "Athlete" }, Request.Url.Scheme)';
+        }
+        function WorkoutProgress()
+        {
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("WorkoutOverview", null, new { controller = "Athlete" }, Request.Url.Scheme)',
+                contentType: "application/json; charset=utf-8",
+                datatype: "json",
+                success: function (data) {
+
+                    $('#divWSModelBody').html(data);
+                    setTimeout(function () {
+                        $(window).trigger('resize');
+                        $('#modalForm').modal('show');
+                    } , 200 );
+                    //setTimeout( $('.modal').data()['bs.modal'].resize(),1000);
+                },
+                error: function () {
+                    $('#divWSModelBody').html("Content load failed.");
+
+                }
+            });
+        }
+        function Logout(logoutURL) {
+            $.ajax({
+                url: logoutURL,
+                type: "POST",
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (resp) {
+                    if (resp.Status === 3) {
+                        window.location.href = resp.RedirectLocation;
+                    }
+                    else {
+                        alert(resp.Message);
+                    }
+                },
+                error: function (resp) {
+                    alert("Error in processing. Please try again after sometime");
+                }
+            });
+        }
+	</script>
+</head>
+<body>
+    <header class="clearfix">
+        <!-- Search starts -->
+        @*<div class="custom-search">
+            <i class="icon-search4"></i>
+            <input type="text" class="search-query" placeholder="Search here ...">
+        </div>*@
+    </header>
+    <!-- Logo bar starts -->
+    <div class="logo-bar clearfix">
+        <div class="container-fluid">
+            <!-- Row starts -->
+            <div class="row gutter" style="padding:5px 0px 5px 0px;margin-top:5px">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                 
+					<h5 class="logo-title" onclick="GoToHome();" style="position:relative;color:white;font-weight:bold;font-size:20px;">StrengthTracker</h5>
+                    <h5 class="logo-title" style="margin-top:10px">Welcome @ViewBag.UserName</h5>
+                </div>
+            </div>
+            <!-- Row ends -->
+        </div>
+    </div>
+    <div>
+        @RenderBody()
+    </div>
+</body>
+</html>

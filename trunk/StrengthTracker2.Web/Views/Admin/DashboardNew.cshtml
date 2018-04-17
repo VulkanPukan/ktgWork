@@ -1,0 +1,342 @@
+﻿@model StrengthTracker2.Web.Models.Coach.CoachDashboardModel
+@{
+    ViewBag.Title = "Strength Tracker | Dashboards";
+    Layout = "~/Views/Admin/_LayoutNew.cshtml";
+}
+<style>
+    .k-grid .k-alt {
+        background-color: #fafbfc; /* specify the alternate background-color */
+    }
+
+    .k-grid .k-grid-header .k-header .k-link {
+        height: auto;
+    }
+
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+    }
+
+    #dvSiteFooter {
+        top: 70px !important;
+    }
+
+    #atheleStatusLeged {
+        text-align: -webkit-center;
+    }
+
+        #atheleStatusLeged .legendLabel {
+            font-size: x-small !important;
+        }
+
+    .chartLegend {
+        text-align: -webkit-center;
+    }
+
+        .chartLegend .legendLabel {
+            font-size: x-small !important;
+        }
+
+    .icon-calendar2 {
+        color: white;
+        font-size: large;
+        background: transparent !important;
+        border: none !important;
+    }
+</style>
+<div id="startDateModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Start date selection</h4>
+            </div>
+            <div class="modal-body">
+                <div id="startDatepicker"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="startDateCancel" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="startDateSave" type="button" class="btn btn-info">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="endDateModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">End date selection</h4>
+            </div>
+            <div class="modal-body">
+                <div id="endDatepicker"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="endDateCancel" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="endDateSave" type="button" class="btn btn-info">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="top-bar clearfix">
+    <div class="container-fluid">
+        <div class="row gutter">
+            <div class="col-md-12 col-sm-6 col-xs-12">
+                <h3 class="page-title" style="float:left;">Dashboards</h3>
+                <div style="float:right;line-height:20px;margin-top:25px;">
+                    <ul>
+                        @if (Session["UserRole"] != null)
+                        {
+                            var userRole = (StrengthTracker2.Core.Repository.Entities.Security.RoleDetails)(Session["UserRole"]);
+                            var userPermissons = userRole.RolePermissions;
+                            var canUserAccessAdminDashboard = userPermissons.Where(p => p.PermissionID == 9 && p.CanView == true).ToList();
+                            if (canUserAccessAdminDashboard != null && canUserAccessAdminDashboard.Count > 0)
+                            {
+                        <li style="display:inline;">
+                            <a href="/Admin/CoachDashboardNew" title="Coach dashboard" style="color:#337ab7;">
+                                <span class="icon-picasa" style="font-size: 30px;"></span>
+                            </a>
+                        </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-container" id="adminGrids">
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <div class="panel panel-light">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Athlete Enrollment by Count</h4>
+                    <div class="pull-right">
+                        <button id="registrationByDateChartStart" type="button" class="icon-calendar2" title="Start Date"></button>
+                        <button id="registrationByDateChartEnd" type="button" class="icon-calendar2" title="End Date"></button>
+                        @*<button type="button" class="icon-calendar2" data-toggle="modal" title="Start Date" data-target="#startDateModal"></button>
+                            <button type="button" class="icon-calendar2" data-toggle="modal" title="End Date" data-target="#endDateModal"></button>*@
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div id="registrationByDateChart" class="chart-height3"></div>
+                    <div id="registrationByDateLegend" class="chartLegend"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <div class="panel panel-light">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Sessions</h4>
+                    <div class="pull-right">
+                        <button type="button" class="icon-calendar2" data-toggle="modal" title="Start Date" data-target="#startDateModal"></button>
+                        <button type="button" class="icon-calendar2" data-toggle="modal" title="End Date" data-target="#endDateModal"></button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div id="lineGraph" class="chart-height3"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <div class="panel panel-light">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Athlete Enrollment Status</h4>
+                    <div class="pull-right">
+                        <button id="athletesStatusChartStart" type="button" class="icon-calendar2" title="Start Date"></button>
+                        <button id="athletesStatusChartEnd" type="button" class="icon-calendar2" title="End Date"></button>
+                        @*<button type="button" class="icon-calendar2" data-toggle="modal" title="Start Date" data-target="#startDateModal"></button>
+                            <button type="button" class="icon-calendar2" data-toggle="modal" title="End Date" data-target="#endDateModal"></button>*@
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div id="athletesStatusChart" class="chart-height3"></div>
+                    <div id="athletesStatusLegend" class="chartLegend"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <div class="panel panel-light">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Cumulative Customer/Location Count</h4>
+                    <div class="pull-right">
+                        <button id="customerLocationChartStart" type="button" class="icon-calendar2" title="Start Date"></button>
+                        <button id="customerLocationChartEnd" type="button" class="icon-calendar2" title="End Date"></button>
+                        @*<button type="button" class="icon-calendar2" data-toggle="modal" title="Start Date" data-target="#startDateModal"></button>
+                            <button type="button" class="icon-calendar2" data-toggle="modal" title="End Date" data-target="#endDateModal"></button>*@
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div id="customerLocationChart" class="chart-height3"></div>
+                    <div id="customerLocationLegend" class="chartLegend"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <div class="panel panel-light">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Athletes Demographic - By Age, Sports and Gender</h4>
+                    <div class="pull-right">
+                        <button type="button" class="icon-calendar2" data-toggle="modal" title="Start Date" data-target="#startDateModal"></button>
+                        <button type="button" class="icon-calendar2" data-toggle="modal" title="End Date" data-target="#endDateModal"></button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div id="AthleteAgeChart" class="chart-height4" style="width:30%;display:inline-block;vertical-align:top;margin-left:25px !important;"></div>
+                    <div id="AthleteSportChart" class="chart-height4" style="width:30%;display:inline-block;vertical-align:top;"></div>
+                    <div id="AthleteGenderChart" class="chart-height4" style="width:30%;display:inline-block;vertical-align:top;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    @*<script src="../Scripts/slider/js/bootstrap-slider.js"></script>
+        <script src="../Scripts/sparklines/jquery.sparkline.min.js"></script>
+        <script src="../Scripts/slimscroll/jquery.slimscroll.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="../Scripts/mustang/js/bootstrap.min.js"></script>
+        <!-- jquery ScrollUp JS -->
+        <script src="../Scripts/mustang/js/scrollup.min.js"></script>
+        <!-- Theme Switcher -->     
+        <script src="../Scripts/mustang/js/themeSwitcher.js"></script>*@
+    <script src="../Scripts/jquery-ui.min.js"></script>
+    <script src="../Scripts/moment/min/moment.min.js"></script>
+    <script src="../Scripts/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="../Scripts/StrengthTracker2/Charts/ChartSharedCode.js"></script>
+    <script src="../Scripts/StrengthTracker2/Charts/AthletesStatusChart.js"></script>
+    <script src="../Scripts/StrengthTracker2/Charts/CustomerLocationChart.js"></script>
+    <script src="../Scripts/StrengthTracker2/Charts/RegistrationByDateChart.js"></script>
+
+    <script src="../Scripts/mustang/js/flot/jquery.flot.min.js"></script>
+    <script src="../Scripts/mustang/js/flot/jquery.flot.time.min.js"></script>
+    <script src="../Scripts/mustang/js/flot/jquery.flot.pie.min.js"></script>
+    <script src="../Scripts/mustang/js/flot/jquery.flot.stackbars.js"></script>
+    <script src="../Scripts/mustang/js/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="../Scripts/mustang/js/flot/jquery.flot.resize.min.js"></script>
+    <script src="../Scripts/mustang/js/flot/jquery.flot.categories.js"></script>
+
+    <!-- D3 JS -->
+    <script src="../Scripts/mustang/js/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.18/c3.js"></script>
+    <script src="../Scripts/mustang/js/c3/custom-pie.js"></script>
+    <script src="../Scripts/mustang/js/c3/custom-line.js"></script>
+    @*@<script src="../Scripts/mustang/js/c3/custom-stacked-bar.js"></script>
+    <script src="../Scripts/mustang/js/c3/custom-donut.js"></script>
+    <script src="../Scripts/mustang/js/c3/custom-area-spline.js"></script>
+    <script src="../Scripts/mustang/js/c3/custom-step-graph.js"></script>
+    <script src="../Scripts/mustang/js/c3/custom-scatter-plot.js"></script>
+    <script src="../Scripts/mustang/js/c3/custom-bar-area.js"></script>
+    <script src="../Scripts/mustang/js/c3/custom-spline.js"></script>
+    <script src="../Scripts/mustang/js/c3/custom-bar.js"></script>
+    <script src="../Scripts/mustang/js/c3/custom-server-requests.js"></script>*@
+
+    @*<script src="../Scripts/mustang/js/c3/custom-bar-one.js"></script>*@
+    @*<script src="../Scripts/jquery-1.11.0.min.js"></script>*@
+    <!-- Common JS -->
+    <script type="text/javascript" charset="utf-8">
+        $("#liDashboard").addClass("active");
+        initModalDatePickers();
+
+        var sportData = {};
+        var sportLabels = [];
+
+        var genderData = {};
+        var genderLabels = [];
+
+        $(function() {
+            $.ajax({
+                url: '/Admin/GetAthleteSportStats',
+                type: "POST",
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (resp) {
+                    resp.forEach(function (e) {
+                        sportLabels.push(e.label);
+                        sportData[e.label] = e.value;
+                    });
+                }
+            });
+            $.ajax({
+                url: '/Admin/GetAthleteGenderStats',
+                type: "POST",
+                contentType: 'application/json',
+                dataType: "json",
+                success: function(resp) {
+                    resp.forEach(function (e) {
+                        genderLabels.push(e.label);
+                        genderData[e.label] = e.value;
+                    });
+                }
+            });
+        });
+
+        var ageChart = c3.generate({
+            bindto: '#AthleteAgeChart',
+            data: {
+                columns: [
+                    ['d25', 25],
+                    ['d21', 21],
+                    ['d31', 31],
+                    ['d19', 19],
+                    ['d23', 23]
+                ],
+                type: 'pie',
+                names: {
+                    d25: 25,
+                    d21: 21,
+                    d31: 31,
+                    d19: 19,
+                    d23: 23,
+                },
+                colors: {
+                    d25: '#34abd1',
+                    d21: '#45b2d4',
+                    d31: '#55b9d8',
+                    d19: '#66C0DC',
+                    d23: '#77c7e0',
+                },
+            }
+        });
+
+        var sportChart = c3.generate({
+            bindto: '#AthleteSportChart',
+            data: {
+                json: [ sportData ],
+                keys: {
+                    value: sportLabels
+                },
+                type: 'pie'
+            }
+        });
+
+        //var jsonData = [
+        //    { label: 'www.site1.com', value: 200 },
+        //    { label: 'www.site2.com', value: 100 },
+        //    { label: 'www.site3.com', value: 300 },
+        //    { label: 'www.site4.com', value: 400 }
+        //];
+
+        //jsonData.forEach(function(e) {
+        //    genderLabels.push(e.label);
+        //    genderData[e.label] = e.value;
+        //});
+
+        //console.log(genderData);
+        //console.log(genderLabels);
+
+        var genderChart = c3.generate({
+            bindto: '#AthleteGenderChart',
+            data: {
+                json: [genderData],
+                type: 'pie',
+                //keys: {
+                //    value: genderLabels
+                //}
+            }
+        });
+    </script>
+}
+

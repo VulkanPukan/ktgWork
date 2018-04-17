@@ -1,0 +1,205 @@
+﻿@{
+	ViewBag.Title = "Strength Tracker | Add Role";
+	Layout = "~/Views/Admin/_LayoutNew.cshtml";
+}
+
+<style>
+	.navbar-top .navbar-header {
+		width: 250px !important;
+		text-align: center;
+	}
+
+	#dvSiteFooter {
+		top: 70px !important;
+	}
+
+	.row {
+		margin-left: -30px;
+		margin-right: -30px;
+	}
+
+	.breadcrumbs2 .active a {
+		color: #ffffff;
+		background-color: #3a86c8;
+	}
+
+		.breadcrumbs2 .active a:after {
+			border-left-color: #3a86c8;
+		}
+
+		.breadcrumbs2 .active a:before {
+			border-color: #3a86c8 #3a86c8 #3a86c8 transparent;
+		}
+
+	.breadcrumbs2 > li:last-child a {
+		color: #2a303e;
+	}
+</style>
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+@*<div class="dashboard-wrapper">*@
+<div class="top-bar clearfix">
+	<!-- Container fluid starts -->
+	<div class="container-fluid">
+		<!-- Row starts -->
+		<div class="row gutter">
+			<div class="col-md-8 col-sm-6 col-xs-12">
+				<h3 class="page-title">Add User</h3>
+			</div>
+		</div>
+		<!-- Row ends -->
+	</div>
+	<!-- Container fluid ends -->
+</div>
+<!-- Top Bar ends -->
+<!-- Main container starts -->
+<div class="main-container">
+	<div class="required pull-right">* Required fields</div>
+	@using (Ajax.BeginForm("addAdminUserForm", "Admin", new AjaxOptions { HttpMethod = "POST", OnSuccess = "addUserResult" }, new { id = "addAdminUserForm" }))
+	{
+		<div class="row gutter">
+			<div class="col-lg-12">
+				<div class="panel-default">
+					<div class="panel-body">
+						<form role="form" class="form-wizard">
+							<div class="well">
+								<div id="dvAddAdminUserMsg" style="display: none;"></div>
+								<!-- START row -->
+								<div class="row">
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>Name *</label>
+											<div class="controls">
+												<input type="text" placeholder="Name" class="form-control m-b">
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- END row -->
+								<!-- START row -->
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="form-group">
+											<label>Description*</label>
+											<div class="controls">
+												<textarea style="height:102px;" id="taRolesDesc2" rows="4" cols="49" maxlength="12000" class="form-control m-b"></textarea>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- END row -->
+								<!-- START row -->
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="form-group">
+											<label>Permissions</label><hr />
+											<div class="controls">
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- END row -->
+								<!-- START row -->
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="form-group">
+											<div id="rolesAddPermisssionGrid" style="margin-top:15px; overflow:visible !important;" class="clearfix"></div>
+											<div id="addpermissionPager"></div>
+										</div>
+									</div>
+								</div>
+								<!-- END row -->
+								<!-- START row -->
+								<div class="row">
+									<div class="col-md-12">
+										<div class="pull-right">
+											<button type="button" id="btnCancelAddUser" onclick="ShowUserGrid();" class="btn btn-sm btn-default" style="display: none;">Cancel</button>
+											<button type="button" id="btnSaveAddUser" value="Ok" class="btn btn-primary mb-sm" onclick="SaveAddUser();">Save</button>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+</div>
+<!-- Main container ends -->
+
+@section Scripts {
+	@Scripts.Render("~/bundles/jquery")
+	<script src="../Scripts/kendo.all.min.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		var addpermissiondataSource = new kendo.data.DataSource({
+			data:
+
+        [
+                { PermisssionName: "Manage Programs", ViewPermission: true, AddPermission: true, EditPermission: true, DeletePermission: true, DisableAddChkBox: "", DisableEditChkBox: "", DisabledDelChkBox: "" },
+                { PermisssionName: "Manage Exercises", ViewPermission: true, AddPermission: true, EditPermission: false, DeletePermission: true, DisableAddChkBox: "", DisableEditChkBox: "", DisabledDelChkBox: "" },
+                { PermisssionName: "Manage Customers", ViewPermission: true, AddPermission: false, EditPermission: false, DeletePermission: true, DisableAddChkBox: "", DisableEditChkBox: "", DisabledDelChkBox: "" },
+                { PermisssionName: "Manage Users", ViewPermission: true, AddPermission: true, EditPermission: true, DeletePermission: true, DisableAddChkBox: "", DisableEditChkBox: "", DisabledDelChkBox: "" },
+                { PermisssionName: "Audit Log", ViewPermission: true, AddPermission: false, EditPermission: false, DeletePermission: false, DisableAddChkBox: "disabled", DisableEditChkBox: "disabled", DisabledDelChkBox: "disabled" },
+                { PermisssionName: "Perform Evaluation", ViewPermission: true, AddPermission: false, EditPermission: false, DeletePermission: true, DisableAddChkBox: "", DisableEditChkBox: "", DisabledDelChkBox: "" },
+                { PermisssionName: "Manage Schedule", ViewPermission: true, AddPermission: false, EditPermission: false, DeletePermission: true, DisableAddChkBox: "", DisableEditChkBox: "", DisabledDelChkBox: "" },
+                { PermisssionName: "Dashboard panel1", ViewPermission: true, AddPermission: false, EditPermission: false, DeletePermission: false, DisableAddChkBox: "disabled", DisableEditChkBox: "disabled", DisabledDelChkBox: "disabled" },
+                { PermisssionName: "Dashboard panel2", ViewPermission: true, AddPermission: false, EditPermission: false, DeletePermission: false, DisableAddChkBox: "disabled", DisableEditChkBox: "disabled", DisabledDelChkBox: "disabled" },
+                { PermisssionName: "Dashboard panel3", ViewPermission: true, AddPermission: false, EditPermission: false, DeletePermission: false, DisableAddChkBox: "disabled", DisableEditChkBox: "disabled", DisabledDelChkBox: "disabled" },
+        ],
+			pageSize: 10
+
+		});
+		$("#rolesAddPermisssionGrid").kendoGrid({
+			//selectable: "multiple cell",
+			allowCopy: true,
+			scrollable: true,
+			sortable: true,
+			filterable: false,
+			columns: [
+				{
+					field: "PermisssionName",
+					title: "Permisssion Name",
+				},
+				{
+					field: "ViewPermission",
+					title: "View",
+					template: '#if(ViewPermission==true){# ' + '<input type="checkbox" checked >' + ' #}else{# ' + '<input type="checkbox" >' + '#}#',
+					attributes: {
+						style: 'white-space: nowrap '
+					}
+				},
+				{
+					field: "AddPermission",
+					title: "Add",
+					template: '#if(AddPermission==true){# ' + '<input type="checkbox" checked #=DisableAddChkBox#>' + ' #}else{# ' + '<input type="checkbox" #=DisableAddChkBox#>' + '#}#',
+					attributes: {
+						style: 'white-space: nowrap '
+					}
+				}, {
+					field: "EditPermission",
+					title: "Edit",
+					template: '#if(EditPermission==true){# ' + '<input type="checkbox" checked #=DisableEditChkBox#>' + ' #}else{# ' + '<input type="checkbox" #=DisableEditChkBox#>' + '#}#',
+					attributes: {
+						style: 'white-space: nowrap '
+					}
+				},
+				{
+					field: "DeletePermission",
+					title: "Delete",
+					template: '#if(DeletePermission==true){# ' + '<input type="checkbox" checked #=DisabledDelChkBox#>' + ' #}else{# ' + '<input type="checkbox" #=DisabledDelChkBox#>' + '#}#',
+					attributes: {
+						style: 'white-space: nowrap '
+					}
+				}
+			],
+			dataSource: addpermissiondataSource
+		});
+		addpermissiondataSource.read();
+		$("#addpermissionPager").kendoPager({
+			autoBind: true,
+			dataSource: addpermissiondataSource
+		});
+	</script>
+}

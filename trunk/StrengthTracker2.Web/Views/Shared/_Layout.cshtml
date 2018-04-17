@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="no-ie">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <title>@ViewBag.Title</title>
+    @*@Styles.Render("~/Content/css")*@
+    @Scripts.Render("~/bundles/modernizr")
+   <link rel="stylesheet" href="@Url.Content("~/content/bootstrap.css")">
+   <!-- Vendor CSS-->
+   <link rel="stylesheet" href="~/content/fontawesome/css/font-awesome.min.css">
+   <link rel="stylesheet" href="~/content/animo/animateanimo.css">
+   <!-- App CSS-->
+   <link rel="stylesheet" href="~/content/app.css">
+   <link rel="stylesheet" href="~/content/common.css">
+   <link rel="stylesheet" href="~/content/kendo.common.min.css" />
+   <link rel="stylesheet" href="~/content/kendo.silver.min.css">
+   <link rel="icon" type="image/png" href="~/Images/favicon.png">
+   <script src="~/Scripts/fastclick/fastclick.js" type="application/javascript"></script>
+</head>
+<body>
+    @RenderBody()
+
+    @Scripts.Render("~/bundles/jquery")
+    @RenderSection("scripts", required: false)
+    <script src="~/content/animo/animo.min.js"></script>
+    <script src="~/Scripts/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/chosen/chosen.jquery.min.js"></script>
+    <script src="~/Scripts/filestyle/bootstrap-filestyle.min.js"></script>
+    <script src="~/Scripts/storejson2.min.js"></script>
+    <script src="~/Scripts/slider/js/bootstrap-slider.js"></script>
+    <script src="~/Scripts/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.resize.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.pie.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.time.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.categories.min.js"></script>
+    <script src="~/Scripts/app.js"></script>
+    <script src="~/Scripts/pages.js"></script>
+</body>
+</html>

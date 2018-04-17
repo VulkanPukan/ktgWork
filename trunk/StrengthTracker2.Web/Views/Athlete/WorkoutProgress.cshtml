@@ -1,0 +1,326 @@
+﻿
+@{
+    ViewBag.Title = "View My Progress";
+    Layout = "~/Views/Athlete/_MobileLayout.cshtml";
+}
+
+@*<div class="wrapper">*@
+<!-- End aside-->
+@*<div class="dashboard-wrapper">*@
+<div class="top-bar clearfix">
+	<!-- Container fluid starts -->
+	<div class="container-fluid">
+		<!-- Row starts -->
+		<div class="row gutter">
+			<div class="col-md-12 col-sm-6 col-xs-12">
+				<h3 class="page-title" style="text-align:center">My Progress</h3> 
+				
+			</div>
+		</div>
+		<!-- Row ends -->
+	</div>
+	<!-- Container fluid ends -->
+</div>
+<!-- Top Bar ends -->
+<!-- Main container starts -->
+<div class="main-container">
+	<!-- Graph Row Starts -->
+	<div class="row">
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+			<div class="panel panel-light">
+				<div class="panel-heading">
+					<h4 class="panel-title">Volume Of Weight</h4>
+				</div>
+				<div class="panel-body">
+					<div id="stackedBarGraph1" class="chart-height3"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+			<div class="panel panel-light">
+				<div class="panel-heading">
+					<h4 class="panel-title">Muscular Balance Ratio</h4>
+				</div>
+				<div class="panel-body">
+					<div id="barGraphMBR" class="chart-height3"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Graph Row ends -->
+	<!-- Graph Row Starts -->
+	<div class="row">
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+			<div class="panel panel-light">
+				<div class="panel-heading">
+					<h4 class="panel-title">Relative Strength (% of BM)</h4>
+				</div>
+				<div class="panel-body">
+					<div id="stackedBarGraph" class="chart-height4"></div>
+				</div>
+				
+			</div>
+		</div>
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+			<div class="panel panel-light">
+				<div class="panel-heading">
+					<h4 class="panel-title">Your Absolute Strength (1RM)</h4>
+				</div>
+				<div class="panel-body">
+					<div id="stacked-area-chart" class="chart-height3"></div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Main container ends -->
+
+
+	<script src="../Scripts/mustang/js/flot/jquery.flot.min.js"></script>
+	<script src="../Scripts/mustang/js/flot/jquery.flot.time.min.js"></script>
+	<script src="../Scripts/mustang/js/flot/jquery.flot.pie.min.js"></script>
+	<script src="../Scripts/mustang/js/flot/jquery.flot.stack.min.js"></script>
+	<script src="../Scripts/mustang/js/flot/jquery.flot.tooltip.min.js"></script>
+	<script src="../Scripts/mustang/js/flot/jquery.flot.resize.min.js"></script>
+	<!-- D3 JS -->
+	<script src="../Scripts/mustang/js/d3.min.js"></script>
+	<script src="../Scripts/mustang/js/c3/c3.min.js"></script>
+	
+	<script type="text/javascript" charset="utf-8">
+        function gd(year, month, day) {
+            var timeTicks = ((new Date(year, month, day).getTime() * 10000) + 621355968000000000);
+            return timeTicks;
+        }
+
+        var chart7 = c3.generate({
+        	bindto: '#stackedBarGraph1',
+        	data: {
+        		columns: [
+					['data1', 30, 90, 200, 400, 590, 250, 330, 120, 480, 560, 220, 300, 240, 470, 680, 550, 250, 330, 120, 90],
+					
+        		],
+        		type: 'bar',
+        		names: {
+        			data1: 'Sessions',
+        			
+        		},
+        		colors: {
+        			data1: '#ea423f',
+        		
+        		},
+        		groups: [
+					['data1']
+        		]
+        	},
+        	grid: {
+        		x: {
+        			show: true,
+        		},
+        		y: {
+        			show: true
+        		}
+        	}
+        });
+
+        $(function () {
+
+        	var ds = [], data, chartOptions;
+
+        	ds.push([[210, 1], [330, 2], [390, 3], [450, 4], [520, 5], [310, 6]]);
+        	ds.push([[150, 1], [220, 2], [290, 3], [230, 4], [380, 5], [160, 6]]);
+        	ds.push([[600, 1], [130, 2], [190, 3], [350, 4], [270, 5], [320, 6]]);
+
+        	data = [{
+        		label: 'You',
+        		data: ds[1]
+        	}, {
+        		label: 'Good',
+        		data: ds[0]
+        	}, {
+        		label: 'Elite',
+        		data: ds[2]
+        	}];
+
+        	chartOptions = {
+        		xaxis: {
+
+        		},
+        		grid: {
+        			hoverable: true,
+        			clickable: false,
+        			borderWidth: 1,
+        			tickColor: '#eaeaea',
+        			borderColor: '#eaeaea',
+        		},
+        		series: {
+        			stack: true
+        		},
+        		legend: {
+        			position: 'se'
+        		},
+        		bars: {
+        			horizontal: true,
+        			show: true,
+        			barWidth: .25,
+        			fill: true,
+        			lineWidth: 0,
+        			fillColor: { colors: [{ opacity: 1 }, { opacity: 1 }] }
+        		},
+        		shadowSize: 0,
+        		tooltip: true,
+
+        		tooltipOpts: {
+        			content: '%s: %x'
+        		},
+        		colors: ['#3a86c8', '#64bd63', '#6dc6cd', '#52bf8a', '#638ca5'],
+        	}
+
+        	var holder = $('#stackedBarGraph2');
+        	if (holder.length) {
+        		$.plot(holder, data, chartOptions);
+        	}
+
+        });
+
+
+        $(function () {
+
+        	var ds = [], data, chartOptions;
+
+        	ds.push([[210, 1], [330, 2], [390, 3], [450, 4], [520, 5], [310, 6]]);
+        	ds.push([[150, 1], [220, 2], [290, 3], [230, 4], [380, 5], [160, 6]]);
+        	ds.push([[600, 1], [130, 2], [190, 3], [350, 4], [270, 5], [320, 6]]);
+
+        	data = [{
+        		label: 'You',
+        		data: ds[1]
+        	}, {
+        		label: 'Good',
+        		data: ds[0]
+        	}, {
+        		label: 'Elite',
+        		data: ds[2]
+        	}];
+
+        	chartOptions = {
+        		xaxis: {
+
+        		},
+        		grid: {
+        			hoverable: true,
+        			clickable: false,
+        			borderWidth: 1,
+        			tickColor: '#eaeaea',
+        			borderColor: '#eaeaea',
+        		},
+        		series: {
+        			stack: true
+        		},
+        		legend: {
+        			position: 'se'
+        		},
+        		bars: {
+        			horizontal: true,
+        			show: true,
+        			barWidth: .25,
+        			fill: true,
+        			lineWidth: 0,
+        			fillColor: { colors: [{ opacity: 1 }, { opacity: 1 }] }
+        		},
+        		shadowSize: 0,
+        		tooltip: true,
+        		groups: [
+					['data1'], ['data2'], ['data3']
+        		],
+        		tooltipOpts: {
+        			content: '%s: %x'
+        		},
+        		colors: ['#3a86c8', '#64bd63', '#6dc6cd', '#52bf8a', '#638ca5'],
+        	}
+
+        	var holder = $('#stacked-area-chart');
+        	if (holder.length) {
+        		$.plot(holder, data, chartOptions);
+        	}
+
+        });
+
+		var chart6 = c3.generate({
+	bindto: '#barGraphMBR',
+	data: {
+	
+		columns: [
+			
+			['data1', 55, 58, 62, 87, 32, 58, 55, 21, 20, 30, 98, 10, 22, 98, 99, 105, 82, 57, 121, 78],
+			['data2', 21, 26, 30, 38, 11, 24, 36, 53, 58, 62, 65, 61, 64, 32, 45, 71, 38, 23, 65, 11]
+			
+		],
+		type: 'bar',
+		
+		names: {
+			data1: 'Elite',
+			data2: 'You'
+		},
+
+		colors: {
+			data1: '#ea423f',
+			data2: '#3a86c8'
+		}
+		
+	}
+});
+		
+		var chart = c3.generate({
+			bindto: '#stackedBarGraph',
+			grid: {
+				x: {
+					show: true,
+				},
+				y: {
+					show: true
+				}
+			},
+			data: {
+				x: 'x',
+				columns:
+					[
+				          ['x', 'DB Renegade Row', 'Seated DB Overhead Press', 'Hang Clean', 'Bent Over Row', "Farmer's Walk", 'Pull Ups', 'BB Bench Press', 'Back Squat', 'Hex Bar Deadlift','Hip Thrust'],
+				         	['data1', 300, 58, 62, 87, 32, 58, 55, 21, 20, 30, 98, 10, 22, 98, 99, 105, 82, 57, 121, 78],
+			                ['data2', 21, 26, 30, 38, 11, 24, 36, 53, 58, 62, 65, 61, 64, 32, 45, 71, 38, 23, 65, 11],
+							['data3', 121, 126, 130, 138, 111, 124, 136, 153, 158, 162, 165, 61, 64, 32, 45, 71, 38, 23, 65, 11]
+					],
+
+				type: 'bar',
+				names: {
+					data1: 'Elite',
+					data2: 'You',
+					data3: 'Good'
+				},
+				colors: {
+					data1: '#3a86c8',
+					data2: '#ea423f',
+					data3: '#6dc6cd',
+				}
+			},
+			axis: {
+				rotated: true,
+				x: {
+					type: 'category'
+				}
+			},
+			tooltip: {
+				grouped: false
+			},
+			legend: {
+				show: true
+			}
+			
+		});
+        $(document).ready(function () {
+           // chart = $.plot($("#placeholder"), data, options);
+        });
+	</script>
+	
+
+

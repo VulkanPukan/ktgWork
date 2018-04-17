@@ -1,0 +1,227 @@
+﻿<div id="dvAthleteRegistration">
+    <div class="panel-heading bb" style="font-weight:normal;color:white;">
+        Athlete Registration
+    </div>
+    <div class="panel-body">
+        <div class="form-group col-lg-6">
+            <div class="col-lg-5">
+                <label class="control-label">Show on Athlete Registration</label>
+            </div>
+            <div class="col-lg-7">
+                <select id="personalTrainerNameViewSelect" class="form-control m-b">
+                    <option value="1">Show my first name and last name</option>
+                    <option value="2">Show my first name</option>
+                    <option value="3">Show my last name</option>
+                    <option value="4">Other </option>
+                </select>
+                &nbsp
+                <input id="personalTrainerNameViewInput" class="form-control m-b" style="display:none" type="text" />
+            </div>
+        </div>
+        <div class="form-group col-lg-12">
+            <div class="col-lg-7 pull-right">
+                <div class="pull-right">
+                    <button type="button" id="btnPreviewPersonalTrainer" class="btn btn-sm btn-info">Preview</button>
+                    <button type="button" id="btnSavePersonalTrainer" value="Ok" class="btn btn-success mb-lg">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dvCompanyInfo">
+    <div class="panel-heading bb" style="font-weight:normal;color:white;">
+        Company info
+    </div>
+    <div class="panel-body">
+        <div class="form-group col-lg-6">
+            <div class="col-lg-5">
+                <label class="control-label">Customer First Name</label>
+            </div>
+            <div class="col-lg-7">
+                <input type="text" id="customerFirstName" class="form-control m-b" />
+            </div>
+        </div>
+        <div class="form-group col-lg-6">
+            <div class="col-lg-5">
+                <label class="control-label">Customer Last Name</label>
+            </div>
+            <div class="col-lg-7">
+                <input type="text" id="customerLastName" class="form-control m-b" />
+            </div>
+        </div>
+
+
+        <div class="form-group col-lg-6">
+            <div class="col-lg-5">
+                <label class="control-label">Customer Name</label>
+            </div>
+            <div class="col-lg-7">
+                <input type="text" id="customerName" class="form-control m-b" />
+            </div>
+        </div>
+        <div class="form-group col-lg-6">
+            <div class="col-lg-5">
+                <label class="control-label">Customer Unique URL</label>
+            </div>
+            <div class="col-lg-7">
+                <span style="float: left; height: 20px; padding-top: 10px;font-weight:bold !important;">@Session["PersonalPrefix"]</span>
+                <input type="hidden" id="customerShortName" disabled class="form-control m-b" style="float: right; width: 70% !important;" />
+            </div>
+        </div>
+        <div class="form-group col-lg-6">
+            <div class="col-lg-5">
+                <label class="control-label">Customer Email</label>
+            </div>
+            <div class="col-lg-7">
+                <input type="text" id="customerEmail" class="form-control m-b" />
+            </div>
+        </div>
+        <div class="form-group col-lg-6">
+            <div class="col-lg-5">
+                <label class="control-label">Contact phone</label>
+            </div>
+            <div class="col-lg-7">
+                <input type="text" id="customerPhone" class="form-control m-b" />
+            </div>
+        </div>
+        <div class="form-group col-lg-6">
+            <div class="col-lg-5">
+                <label class="control-label">Address</label>
+            </div>
+            <div class="col-lg-7">
+                <input type="text" id="customerAddress" class="form-control m-b" />
+            </div>
+        </div>
+        <div class="form-group col-lg-6">
+            <div class="col-lg-5">
+                <label class="control-label">Billing address</label>
+            </div>
+            <div class="col-lg-7">
+                <input type="text" id="customerBillingAddress" class="form-control m-b" />
+            </div>
+        </div>
+        <div class="form-group col-lg-12">
+            <div class="col-lg-7 pull-right">
+                <div class="pull-right">
+                    <button type="button" id="btnSavePersonalTrainerCustomerInfo" value="Ok" class="btn btn-success mb-lg">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+    function GetCustomerInforRegistration() {
+        $.ajax({
+            url: "../Admin/GetCustomerInforRegistration",
+            type: "POST",
+            success: function (resp) {
+                $("#personalTrainerNameViewSelect").val(resp.RegistrationAthletePageTextID);
+                if (resp.RegistrationAthletePageTextID == 4) {
+                    $("#personalTrainerNameViewInput").show();
+                    $("#personalTrainerNameViewInput").val(resp.RegistrationAthletePageText);
+                }
+            }, error: function () {
+                console.log(resp.Message);
+            }
+        });
+    }
+    function InitPersonalTrainerProfileSections() {
+        $("#personalTrainerNameViewSelect").on('change', function () {
+            var input = $("#personalTrainerNameViewInput");
+            if (this.value == 4) {
+                input.show();
+            }
+            else {
+                input.hide();
+            }
+        });
+        $("#btnPreviewPersonalTrainer").click(function () {
+            UpdateProfileStringValue();
+        })
+        $("#btnSavePersonalTrainer").click(function () {
+            SaveProfileStringValue();
+        })
+        $("#btnSavePersonalTrainerCustomerInfo").click(function () {
+            SavePersonalTrainerCustomerInfo();
+        })
+        GetPersonalTrainerCustomerInfo();
+    }
+    function SavePersonalTrainerCustomerInfo() {
+        $.ajax({
+            url: "../Registration/UpdatePersonalTrainerCustomerInfo",
+            type: "POST",
+            data: {
+                ContactFirstName: $("#customerFirstName")[0].value,
+                ContactLastName: $("#customerLastName")[0].value,
+                OrganizationName: $("#customerName")[0].value,
+                ShortName: $("#customerShortName")[0].value,
+                ContactEmail: $("#customerEmail")[0].value,
+                ContactPhone: $("#customerPhone")[0].value,
+                Address: $("#customerAddress")[0].value,
+                BillingAddress: $("#customerBillingAddress")[0].value
+            },
+            success: function (resp) {
+                alert(resp.Message);
+            }, error: function () {
+                console.log(resp.Message);
+            }
+        });
+    }
+    function GetPersonalTrainerCustomerInfo() {
+        $.ajax({
+            url: "../Registration/GetPersonalTrainerCustomerInfo",
+            type: "POST",
+            success: function (resp) {
+                $("#customerFirstName").val(resp.ContactFirstName);
+                $("#customerLastName").val(resp.ContactLastName);
+                $("#customerName").val(resp.OrganizationName);
+                $("#customerShortName").val(resp.ShortName);
+                $("#customerEmail").val(resp.ContactEmail);
+                $("#customerPhone").val(resp.ContactPhone);
+                $("#customerAddress").val(resp.Address);
+                $("#customerBillingAddress").val(resp.BillingAddress);
+                GetCustomerInforRegistration();
+            }, error: function () {
+                console.log(resp.Message);
+            }
+        });
+    }
+    function UpdateProfileStringValue() {
+        var value = $("#personalTrainerNameViewSelect")[0].value;
+        var text = "";
+        if (value == 4) {
+            text = $("#personalTrainerNameViewInput")[0].value;
+        }
+        $.ajax({
+            url: "../Registration/PersonalTrainerRegisterPageString",
+            type: "POST",
+            data: { value: value, text: text },
+            success: function (resp) {
+                openInNewTab(resp.Message);
+            }, error: function () {
+                console.log(resp.Message);
+            }
+        });
+    }
+    function SaveProfileStringValue() {
+        var value = $("#personalTrainerNameViewSelect")[0].value;
+        var text = "";
+        text = $("#personalTrainerNameViewInput")[0].value;
+        $.ajax({
+            url: "../Registration/PersonalTrainerSaveRegisterPageString",
+            type: "POST",
+            data: { value: value, text: text },
+            success: function (resp) {
+                alert(resp.Message);
+            }, error: function () {
+                console.log(resp.Message);
+            }
+        });
+    }
+    function openInNewTab(url) {
+        $("<a>").attr("href", url).attr("target", "_blank")[0].click();
+    }
+
+</script>

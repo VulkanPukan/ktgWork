@@ -1,0 +1,212 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | MovementTypes";
+    Layout = "~/Views/Admin/_Layout.cshtml";
+}
+<style>
+    .k-grid .k-alt {
+        background-color: #fafbfc; /* specify the alternate background-color */
+    }
+
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+    }
+
+    #movementGrid .k-grid-content, #movementGrid tr td:last-child {
+        overflow: visible;
+    }
+
+    #movementGrid .k-grid-header {
+        padding-right: 0 !important;
+    }
+    #dvSiteFooter {
+        top: 70px !important;
+    }
+</style>
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+        <div class="main-content">
+            <h3>Movement Types</h3>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="">
+                        <div class="panel-body">
+                            <div id="movementgridcontainer">
+                                <div class="clearfix">
+                                    <button type="button" onclick="ShowMovementDetails(0);" class="btn btn-primary pull-right  mb-sm">
+                                        <em class="fa fa-plus-circle fa-fw mr-sm"></em>Add Movement Type
+                                    </button>
+                                </div>
+                                <div id="movementGrid" style="margin-top:8px; overflow:visible !important;" class="clearfix"></div>
+                                <div id="movementPager"></div>
+                            </div>
+                            
+                            <div id="MovementDetails" style="display:none;">
+
+                                <div class="">
+                                    <div class="panel-heading bb">
+                                        <label id="addeditMovment" style="font-weight: normal;"></label>
+                                        <div class="required pull-right">* Required fields</div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <form class="form-horizontal">
+
+
+                                              <div class="form-group">
+                                                <label class="col-lg-2 control-label">Name*</label>
+                                                <div class="col-lg-10">
+                                                    <input type="text" placeholder="Name" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">Description*</label>
+                                                <div class="col-lg-10">
+                                                    <textarea style="height:102px;" id="taMovementDesc" rows="4" cols="49" maxlength="12000"></textarea>
+                                                </div>
+                                            </div>
+                                           
+                                    
+                                            <div class="form-group col-lg-6">&nbsp;</div>
+                                            <div class="form-group col-lg-12"  style="width:103% !important;">
+                                                <div class="col-lg-5">&nbsp;</div>
+                                                <div class="pull-right">
+                                                    <button type="button" onclick="ShowMovementGrid();" class="btn btn-sm btn-default">Cancel</button>
+                                                    <button type="button" onclick="ShowMovementGrid();" class="btn btn-primary btn-sm">Save</button>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        
+
+<!-- START confirm deletion modal-->
+<div id="confirmDeletion" tabindex="-1" role="dialog" aria-labelledby="confirmDeletionLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmDeletionLabel" class="modal-title">Confirm Deletion</h4>
+            </div>
+            <div class="modal-body">
+                Delete Movement Type?
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-primary">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END confirm deletion modal-->
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script src="../Scripts/kendo.all.min.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
+
+        var movementdataSource = new kendo.data.DataSource({
+            data: [
+                { Name: "Acceleration", Description: "Acceleration Desc" },
+                { Name: "Core", Description: "Core muscles"},
+                { Name: "Quickness", Description: "Quickness Desc" },
+                
+            ],
+            pageSize: 10
+
+        });
+        
+        $("#liConfig").addClass("active");
+
+        $('#liConfig ul').removeClass();
+        $('#liConfig ul').addClass('nav collapse in');
+        $("#movementGrid").kendoGrid({
+            selectable: "multiple cell",
+            allowCopy: true,
+            //height: 550,
+            scrollable: true,
+            sortable: true,
+            filterable: true,
+            //pageable: {
+            //    input: true,
+            //    numeric: false
+            //},
+            columns: [
+                {
+                    field: "Name",
+                    template: '<a href="javascript:void(0)" onclick="ShowMovementDetails(1);">#=Name#</a>'
+                },
+                {
+                    field: "Description",
+                    //title: "User Name",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "Actions",
+                    title: "Actions",
+                    width: "150px",
+                    template: '<div class="btn-group mb-sm">' +
+                           '<button type="button" data-toggle="dropdown" class="btn btn-default">Select…</button>' +
+                           '<button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">' +
+                              '<span class="caret"></span>' +
+                           '</button>' +
+                           '<ul role="menu" class="dropdown-menu" style="min-width:102px !important;">' +
+                              '<li><a href="javascript:void(0);" onclick="ShowDeleteConfirmationPopup();">Delete</a>' +
+                              
+                              '</li>' +
+                           '</ul>' +
+                        '</div>'
+                }
+            ],
+            dataSource: movementdataSource
+        });
+
+
+        movementdataSource.read();
+        $("#movementPager").kendoPager({
+            autoBind: true,
+            dataSource: movementdataSource
+        });
+
+
+
+        function ShowDeleteConfirmationPopup() {
+            $('#confirmDeletion').modal('show');
+        }
+        
+        function ShowMovementDetails(typ) {
+            
+            $("#movementgridcontainer").hide();
+            var editor = $("#taMovementDesc").data("kendoEditor");
+            if (editor == undefined) {
+                $("#taMovementDesc").kendoEditor({
+                    resizable: {
+                        content: true,
+                        toolbar: true
+                    }
+                });
+            }
+            if (typ == 0) {
+                $('#addeditMovment').text("Add Movement Type");
+            }
+            else {
+                $('#addeditMovment').text("Edit Movement Type");
+            }
+            $("#MovementDetails").show();
+        
+        }
+
+        function ShowMovementGrid() {
+            $("#movementgridcontainer").show();
+            $("#MovementDetails").hide();
+        }
+
+    </script>
+}

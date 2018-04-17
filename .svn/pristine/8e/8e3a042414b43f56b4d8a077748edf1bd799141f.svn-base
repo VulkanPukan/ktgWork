@@ -1,0 +1,349 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Capacity";
+    Layout = "~/Views/Coach/_Layout.cshtml";
+}
+<style>
+    .k-grid .k-alt {
+        background-color: #fafbfc; /* specify the alternate background-color */
+    }
+
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+    }
+    .k-grid  .k-grid-header  .k-header  .k-link {
+    height: auto;
+}
+ #capacityGrid .k-grid-content, #capacityGrid tr td:last-child {
+    overflow:visible;
+    }   
+#capacityGrid .k-grid-header {
+        padding-right: 0 !important;
+    }
+
+     .navbar-top .navbar-header {
+            width: 250px !important;
+            text-align: center;
+        }
+     #dvSiteFooter {
+        top: 4% !important;
+    }
+
+</style>
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+<link href="~/Scripts/datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+
+@*<link rel="stylesheet" href="styles/kendo.default.min.css" />
+    <link rel="stylesheet" href="styles/kendo.default.mobile.min.css" />*@
+
+        <div class="main-content">
+            <h3>Schedule Capacity</h3>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="">
+                        <div class="panel-body">
+                            <div id="capacitygridcontainer">
+                                <div class="clearfix">
+                                    <div class="pull-right">
+                                        <button type="button" onclick="ShowAddCapacity();" class="btn btn-primary pull-right mb-sm"><em class="fa fa-plus-circle fa-fw mr-sm"></em>Add Capacity</button>
+                                    </div>
+                                </div>
+                                <div id="capacityGrid" style="margin-top: 8px;" class="clearfix"></div>
+                                <div id="capacityPager"></div>
+                            </div>
+                            <div id="EditCapacity" style="display: none;">
+                                <div class="">
+                                    <div class="panel-heading">Edit Capacity</div>
+                                    <div class="panel-body">
+                                        <form class="form-horizontal">
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">Capacity Type *</label>
+                                                <div class="col-lg-6">
+                                                    <select id="lstCapacityType" name="lstCapacityType" class="form-control m-b">
+                                                        <option value="1">Days of Week</option>
+                                                        <option value="2">Sepecific Date</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">Select Days *</label>
+                                                <div class="col-lg-6">
+                                                    <label class="checkbox-inline c-checkbox">
+                                                        <input id="inlineCheckbox10" type="checkbox" value="option1">
+                                                        <span class="fa fa-check"></span>Sun</label>
+                                                    <label class="checkbox-inline c-checkbox">
+                                                        <input id="inlineCheckbox20" type="checkbox" value="option2">
+                                                        <span class="fa fa-check"></span>Mon</label>
+                                                    <label class="checkbox-inline c-checkbox">
+                                                        <input id="inlineCheckbox30" type="checkbox" value="option3">
+                                                        <span class="fa fa-check"></span>Tue</label>
+                                                    <label class="checkbox-inline c-checkbox">
+                                                        <input id="inlineCheckbox30" type="checkbox" value="option3">
+                                                        <span class="fa fa-check"></span>Wed</label>
+                                                    <label class="checkbox-inline c-checkbox">
+                                                        <input id="inlineCheckbox30" type="checkbox" value="option3">
+                                                        <span class="fa fa-check"></span>Thu</label>
+                                                    <label class="checkbox-inline c-checkbox">
+                                                        <input id="inlineCheckbox30" type="checkbox" value="option3">
+                                                        <span class="fa fa-check"></span>Fri</label>
+                                                    <label class="checkbox-inline c-checkbox">
+                                                        <input id="inlineCheckbox30" type="checkbox" value="option3">
+                                                        <span class="fa fa-check"></span>Sat</label>
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">Time *</label>
+                                                <div class="col-lg-6">
+                                                    <!--input.datepicker.form-control(size='16', type='text', value='12-02-2013', data-date-format='dd-mm-yyyy')-->
+                                                    <div data-pick-date="false" class="datetimepicker input-group date mb-lg">
+                                                        <input type="text" id="fromTime" class="form-control" placeholder="From Time">
+                                                        <span class="input-group-addon">
+                                                            <span class="fa fa-calendar fa-clock-o"></span>
+                                                        </span>
+                                                    </div>
+                                                    <div data-pick-date="false" class="datetimepicker input-group date mb-lg">
+                                                        <input type="text" id="toTime" class="form-control" placeholder="To Time">
+                                                        <span class="input-group-addon">
+                                                            <span class="fa-calendar fa"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label"># of Clients *</label>
+                                                <div class="col-lg-6">
+                                                    <input type="text" placeholder="# of Clients" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label"></label>
+                                                <div class="col-lg-6">
+                                                    <div class="pull-right">
+                                                        <button type="submit" class="btn btn-sm btn-default">Cancel</button>
+                                                        <button type="submit" onclick="ShowCapacityGrid();" class="btn btn-primary btn-sm">Save</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="AddCapacity" style="display: none;">
+
+                                <div class="">
+                                    <div class="panel-heading">Add Capacity</div>
+                                    <div class="panel-body">
+                                        <form class="form-horizontal">
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">Capacity Type *</label>
+                                                <div class="col-lg-6">
+                                                    <select id="lstCapacityType" name="lstCapacityType" class="form-control m-b">
+                                                        <option value="1">Days of Week</option>
+                                                        <option value="2">Sepecific Date</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">Select Days *</label>
+                                                <div class="col-lg-6">
+                                                    <label class="checkbox-inline c-checkbox">
+                                                        <input id="inlineCheckbox10" type="checkbox" value="option1">
+                                                        <span class="fa fa-check"></span>Sun</label>
+                                                    <label class="checkbox-inline c-checkbox">
+                                                        <input id="inlineCheckbox20" type="checkbox" value="option2">
+                                                        <span class="fa fa-check"></span>Mon</label>
+                                                    <label class="checkbox-inline c-checkbox">
+                                                        <input id="inlineCheckbox30" type="checkbox" value="option3">
+                                                        <span class="fa fa-check"></span>Tue</label>
+                                                    <label class="checkbox-inline c-checkbox">
+                                                        <input id="inlineCheckbox30" type="checkbox" value="option3">
+                                                        <span class="fa fa-check"></span>Wed</label>
+                                                    <label class="checkbox-inline c-checkbox">
+                                                        <input id="inlineCheckbox30" type="checkbox" value="option3">
+                                                        <span class="fa fa-check"></span>Thu</label>
+                                                    <label class="checkbox-inline c-checkbox">
+                                                        <input id="inlineCheckbox30" type="checkbox" value="option3">
+                                                        <span class="fa fa-check"></span>Fri</label>
+                                                    <label class="checkbox-inline c-checkbox">
+                                                        <input id="inlineCheckbox30" type="checkbox" value="option3">
+                                                        <span class="fa fa-check"></span>Sat</label>
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">Time *</label>
+                                                <div class="col-lg-6">
+                                                    <!--input.datepicker.form-control(size='16', type='text', value='12-02-2013', data-date-format='dd-mm-yyyy')-->
+                                                    <div data-pick-date="false" class="datetimepicker input-group date mb-lg">
+                                                        <input type="text" id="fromTime" class="form-control" placeholder="From Time">
+                                                        <span class="input-group-addon">
+                                                            <span class="fa fa-calendar fa-clock-o"></span>
+                                                        </span>
+                                                    </div>
+                                                    <div data-pick-date="false" class="datetimepicker input-group date mb-lg">
+                                                        <input type="text" id="toTime" class="form-control" placeholder="To Time">
+                                                        <span class="input-group-addon">
+                                                            <span class="fa-calendar fa"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label"># of Clients *</label>
+                                                <div class="col-lg-6">
+                                                    <input type="text" placeholder="# of Clients" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label"></label>
+                                                <div class="col-lg-6">
+                                                    <div class="pull-right">
+                                                        <button type="submit" class="btn btn-sm btn-default">Cancel</button>
+                                                        <button type="submit" onclick="ShowCapacityGrid();" class="btn btn-primary btn-sm">Save</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- START confirm deletion modal-->
+<div id="confirmDeletion" tabindex="-1" role="dialog" aria-labelledby="confirmDeletionLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmDeletionLabel" class="modal-title">Confirm Deletion</h4>
+            </div>
+            <div class="modal-body">
+                Delete Holiday?
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-primary">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END confirm deletion modal-->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+
+    @*<link href="http://cdn.kendostatic.com/2013.1.319/styles/kendo.common.min.css" rel="stylesheet" type="text/css"/>
+    <link href="http://cdn.kendostatic.com/2013.1.319/styles/kendo.default.min.css" rel="stylesheet" type="text/css"/>*@
+    <script src="../Scripts/kendo.all.min.js"></script>
+    <script src="~/Scripts/moment/min/moment.min.js"></script>
+    <script src="~/Scripts/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+        var capacitydataSource = new kendo.data.DataSource({
+            data: [
+                { Days: "Friday", Date: '1, May 2015', From: '10:00:00', To: '18:30:00', NoofClients: '6' },
+                { Days: "Saturday", Date: "4, Jul 2015", From: '08:00:00', To: '09:00:00', NoofClients: '3' },
+                { Days: "Tuesday", Date: "26, Jan 2016", From: '08:00:00', To: '17:00:00', NoofClients: '6' }
+            ],
+            pageSize: 10
+
+        });
+        
+
+        $("#liCapacity").addClass("active");
+        $("#capacityGrid").kendoGrid({
+            selectable: "multiple cell",
+            allowCopy: true,
+            //height: 550,
+            scrollable: true,
+            sortable: true,
+            filterable: false,
+
+            //pageable: {
+            //    input: true,
+            //    numeric: false
+            //},
+            columns: [
+                {
+                    field: "Days",
+                    template: '<a href="javascript:void(0)" onclick="ShowEditCapacity();">#=Days#</a>',
+                },
+                {
+                    field: "Date",
+                    template: '#=Date#',
+                },
+                {
+                    field: "From",
+                    template: '#=From#',
+                },
+                {
+                    field: "To",
+                    template: '#=To#',
+                },
+                {
+                    field: "# of Clients",
+                    Title: 'NoofClients',
+                    template: '#=NoofClients#'
+                },
+                //{
+                //    field: "Delete",
+                //    width: "90px",
+                //    template: '<a href="javascript:void(0)" onclick="ShowDeleteConfirmationPopup();">Delete</a>',
+                //    attributes: {
+                //        style: 'white-space: nowrap '
+                //    }
+                //},
+                {
+                    field: "Actions",
+                    //title: "Actions",
+                    width: "200px",
+                    template: '<div class="btn-group mb-sm">' +
+                        '<button type="button" data-toggle="dropdown" class="btn btn-default">Select…</button>' +
+                        '<button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">' +
+                        '<span class="caret"></span>' +
+                        '</button>' +
+                        '<ul role="menu" class="dropdown-menu" style="min-width:102px !important;">' +
+                        '<li><a href="javascript:void(0);" onclick="ShowDeleteConfirmationPopup();">Delete</a></li>' +
+                        '</ul>' +
+                        '</div>',
+                }
+            ],
+            dataSource: capacitydataSource
+        });
+
+        capacitydataSource.read();
+        $("#capacityPager").kendoPager({
+            autoBind: true,
+            dataSource: capacitydataSource
+        });
+
+        function ShowDeleteConfirmationPopup() {
+            $('#confirmDeletion').modal('show');
+        }
+
+        function ShowEditCapacity() {
+            $("#capacitygridcontainer").hide();
+            $("#AddCapacity").hide();
+            $("#EditCapacity").show();
+        }
+
+        function ShowAddCapacity() {
+            $("#capacitygridcontainer").hide();
+            $("#EditCapacity").hide();
+            $("#AddCapacity").show();
+        }
+
+        function ShowCapacityGrid() {
+            $("#capacitygridcontainer").show();
+            $("#EditCapacity").hide();
+            $("#AddCapacity").hide();
+        }
+
+    </script>
+}

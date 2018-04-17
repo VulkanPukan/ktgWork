@@ -1,0 +1,60 @@
+﻿@{
+    Layout = null;
+}
+<link rel="stylesheet" href="~/content/StrengthTracker2/UserDataVisibility.css">
+<div id="dvVisibility">
+    <div class="panel-heading bb" style="font-weight:normal;color:white;">
+        Assign the User's Visibility
+    </div>
+    <div class="panel-body">
+        <div class="form-group col-lg-6">
+            <div class="col-lg-2">
+                <input type="checkbox" name="chkAthleticDirector" id="athleticDirectorCheckbox" />
+            </div>
+            <div class="col-lg-10">
+                <label class="control-label">See all information</label> @*&nbsp;<i class="fa fa-info-circle" aria-hidden="true" onclick="ShowADToolTipModal();"></i>*@
+            </div>
+        </div>
+        <div class="form-group col-lg-12">
+            Note: Checking this box will enable this User to gain visibility to ALL information associated with ALL Sports, Teams
+            and Athletes within the Modules (tabs) they have access to based on their Role.
+        </div>
+        <div class="form-group col-lg-12">
+            <div class="col-lg-7 pull-right">
+                <div class="pull-right">
+                    <input type="button" id="btnSaveIsAthleticDirector" value="Save" class="btn btn-success mb-lg">
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-lg-12">
+            <table id="userDataVisibilityTable" class="table table-striped info no-margin scroll">
+                <thead>
+                    <tr>
+                        <th class="col-md-3 col-xs-2" style="background:#3a86c8;">
+                            <span class="selectAllUserDataVisibility" id="selectAllUserDataVisibility">All</span>
+                            <span class="selectAllUserDataVisibility">/</span>
+                            <span class="selectAllUserDataVisibility" id="selectNoneUserDataVisibility"> None</span>
+                            Select
+                        </th>
+                        <th class="col-md-4 col-xs-4" style="background:#3a86c8;">Sport</th>
+                        <th class="col-md-3 col-xs-3" style="background:#3a86c8;">Team</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="trTeamCoach1">
+                        <td><input id="checkBox" type="checkbox"></td>
+                        <td>Volleyball</td>
+                        <td>Female Volleyball Sophomore B July 2017</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group col-lg-12">
+            <div class="col-lg-7 pull-right">
+                <div class="pull-right">
+                    <input type="button" id="btnSaveUserDataVisibility" value="Save" class="btn btn-success mb-lg">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

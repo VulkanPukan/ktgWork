@@ -1,0 +1,5 @@
+D:\SVN\KTG\trunk\MyProgrammer.Core\bin\Debug\MyProgrammer.Core.dll
+D:\SVN\KTG\trunk\MyProgrammer.Core\bin\Debug\MyProgrammer.Core.pdb
+D:\SVN\KTG\trunk\MyProgrammer.Core\obj\Debug\MyProgrammer.Core.csprojResolveAssemblyReference.cache
+D:\SVN\KTG\trunk\MyProgrammer.Core\obj\Debug\MyProgrammer.Core.dll
+D:\SVN\KTG\trunk\MyProgrammer.Core\obj\Debug\MyProgrammer.Core.pdb

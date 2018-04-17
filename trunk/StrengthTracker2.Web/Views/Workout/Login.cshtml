@@ -1,0 +1,247 @@
+﻿@using StrengthTracker2.Core.DataTypes
+@{
+    Layout = null;
+
+    string[] _startChars = new string[] { "All", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+    string[] _months = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.MonthNames;
+    string[] _days = new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" };
+}
+<!DOCTYPE html>
+<html lang="en" class="no-ie">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <title>Workout Session Login</title>
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="@Url.Content("~/content/bootstrap.css")">
+    <!-- Vendor CSS-->
+    <link rel="stylesheet" href="~/content/fontawesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/content/animo/animateanimo.css">
+    <!-- App CSS-->
+    <link rel="stylesheet" href="~/content/app.css">
+    <link rel="stylesheet" href="~/content/common.css">
+
+    <link rel="stylesheet" href="~/content/kendo.common.min.css" />
+    <link rel="stylesheet" href="~/content/kendo.silver.min.css">
+    <link href="~/Scripts/datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="~/Images/favicon.png">
+
+    <script src="~/Scripts/fastclick/fastclick.js" type="application/javascript"></script>
+
+    <style>
+        #dvSiteHeader {
+            width: 98.9% !important;
+        }
+
+        .titlebar {
+            color: #ffffff !important;
+            font-size: 17px;
+            line-height: 19px;
+            padding: 10px 15px !important;
+            padding-top: 20px !important;
+            background-color: #35394b !important;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="wrapper">
+        <nav role="navigation" class="navbar navbar-default navbar-top navbar-fixed-top titlebar" id="dvSiteHeader">
+            <div class="">
+                Strength Tracker - Workout Session Login
+            </div>
+        </nav>
+        <div class="main-content mt">
+            <h3></h3>
+            <div class="row b m-sm pt">
+                <div class="col-lg-2" style="padding:1px; ">
+                    <div class="panel-body bg-primary pl bb mb">
+                        <label class="control-label " style="width:100%; float:left; display:block; text-align:center;">Last Name Starts with</label>
+                    </div>
+                    <input type="hidden" id="txtSelectedUserId" name="txtSelectedUserId" value="0">
+                    <div class="panel-body">
+                        @foreach (string chr in _startChars)
+                        {
+                            <div class="form-group" style="width:25%; float:left; display:block; text-align:center;">
+                                <a href="javascript:void(0);" title="@chr" onclick="FilterByInitial(this)" class="control-label charsclass" style="font-size:15px; padding-left:5px; padding-right:5px; @(chr == "All"? "background-color:lightgray;" : @"")">@chr</a>
+                            </div>
+                        }
+                    </div>
+
+                </div>
+                <div class="col-lg-7" style="padding:1px; ">
+                    <div class="panel-body bg-primary pl bb mb">
+                        <label class="control-label " style="width:100%; float:left; display:block; text-align:center;">Athlete</label>
+                    </div>
+                    <div class="panel-body">
+                        
+                        @foreach (var user in Model.Users)
+                        {                                               
+                            var imgURL = user.ProfilePicture;
+                            <div class="form-group" style="width:33.33%; float:left; display:block;">
+                                <img src="@imgURL" alt="Image" width="45" height="45" class="img-thumbnail img-circle">
+                                @if (Model.CurrentUser != null && Model.CurrentUser.UserType == UserType.Coach)
+                                {
+                                    <a href="@Url.Action("DailyWorkoutSession", "Workout")" class="control-label userclass">
+                                        @user.FullName
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="javascript:void(0);" title="@user.FullName" onclick="SetName(this,@user.UserId)" class="control-label userclass">@user.FullName</a>
+                                }
+                                <span class="userclass" title="@user.LastName" style="display:none;"></span>
+                            </div>
+                        }
+                    </div>
+
+                </div>
+                <div class="col-lg-3" style="padding:1px; ">
+                    <div class="panel-body bg-primary pl bb mb">
+                        <label class="control-label " style="width:100%; float:left; display:block; text-align:center;">Birth Month & Day</label>
+                    </div>
+                    <div class="">
+
+                        <div id="divMonths" style="display:none;">
+                            <input type="hidden" id="txtSelectedMonth" name="txtSelectedMonth" value="0">
+                            @foreach (string month in _months)
+                            {
+                                <div class="form-group" style="width:33.33%; float:left; display:block; text-align:center;">
+                                    <a href="javascript:void(0);" title="@month" onclick="SetMonth(this)" class="control-label monthclass ">@month</a>
+                                </div>
+                            }
+                        </div>
+
+                        <div id="divDays" style="display:none;" class="mt mb pt">
+                            <label class="control-label pl bb mb" style="width:100%; float:left; display:block; text-align:center;">Birth Day</label>
+                            <input type="hidden" id="txtSelectedDay" name="txtSelectedDay" value="0">
+                            @foreach (string day in _days)
+                            {
+                                <div class="form-group" style="width:16.66%; float:left; display:block; text-align:center;">
+                                    <a href="javascript:void(0);" title="@day" onclick="SetDay(this)" class="control-label dayclass ">@day</a>
+                                </div>
+                            }
+                        </div>
+                        <div>
+                            <button id="btnLogin" type="button" class="btn btn-purple btn-block mt mb " style="display:none;" onclick="Login();">Let's Workout!</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/content/animo/animo.min.js"></script>
+    <script src="~/Scripts/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/chosen/chosen.jquery.min.js"></script>
+    <script src="~/Scripts/filestyle/bootstrap-filestyle.min.js"></script>
+    <script src="~/Scripts/storejson2.min.js"></script>
+    <script src="~/Scripts/slider/js/bootstrap-slider.js"></script>
+    <script src="~/Scripts/sparklines/jquery.sparkline.min.js"></script>
+    <script src="~/Scripts/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.resize.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.pie.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.time.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.categories.min.js"></script>
+    <script src="~/Scripts/app.js"></script>
+    <script src="~/Scripts/pages.js"></script>
+
+    <script src="~/Scripts/kendo.all.min.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
+
+        function FilterByInitial(filterChar)
+        {
+            $("#divMonths").hide();
+            $("#divDays").hide();
+            $("#btnLogin").hide();
+
+            $(".charsclass").css("background-color", "white");
+            $(filterChar).css("background-color", "lightgray");
+
+            $(".userclass").css("background-color", "white");
+            $(".monthclass").css("background-color", "white");
+            $(".dayclass").css("background-color", "white");
+
+            //$("input[name^='news']").val("news here!");
+
+            if (filterChar.text == "All")
+            {
+                $("a.userclass").show();
+                $("a.userclass").parent().css("width", "33.33%");
+            }
+            else {
+                $("a.userclass").hide();
+                $("a.userclass").parent().css("width", "0%");
+                $("span.userclass[title^='" + filterChar.text + "']").parent().children("a.userclass").show();
+                $("span.userclass[title^='" + filterChar.text + "']").parent().css("width", "33.33%");
+            }
+        }
+
+        function SetName(selectedName,uid)
+        {
+
+            $("#txtSelectedUserId").text(uid);
+            $("#divMonths").show();
+            $("#divDays").hide();
+            $("#btnLogin").hide();
+
+            $(".userclass").css("background-color", "white");
+            $(selectedName).css("background-color", "lightgray");
+
+            $(".monthclass").css("background-color", "white");
+            $(".dayclass").css("background-color", "white");
+
+
+
+
+        }
+
+        function SetMonth(selectedMonth) {
+            $("#txtSelectedMonth").text( $(selectedMonth).html());
+            $("#divDays").show();
+            $("#btnLogin").hide();
+            $(".monthclass").css("background-color", "white");
+            $(selectedMonth).css("background-color", "lightgray");
+
+            $(".dayclass").css("background-color", "white");
+        }
+
+        function SetDay(selectedDay) {
+            $("#btnLogin").show();
+            $("#txtSelectedDay").text( $(selectedDay).html());
+            $(".dayclass").css("background-color", "white");
+            $(selectedDay).css("background-color", "lightgray");
+        }
+
+        @*function Login() {
+            window.location = "@Url.Action("DailyWorkoutSession", "Workout")";
+        }*@
+
+        function Login() {
+            var monthName = $("#txtSelectedMonth").text();
+            var dayNumber = $("#txtSelectedDay").text();
+            var userId = $("#txtSelectedUserId").text();
+            if (monthName.length > 0 && dayNumber.length > 0 && userId.length > 0) {
+                $.ajax({
+                    url: "@Url.Action("postlogin", "workout")",
+                    type: "POST",
+                    data: { userId: userId, monthName: monthName, dayNumber: dayNumber },
+                    dataType: "json",
+                    success: function (e) {
+                        window.location.href = e;
+                    }
+                });
+            }
+            else {
+                return false;
+            }
+        }
+    </script>
+
+</body>
+</html>

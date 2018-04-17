@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  For more information on how to configure your ASP.NET application, please visit
+  http://go.microsoft.com/fwlink/?LinkId=152368
+  -->
+<configuration>
+  <configSections>
+    <!-- For more information on Entity Framework configuration, visit http://go.microsoft.com/fwlink/?LinkID=237468 -->
+    <section name="entityFramework" type="System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" requirePermission="false" />
+  </configSections>
+  <connectionStrings>
+    <add name="DefaultConnection" providerName="System.Data.SqlClient" connectionString="Data Source=(LocalDb)\v11.0;Initial Catalog=aspnet-StrengthTracker2.Web-20160906175808;Integrated Security=SSPI;AttachDBFilename=|DataDirectory|\aspnet-StrengthTracker2.Web-20160906175808.mdf" />
+  </connectionStrings>
+  <appSettings>
+    <add key="webpages:Version" value="2.0.0.0" />
+    <add key="webpages:Enabled" value="false" />
+    <add key="PreserveLoginUrl" value="true" />
+    <add key="ClientValidationEnabled" value="true" />
+    <add key="UnobtrusiveJavaScriptEnabled" value="true" />
+    <add key="ClientResetPwd" value="StrengthTracker Account Password Reset" />
+    <add key="ClientForgotUserName" value="StrengthTracker Account User Name" />
+    <add key="UserTimeOut" value="30" />
+    <!--<add key="PersonalTrainerRegnURL" value="http://localhost:2719/Registration/PersonalTrainer?p=" />
+    <add key="PersonalTrainerLoginURL" value="http://localhost:2719/" />-->
+    <add key="PersonalTrainerRegnURL" value="https://dev1.myprogrammer.com/ktg-dev2/Registration/PersonalTrainer?p=" />
+    <add key="PersonalTrainerLoginURL" value="https://dev1.myprogrammer.com/ktg-dev2/" />
+    <!--<add key="AdminEmail" value="rohit.kukreti@myprogrammer.com" />
+    <add key="AdminEmailCC" value="rohit.kukreti@myprogrammer.com" />-->
+    <add key="AdminEmail" value="nancykocarek@allsportsprofitness.com" />
+    <add key="AdminEmailCC" value="denniscurtis@allsportsprofitness.com" />
+    <!--<add key="PersonalScriptFile" value="G:\Work\My Programmer\Projects\ktg2\trunk\DB Scripts\PersonaTrainerCreation-Full DB with Data Script.sql" />
+    <add key="PersonalDBPath" value="G:\Work\My Programmer\DB" />
+    <add key="PersonalDBLogPath" value="G:\Work\My Programmer\DB" />-->
+    <add key="PersonalScriptFile" value="C:\jenkins\workspace\ktg-dev2\DBScripts\PersonaTrainerCreation-Full DB with Data Script.sql" />
+    <add key="PersonalDBPath" value="C:\Program Files\Microsoft SQL Server\MSSQL10_50.MPSQLSERVER2008\MSSQL\DATA" />
+    <add key="PersonalDBLogPath" value="C:\Program Files\Microsoft SQL Server\MSSQL10_50.MPSQLSERVER2008\MSSQL\DATA" />
+	<add key="OrganizationScriptFile" value="C:\jenkins\workspace\ktg-dev2\DBScripts\EnterpriseCustomerCreation-FullDB with Data Script.sql" />
+    <add key="OrganizationDBPath" value="C:\Program Files\Microsoft SQL Server\MSSQL10_50.MPSQLSERVER2008\MSSQL\DATA" />
+    <add key="OrganizationDBLogPath" value="C:\Program Files\Microsoft SQL Server\MSSQL10_50.MPSQLSERVER2008\MSSQL\DATA" />
+    <!--<add key="DBConnStr" value="server=rohitlaptop\sqlexpress;database=:custname:;uid=sa;password=Password123;" />
+    <add key="TKGDBDSN" value="server=rohitlaptop\sqlexpress;database=ktg-dev;uid=sa;password=Password123;" />
+    <add key="TKGMasterDSN" value="server=rohitlaptop\sqlexpress;database=TKGMaster;uid=sa;password=Password123;" />-->
+    <add key="DBConnStr" value="server=dev1.myprogrammer.com,10591;database=:custname:;uid=rohit.kukreti;password=RKPasswd99#;" />
+    <add key="TKGDBDSN" value="server=dev1.myprogrammer.com,10591;database=ktg-dev2;uid=rohit.kukreti;password=RKPasswd99#;" />
+    <add key="TKGMasterDSN" value="server=dev1.myprogrammer.com,10591;database=TKGMaster;uid=rohit.kukreti;password=RKPasswd99#;" />
+    <add key="IndividualAthleteTrialDays" value="10"/>
+    <add key="PersonalTrainerTrialDays" value="30"/>
+    <!--<add key="TKGDBDSN" value="server=dev1.myprogrammer.com,10591;database=ktg-dev2;uid=rohit.kukreti;password=RKPasswd99#;" />
+    <add key="TKGMasterDSN" value="server=dev1.myprogrammer.com,10591;database=TKGMaster;uid=rohit.kukreti;password=RKPasswd99#;" />-->
+    <add key="PersonalPrefix" value="https://dev1.myprogrammer.com/ktg-dev2/" />
+    <!--<add key="PersonalTrainerRegnURL" value="https://dev1.myprogrammer.com/ktg-dev2/Registration/PersonalTrainer?p=" />
+    <add key="PersonalTrainerLoginURL" value="https://dev1.myprogrammer.com/ktg-dev2/" />
+    <add key="AdminEmail" value="rohit.kukreti@myprogrammer.com" />
+    <add key="AdminEmailCC" value="rohit.kukreti@myprogrammer.com" />-->
+    <!--<add key="PersonalScriptFile" value="C:\jenkins\workspace\ktg-dev2\DBScripts\PersonaTrainerCreation-Full DB with Data Script.sql" />-->
+    <!--<add key="PersonalDBPath" value="C:\Program Files\Microsoft SQL Server\MSSQL10_50.MPSQLSERVER2008\MSSQL\DATA" />
+    <add key="PersonalDBLogPath" value="C:\Program Files\Microsoft SQL Server\MSSQL10_50.MPSQLSERVER2008\MSSQL\DATA" />
+    <add key="DBConnStr" value="server=dev1.myprogrammer.com,10591;database=:custname:;uid=rohit.kukreti;password=RKPasswd99#;" />
+    <add key="TKGDBDSN" value="server=dev1.myprogrammer.com,10591;database=ktg-dev2;uid=rohit.kukreti;password=RKPasswd99#;" />
+    <add key="TKGMasterDSN" value="server=dev1.myprogrammer.com,10591;database=TKGMaster;uid=rohit.kukreti;password=RKPasswd99#;" />-->
+  </appSettings>
+  <system.web>
+    <!--<identity impersonate="true" userName="arun.prasath" password="APPasswd99" />-->
+    <httpRuntime targetFramework="4.5" />
+    <compilation debug="true" targetFramework="4.5" />
+    <authentication mode="Forms">
+      <forms loginUrl="~/Account/Login" timeout="2880" />
+    </authentication>
+    <!--<authorization>
+      <deny users="?" />
+    </authorization>-->
+    <pages>
+      <namespaces>
+        <add namespace="System.Web.Helpers" />
+        <add namespace="System.Web.Mvc" />
+        <add namespace="System.Web.Mvc.Ajax" />
+        <add namespace="System.Web.Mvc.Html" />
+        <add namespace="System.Web.Optimization" />
+        <add namespace="System.Web.Routing" />
+        <add namespace="System.Web.WebPages" />
+      </namespaces>
+    </pages>
+    <profile defaultProvider="DefaultProfileProvider">
+      <providers>
+        <add name="DefaultProfileProvider" type="System.Web.Providers.DefaultProfileProvider, System.Web.Providers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" connectionStringName="DefaultConnection" applicationName="/" />
+      </providers>
+    </profile>
+    <membership defaultProvider="DefaultMembershipProvider">
+      <providers>
+        <add name="DefaultMembershipProvider" type="System.Web.Providers.DefaultMembershipProvider, System.Web.Providers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" connectionStringName="DefaultConnection" enablePasswordRetrieval="false" enablePasswordReset="true" requiresQuestionAndAnswer="false" requiresUniqueEmail="false" maxInvalidPasswordAttempts="5" minRequiredPasswordLength="6" minRequiredNonalphanumericCharacters="0" passwordAttemptWindow="10" applicationName="/" />
+      </providers>
+    </membership>
+    <roleManager defaultProvider="DefaultRoleProvider">
+      <providers>
+        <add name="DefaultRoleProvider" type="System.Web.Providers.DefaultRoleProvider, System.Web.Providers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" connectionStringName="DefaultConnection" applicationName="/" />
+      </providers>
+    </roleManager>
+    <!--
+            If you are deploying to a cloud environment that has multiple web server instances,
+            you should change session state mode from "InProc" to "Custom". In addition,
+            change the connection string named "DefaultConnection" to connect to an instance
+            of SQL Server (including SQL Azure and SQL  Compact) instead of to SQL Server Express.
+      -->
+    <sessionState mode="InProc" customProvider="DefaultSessionProvider">
+      <providers>
+        <add name="DefaultSessionProvider" type="System.Web.Providers.DefaultSessionStateProvider, System.Web.Providers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" connectionStringName="DefaultConnection" />
+      </providers>
+    </sessionState>
+  </system.web>
+  <!--<staticContent>
+      <remove fileExtension=".woff" /> -->
+  <!-- In case IIS already has this mime type -->
+  <!--
+      <mimeMap fileExtension=".woff" mimeType="application/x-font-woff" />
+  </staticContent>-->
+  <system.webServer>
+    <validation validateIntegratedModeConfiguration="false" />
+    <handlers>
+      <remove name="ExtensionlessUrlHandler-ISAPI-4.0_32bit" />
+      <remove name="ExtensionlessUrlHandler-ISAPI-4.0_64bit" />
+      <remove name="ExtensionlessUrlHandler-Integrated-4.0" />
+      <add name="ExtensionlessUrlHandler-ISAPI-4.0_32bit" path="*." verb="GET,HEAD,POST,DEBUG,PUT,DELETE,PATCH,OPTIONS" modules="IsapiModule" scriptProcessor="%windir%\Microsoft.NET\Framework\v4.0.30319\aspnet_isapi.dll" preCondition="classicMode,runtimeVersionv4.0,bitness32" responseBufferLimit="0" />
+      <add name="ExtensionlessUrlHandler-ISAPI-4.0_64bit" path="*." verb="GET,HEAD,POST,DEBUG,PUT,DELETE,PATCH,OPTIONS" modules="IsapiModule" scriptProcessor="%windir%\Microsoft.NET\Framework64\v4.0.30319\aspnet_isapi.dll" preCondition="classicMode,runtimeVersionv4.0,bitness64" responseBufferLimit="0" />
+      <add name="ExtensionlessUrlHandler-Integrated-4.0" path="*." verb="GET,HEAD,POST,DEBUG,PUT,DELETE,PATCH,OPTIONS" type="System.Web.Handlers.TransferRequestHandler" preCondition="integratedMode,runtimeVersionv4.0" />
+    </handlers>
+    <staticContent>
+      <remove fileExtension=".woff" />
+      <mimeMap fileExtension=".woff" mimeType="application/font-woff" />
+    </staticContent>
+  </system.webServer>
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="EntityFramework" publicKeyToken="b77a5c561934e089" />
+        <bindingRedirect oldVersion="0.0.0.0-5.0.0.0" newVersion="5.0.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="WebGrease" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="0.0.0.0-1.3.0.0" newVersion="1.3.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.Helpers" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="1.0.0.0-3.0.0.0" newVersion="3.0.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.WebPages" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="1.0.0.0-3.0.0.0" newVersion="3.0.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.Mvc" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="1.0.0.0-5.2.3.1" newVersion="5.2.3.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.Http" publicKeyToken="31bf3856ad364e35" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-4.0.0.0" newVersion="4.0.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-11.0.0.0" newVersion="11.0.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.Razor" publicKeyToken="31bf3856ad364e35" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-3.0.0.0" newVersion="3.0.0.0" />
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+  <entityFramework>
+    <defaultConnectionFactory type="System.Data.Entity.Infrastructure.LocalDbConnectionFactory, EntityFramework">
+      <parameters>
+        <parameter value="v13.0" />
+      </parameters>
+    </defaultConnectionFactory>
+  </entityFramework>
+</configuration>

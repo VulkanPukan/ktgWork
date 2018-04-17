@@ -1,0 +1,361 @@
+﻿@{
+    Layout = null;
+    var prefix = Session["PersonalPrefix"];
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="icon" type="image/png" href="~/Images/favicon.png">
+    <title>Personal Registration</title>
+    <link rel="stylesheet" href="~/Scripts/mustang/css/main.css" id="themeSwitcher" />
+    <link href="~/Scripts/mustang/css/login.css" rel="stylesheet" />
+    <link href="~/Scripts/mustang/fonts/icomoon/icomoon.css" rel="stylesheet" />
+    <style>
+        button {
+            font-size: 18px;
+            background-color: #4568b2;
+            color: #ffffff;
+            border: 0;
+            -webkit-border-radius: 2px;
+            -moz-border-radius: 2px;
+            border-radius: 2px;
+            -webkit-transition: all 0.2s ease;
+            -moz-transition: all 0.2s ease;
+            -ms-transition: all 0.2s ease;
+            -o-transition: all 0.2s ease;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            width: 100%;
+            margin: 0 auto;
+            display: block;
+            margin-bottom: 10px;
+            padding: 15px;
+        }
+
+        #loading-wrapper #loader {
+            width: 80px !important;
+        }
+
+        .uniqueUrlDiv {
+            height: 42px;
+        }
+
+        input[type="text"].uniqueUrl {
+            border: thin solid #bed2e5;
+        }
+
+        .logoCustom {
+            max-width: max-content !important;
+            float: none;
+        }
+
+        h5 {
+            margin-top: 0px !important;
+            padding-top: 5px !important;
+        }
+
+        input[type="email"].verimail-error {
+            border-color: red;
+        }
+        
+        select{
+            border: thin solid #bed2e5;
+            color: #000000;
+            width: 100%;
+            height: 42px;
+            position: relative;
+            margin: 0 auto;
+            display: block;
+            margin-bottom: 10px;
+            padding: 10px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body class="login loaded">
+    <div id="loading-wrapper">
+        <div id="loader">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+            <div class="line4"></div>
+            <div class="line5"></div>
+            <div class="line6"></div>
+        </div>
+    </div>
+    <form>
+        <div id="login-wrapper" style="width:420px !important;">
+            <div id="login_header">
+                <img src="~/images/saqs-headerlogo.png" class="logo logoCustom" alt="Strength Tracker" />
+            </div>
+            <div class="login-user"></div>
+            <h5>Register as Personal Trainer</h5>
+            <div id="inputs">
+                <input type="hidden" name="Category" id="hdnCustomerCategory" value="2" />
+                <input type="hidden" name="IsFreeTrail" id="hdnIsFreeTrail" value="0" />
+                <div class="form-block">
+                    <input id="firstName" type="text" placeholder="First Name">
+                </div>
+                <div class="form-block">
+                    <input id="lastName" type="text" placeholder="Last Name">
+                </div>
+                <div class="form-block">
+                    <input id="fullName" type="text" placeholder="Company Name">
+                </div>
+                <div class="form-block">
+                    <input id="companyurl" type="text" placeholder="Your Company's Website">
+                </div>
+                <div class="form-block">
+                    <input id="email" type="email" placeholder="Contact email">
+                </div>
+                <div class="form-block">
+                    <input id="phone" type="text" placeholder="Contact phone">
+                </div>
+                <div class="form-block">
+                    <input id="address" type="text" placeholder="Address" onblur="ChangeBillingAdd()">
+                </div>
+                <div class="form-block">
+                    <input id="city" type="text" placeholder="City" onblur="ChangeBillingAdd()">
+                </div>
+                <div class="form-block">
+                    <select id="state"  class="state-select" onblur="ChangeBillingAdd()">
+                        <option value="0">Select State</option>
+                        @*<option value="1">Alabama</option>
+                        <option value="2">Alaska</option>
+                        <option value="30">New Jersey</option>
+                        <option value="35">Ohio</option>*@
+                    </select>
+                </div>
+                <div class="form-block">
+                    <input id="ZIPCode" type="text" placeholder="ZIPCode" onblur="ChangeBillingAdd();">
+                </div>
+                <div class="form-block">
+                    <select id="country" class="country-select" onblur="ChangeBillingAdd();">
+                        <option>Select Country</option>
+                        @*<option value="3">Belgium</option>
+                        <option value="2">Canada</option>
+                        <option value="4">France</option>
+                        <option value="5">Germany</option>
+                        <option value="6">UK</option>
+                        <option value="1">US</option>*@
+                    </select>
+                </div>
+                <div class="form-block">
+                    <input id="chkUseSameAdd" type="checkbox" onclick="ChangeBillingAdd()"> Use same address as above for billing
+                </div>
+                <div class="form-block">
+                    <input id="billingAddress" type="text" placeholder="Billing address"/>
+                </div>
+                <div class="form-block">
+                    <input id="billingCity" type="text" placeholder="City"/>
+                </div>
+                <div class="form-block">
+                    @*<input id="billingState" type="text" placeholder="State" />*@
+                    <select id="billingState"  class="state-select">
+                        <option value="0" selected="selected">Select State</option>
+                        @*<option value="1">Alabama</option>
+                        <option value="2">Alaska</option>
+                        <option value="30">New Jersey</option>
+                        <option value="35">Ohio</option>*@
+                    </select>
+                </div>
+                <div class="form-block">
+                    <input id="billingZIPCode" type="text" placeholder="ZIPCode"/>
+                </div>
+                <div class="form-block">
+                    <select id="billingCountry" class="country-select">
+                        <option selected="selected">Select Country</option>
+                        @*<option value="3">Belgium</option>
+                        <option value="2">Canada</option>
+                        <option value="4">France</option>
+                        <option value="5">Germany</option>
+                        <option value="6">UK</option>
+                        <option value="1">US</option>*@
+                    </select>
+                </div>
+                <div class="panel-heading bb" style="margin-bottom: 5px;">
+                    <label style="font-weight: normal; display: inline-block; max-width: 100%; margin-bottom: 5px; color: white;">Unique URL</label>
+                    <div class="required pull-right" style="color: white;">This is the unique URL which you will use to login.</div>
+                </div>
+                <br/>
+                <div class="form-block uniqueUrlDiv">
+                    <label>https://dev1.myprogrammer.com/ktg-dev2/</label>
+                    <input id="uniqueURL" type="text" class="uniqueUrl" maxlength="15" style="width: 90px; float: right; height: 20px;">
+                </div>
+                <div class="form-block">
+                    <span><strong>Example - https://dev1.myprogrammer.com/ktg-dev2/Uniquefitness </strong></span>
+                </div>
+                <br/>
+                <div class="form-block">
+                    By clicking on 'Register' below, you confirm that you accept the <a href="#" style="color: blue;">Terms of Use</a>.
+                </div>
+                <br/>
+                <div class="clearfix">
+                    <button id="userlogin" onclick="Register();" type="button">
+                        Register
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script src="~/Scripts/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/verimail/verimail.jquery.js"></script>
+    <script src="~/Scripts/jquery.maskedinput.js"></script>
+    <script src="~/Scripts/StrengthTracker2/Common.js"></script>
+    <script src="~/Scripts/StrengthTracker2/countryScript.js"></script>
+    <script src="~/Scripts/StrengthTracker2/State.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        var checkShortNameUrl = "@Url.Action("CheckShortName", "CustomerRegistration")";
+        var registerUrl = "@Url.Action("Register", "CustomerRegistration")";
+        $(document).ready(function () {
+            $("#phone").mask("(999) 999-9999");
+            $('#ZIPCode').mask("99999");
+            $('#billingZIPCode').mask("99999");
+        });
+        $('#uniqueURL').blur(function (event) {
+            loading_img(true);
+            var value = $('#uniqueURL').val();
+            event.preventDefault();
+            if (value.length < 3) {
+                $('#uniqueURL').css('border-color', 'red');
+                $('#uniqueURL').focus();
+                $("#spinner").hide('slow');
+                return false;
+            } else {
+                $.ajax({
+                    url: checkShortNameUrl,
+                    type: "POST",
+                    contentType: 'application/json',
+                    data: JSON.stringify({ 'name': value }),
+                    dataType: "json",
+                    success: function (resp) {
+                        if (resp.Status === 1) {
+                            $('#uniqueURL').css('border-color', 'green');
+                        } else {
+                            $('#uniqueURL').focus();
+                            $('#uniqueURL').css('border-color', 'red');
+                        }
+                        loading_img(false);
+                    },
+                    error: function (resp) {
+                        loading_img(false);
+                        alert("Error in processing request.");
+                    }
+                });
+            }
+        });
+        function Register() {
+            var firstName = $("#firstName").val();
+            var lastName = $("#lastName").val();
+            var uniqueURL = $("#uniqueURL").val();
+            var fullName = $("#fullName").val();
+            var mail = $("#email").val();
+            var phone = $("#phone").val();
+            var address = $("#address").val();
+            var state = $("#state").val();
+            var city = $("#city").val();
+            var country = $("#country").val();
+            var ZIPCode = $("#ZIPCode").val();
+            
+            var billingAddress = $("#billingAddress").val();
+            var billingState = $("#billingState").val();
+            var billingCity = $("#billingCity").val();
+            var billingCountry = $("#billingCountry").val();
+            var billingZIPCode = $("#billingZIPCode").val();
+
+            var companywebsite = $("#companyurl").val();
+            var sameAsAbove = false;
+            if (document.getElementById('chkUseSameAdd').checked) {
+                sameAsAbove = true;
+            }
+            if (!firstName || !lastName || !uniqueURL ||
+               !fullName || !mail || !phone ||
+               !address || !billingAddress) {
+                alert("Please fill all fields!");
+                return;
+            }
+            var data = {
+                ContactFirstName: firstName,
+                ContactLastName: lastName,
+                ContactEmail: mail,
+                ContactPhone: phone,
+
+                BillingAddress: billingAddress,
+                BillingState: billingState,
+                BillingCity: billingCity,
+                BillingCountry: billingCountry,
+                BillingZIPCode: billingZIPCode,
+
+                Address: address,
+                State: state,
+                City: city,
+                Country: country,
+                ZIPCode: ZIPCode,
+
+                ShortName: uniqueURL,
+                OrganizationName: fullName,
+                CompanyWebSite: companywebsite,
+                SameAddAsAbove: sameAsAbove
+            };
+            loading_img(true);
+            var fileData = new FormData();
+            fileData.append('customerModel', JSON.stringify(data));
+            $.ajax({
+                url: registerUrl,
+                type: "POST",
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                dataType: "json",
+                success: function (resp) {
+                    loading_img(false);
+                    if (resp.Status === 3) {
+                        window.location.href = "../CustomerRegistration/TKGThankyouPE";
+                    }
+                    else {
+                        alert(resp.Message);
+                    }
+                },
+                error: function (resp) {
+                    loading_img(false);
+                    alert("Error in processing. Please try again after sometime");
+                }
+            });
+        }
+        function ChangeBillingAdd() {
+            if (document.getElementById('chkUseSameAdd').checked) {
+                $("#billingAddress").val($("#address").val());
+                $("#billingState").val($("#state").val());
+                $("#billingCity").val($("#city").val());
+                $("#billingCountry").val($("#country").val());
+                $("#billingZIPCode").val($("#ZIPCode").val());
+                $("#billingAddress").hide();
+                $("#billingState").hide();
+                $("#billingCity").hide();
+                $("#billingCountry").hide();
+                $("#billingZIPCode").hide();
+            } else {
+                $("#billingAddress").val('');
+                $("#billingState").val('');
+                $("#billingCity").val('');
+                $("#billingCountry").val('');
+                $("#billingZIPCode").val('');
+                $("#billingAddress").show();
+                $("#billingState").show();
+                $("#billingCity").show();
+                $("#billingCountry").show();
+                $("#billingZIPCode").show();
+            }
+        }
+
+        $(document).ready(function () {
+            $("input[type=email]").verimail({});
+        });
+    </script>
+</body>
+</html>

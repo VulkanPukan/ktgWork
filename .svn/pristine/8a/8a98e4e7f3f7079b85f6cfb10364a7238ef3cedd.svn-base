@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{48F1BA03-E18B-4FB4-AC8D-A6AC554E4F8E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>StrengthTracker2.Core</RootNamespace>
+    <AssemblyName>StrengthTracker2.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataTypes\CustomerCategoryType.cs" />
+    <Compile Include="DataTypes\CustomerContactType.cs" />
+    <Compile Include="DataTypes\CustomerType.cs" />
+    <Compile Include="DataTypes\PaymentOption.cs" />
+    <Compile Include="DataTypes\UserResponsibilityType.cs" />
+    <Compile Include="Functional\Contracts\Account\IAccount.cs" />
+    <Compile Include="Functional\Contracts\Account\ILogin.cs" />
+    <Compile Include="Functional\Contracts\Account\IState.cs" />
+    <Compile Include="Functional\Contracts\Account\IUserDataVisibilityManagement.cs" />
+    <Compile Include="Functional\Contracts\Account\IUserHistoryManagement.cs" />
+    <Compile Include="Functional\Contracts\AthleteManagement\IAthleteManagement.cs" />
+    <Compile Include="Functional\Contracts\Customers\ICustomerLocationMgmt.cs" />
+    <Compile Include="Functional\Contracts\Customers\ICustomerLocationRoleManagement.cs" />
+    <Compile Include="Functional\Contracts\Customers\ILocationContactManagement.cs" />
+    <Compile Include="Functional\Contracts\Customers\ILocationPricingManagement.cs" />
+    <Compile Include="Functional\Contracts\ProgramManagement\IExerciseManagement.cs" />
+    <Compile Include="Functional\Contracts\ProgramManagement\IPositionMgmt.cs" />
+    <Compile Include="Functional\Contracts\ProgramManagement\IProgramManagement.cs" />
+    <Compile Include="Functional\Contracts\ProgramManagement\ISportsManagement.cs" />
+    <Compile Include="Functional\Contracts\ProgramManagement\IUOMManagement.cs" />
+    <Compile Include="Functional\Contracts\Teams\ITeamManagement.cs" />
+    <Compile Include="Functional\Contracts\TKGMaster\ICustomerMasterManagement.cs" />
+    <Compile Include="Functional\DBEntities\Actors\Registration.cs" />
+    <Compile Include="Functional\DBEntities\Actors\Team.cs" />
+    <Compile Include="Functional\DBEntities\Actors\TeamDetails.cs" />
+    <Compile Include="Functional\DBEntities\Actors\UserDataVisibility.cs" />
+    <Compile Include="Functional\DBEntities\Actors\UserHistory.cs" />
+    <Compile Include="Functional\DBEntities\Actors\UserSportTeamLink.cs" />
+    <Compile Include="Functional\DBEntities\Customers\CustomerLocation.cs" />
+    <Compile Include="Functional\DBEntities\Customers\CustomerLocationRole.cs" />
+    <Compile Include="Functional\DBEntities\Customers\LocationContact.cs" />
+    <Compile Include="Functional\DBEntities\Customers\LocationPricing.cs" />
+    <Compile Include="Functional\DBEntities\Actors\State.cs" />
+    <Compile Include="Functional\DBEntities\ProgramManagement\Exercise.cs" />
+    <Compile Include="Functional\DBEntities\ProgramManagement\ExerciseTempo.cs" />
+    <Compile Include="Functional\DBEntities\ProgramManagement\MovementType.cs" />
+    <Compile Include="Functional\Contracts\Security\IRoleManagement.cs" />
+    <Compile Include="Functional\Contracts\Customers\IApplicationServerManagement.cs" />
+    <Compile Include="Functional\Contracts\Customers\ICustomerManagement.cs" />
+    <Compile Include="Functional\Contracts\Customers\ICustomerContactManagement.cs" />
+    <Compile Include="Functional\Contracts\Customers\ICustomerPricingManagement.cs" />
+    <Compile Include="Functional\Contracts\Customers\IDatabaseServerManagement.cs" />
+    <Compile Include="Functional\DBEntities\Actors\Contact.cs" />
+    <Compile Include="Functional\DBEntities\Actors\User.cs" />
+    <Compile Include="Functional\DBEntities\Actors\UserDetails.cs" />
+    <Compile Include="Functional\DBEntities\Actors\UserImage.cs" />
+    <Compile Include="Functional\DBEntities\Customers\CustomerDetails.cs" />
+    <Compile Include="Functional\DBEntities\ProgramManagement\Position.cs" />
+    <Compile Include="Functional\DBEntities\ProgramManagement\Program.cs" />
+    <Compile Include="Functional\DBEntities\ProgramManagement\ProgramDetail.cs" />
+    <Compile Include="Functional\DBEntities\ProgramManagement\ProgramExercise.cs" />
+    <Compile Include="Functional\DBEntities\ProgramManagement\ProgramSpecialSchedule.cs" />
+    <Compile Include="Functional\DBEntities\ProgramManagement\SpecialScheduleSessions.cs" />
+    <Compile Include="Functional\DBEntities\ProgramManagement\Sport.cs" />
+    <Compile Include="Functional\DBEntities\ProgramManagement\UOM.cs" />
+    <Compile Include="Functional\DBEntities\Security\Permission.cs" />
+    <Compile Include="Functional\DBEntities\Security\Role.cs" />
+    <Compile Include="Functional\DBEntities\Security\RoleDetails.cs" />
+    <Compile Include="Functional\DBEntities\Security\RolePermission.cs" />
+    <Compile Include="Functional\DBEntities\Customers\ApplicationServer.cs" />
+    <Compile Include="Functional\DBEntities\Customers\Customer.cs" />
+    <Compile Include="Functional\DBEntities\Customers\CustomerContact.cs" />
+    <Compile Include="Functional\DBEntities\Customers\CustomerPricing.cs" />
+    <Compile Include="Functional\DBEntities\Customers\DatabaseServer.cs" />
+    <Compile Include="Functional\DBEntities\TKGMaster\CustomerMaster.cs" />
+    <Compile Include="Functional\DBEntities\WorkoutManagement\AssessmentExercises.cs" />
+    <Compile Include="Functional\DBEntities\WorkoutManagement\AssessmentInfoDetails.cs" />
+    <Compile Include="Functional\DBEntities\WorkoutManagement\AssessmentMasterInfo.cs" />
+    <Compile Include="Functional\DBEntities\WorkoutManagement\AssessmentProfile.cs" />
+    <Compile Include="Functional\DBEntities\WorkoutManagement\AthleteAssessmentInfo.cs" />
+    <Compile Include="Functional\DBEntities\WorkoutManagement\DWChangedExerciseDetails.cs" />
+    <Compile Include="Functional\DBEntities\WorkoutManagement\SAQDetail.cs" />
+    <Compile Include="Functional\DBEntities\WorkoutManagement\SAQStivityDetail.cs" />
+    <Compile Include="Functional\DBEntities\WorkoutManagement\SAQStivityExercises.cs" />
+    <Compile Include="Functional\DBEntities\WorkoutManagement\SAQStivitySessionMaster.cs" />
+    <Compile Include="Functional\Contracts\Workout\IWorkoutManagement.cs" />
+    <Compile Include="Functional\DBEntities\WorkoutManagement\UserWorkoutDetails.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DataTypes\Gender.cs" />
+    <Compile Include="DataTypes\PayLater.cs" />
+    <Compile Include="DataTypes\UserType.cs" />
+    <Compile Include="Repository\Contracts\Account\IAccount.cs" />
+    <Compile Include="Repository\Contracts\Account\ICustomerCategoryTypeFilter.cs" />
+    <Compile Include="Repository\Contracts\Account\ILogin.cs" />
+    <Compile Include="Repository\Contracts\Account\IState.cs" />
+    <Compile Include="Repository\Contracts\Account\IUserDataVisibilityRepository.cs" />
+    <Compile Include="Repository\Contracts\Account\IUserHistoryRepository.cs" />
+    <Compile Include="Repository\Contracts\AthleteManagement\IAthleteCalculationService.cs" />
+    <Compile Include="Repository\Contracts\AthleteManagement\IAthleteFilterRepository.cs" />
+    <Compile Include="Repository\Contracts\AthleteManagement\IAthleteManagementRepository.cs" />
+    <Compile Include="Repository\Contracts\Customers\IApplicationServerManagementRepository.cs" />
+    <Compile Include="Repository\Contracts\Customers\ICustomerLocationMgmtRepository.cs" />
+    <Compile Include="Repository\Contracts\Customers\ICustomerLocationRoleMgmtRepository.cs" />
+    <Compile Include="Repository\Contracts\Customers\ICustomerManagementRepository.cs" />
+    <Compile Include="Repository\Contracts\Customers\ICustomerContactManagementRepository.cs" />
+    <Compile Include="Repository\Contracts\Customers\ICustomerPricingManagementRepository.cs" />
+    <Compile Include="Repository\Contracts\Customers\IDatabaseServerManagementRepository.cs" />
+    <Compile Include="Functional\Contracts\ProgramManagement\IMovementTypeMgmt.cs" />
+    <Compile Include="Repository\Contracts\Customers\ILocationContactManagementRepository.cs" />
+    <Compile Include="Repository\Contracts\Customers\ILocationPricingManagementRepository.cs" />
+    <Compile Include="Repository\Contracts\ProgramManagement\IExerciseManagement.cs" />
+    <Compile Include="Repository\Contracts\ProgramManagement\IMovementTypeRepository.cs" />
+    <Compile Include="Repository\Contracts\ProgramManagement\IPositionMgmtRepository.cs" />
+    <Compile Include="Repository\Contracts\ProgramManagement\IProgramManagementRepository.cs" />
+    <Compile Include="Repository\Contracts\ProgramManagement\ISportsManagementRepository.cs" />
+    <Compile Include="Repository\Contracts\ProgramManagement\IUOMManagementRepository.cs" />
+    <Compile Include="Repository\Contracts\Registration\IRegistrationManager.cs" />
+    <Compile Include="Repository\Contracts\Security\IRoleManagement.cs" />
+    <Compile Include="Repository\Contracts\Teams\ITeamManagmentRepository.cs" />
+    <Compile Include="Repository\Contracts\TKGMaster\ICustomerMasterMgmtRepository.cs" />
+    <Compile Include="Repository\Contracts\Workout\IWorkoutManagement.cs" />
+    <Compile Include="Repository\Entities\Actors\Contact.cs" />
+    <Compile Include="Repository\Entities\Actors\Registration.cs" />
+    <Compile Include="Repository\Entities\Actors\State.cs" />
+    <Compile Include="Repository\Entities\Actors\Team.cs" />
+    <Compile Include="Repository\Entities\Actors\TeamDetails.cs" />
+    <Compile Include="Repository\Entities\Actors\User.cs" />
+    <Compile Include="Repository\Entities\Actors\UserDetails.cs" />
+    <Compile Include="Repository\Entities\Actors\UserHistory.cs" />
+    <Compile Include="Repository\Entities\Actors\UserImage.cs" />
+    <Compile Include="Repository\Entities\Actors\UserDataVisibility.cs" />
+    <Compile Include="Repository\Entities\Actors\UserSportTeamLink.cs" />
+    <Compile Include="Repository\Entities\Customers\CustomerDetails.cs" />
+    <Compile Include="Repository\Entities\Customers\CustomerLocation.cs" />
+    <Compile Include="Repository\Entities\Customers\CustomerLocationRole.cs" />
+    <Compile Include="Repository\Entities\Customers\LocationContact.cs" />
+    <Compile Include="Repository\Entities\Customers\LocationPricing.cs" />
+    <Compile Include="Repository\Entities\ProgramManagement\Exercise.cs" />
+    <Compile Include="Repository\Entities\ProgramManagement\ExerciseTempo.cs" />
+    <Compile Include="Repository\Entities\ProgramManagement\MovementType.cs" />
+    <Compile Include="Repository\Entities\ProgramManagement\Position.cs" />
+    <Compile Include="Repository\Entities\ProgramManagement\Program.cs" />
+    <Compile Include="Repository\Entities\ProgramManagement\ProgramDetail.cs" />
+    <Compile Include="Repository\Entities\ProgramManagement\ProgramExercise.cs" />
+    <Compile Include="Repository\Entities\ProgramManagement\ProgramSpecialSchedule.cs" />
+    <Compile Include="Repository\Entities\ProgramManagement\SpecialScheduleSessions.cs" />
+    <Compile Include="Repository\Entities\ProgramManagement\Sport.cs" />
+    <Compile Include="Repository\Entities\ProgramManagement\UOM.cs" />
+    <Compile Include="Repository\Entities\Security\Permission.cs" />
+    <Compile Include="Repository\Entities\Security\Role.cs" />
+    <Compile Include="Repository\Entities\Security\RoleDetails.cs" />
+    <Compile Include="Repository\Entities\Security\RolePermission.cs" />
+    <Compile Include="Repository\Entities\Customers\ApplicationServer.cs" />
+    <Compile Include="Repository\Entities\Customers\Customer.cs" />
+    <Compile Include="Repository\Entities\Customers\CustomerContact.cs" />
+    <Compile Include="Repository\Entities\Customers\CustomerPricing.cs" />
+    <Compile Include="Repository\Entities\Customers\DatabaseServer.cs" />
+    <Compile Include="Repository\Entities\TKGMaster\CustomerMaster.cs" />
+    <Compile Include="Repository\Entities\WorkoutManagement\AssessmentExercises.cs" />
+    <Compile Include="Repository\Entities\WorkoutManagement\AssessmentInfoDetails.cs" />
+    <Compile Include="Repository\Entities\WorkoutManagement\AssessmentMasterInfo.cs" />
+    <Compile Include="Repository\Entities\WorkoutManagement\AssessmentProfile.cs" />
+    <Compile Include="Repository\Entities\WorkoutManagement\AthleteAssessmentInfo.cs" />
+    <Compile Include="Repository\Entities\WorkoutManagement\DWChangedExerciseDetails.cs" />
+    <Compile Include="Repository\Entities\WorkoutManagement\GrowthTable.cs" />
+    <Compile Include="Repository\Entities\WorkoutManagement\PredictedMaturityClassification.cs" />
+    <Compile Include="Repository\Entities\WorkoutManagement\SAQDetail.cs" />
+    <Compile Include="Repository\Entities\WorkoutManagement\SAQStivityDetail.cs" />
+    <Compile Include="Repository\Entities\WorkoutManagement\SAQStivityExercises.cs" />
+    <Compile Include="Repository\Entities\WorkoutManagement\SAQStivitySessionMaster.cs" />
+    <Compile Include="Repository\Entities\WorkoutManagement\UserWorkoutDetails.cs" />
+    <Compile Include="Repository\Entities\WorkoutManagement\UserWorkoutSessionInfo.cs" />
+    <Compile Include="Repository\Entities\WorkoutManagement\UserWorkoutStatus.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

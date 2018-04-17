@@ -1,0 +1,18 @@
+﻿<p>Hi @Model.FirstName  @Model.LastName,</p>
+
+<p>We received a request to change your password </p>
+<br />
+<p>Click the link below to set a new password:</p>
+
+<p><a href="@Model.SiteAddress" target="_blank">Reset Password</a></p>
+
+<br />
+<p>If you don't want to change your password, you can ignore this email</p>
+
+<p>If you have any problems, please contact sales@saqstivity.com</p>
+
+<br />
+
+<p>This message is for informational purposes only. Please do not reply to this email.</p>
+
+<p>Thank You.</p>

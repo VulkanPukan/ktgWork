@@ -1,0 +1,1 @@
+ALTER TABLE [dbo].[Team] ADD [IsDeleted] [bit] NOT NULL DEFAULT 0

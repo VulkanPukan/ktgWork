@@ -1,0 +1,528 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Profile";
+    Layout = "~/Views/Coach/_Layout.cshtml";
+}
+<style>
+
+    .k-grid .k-grid-header .k-header {
+    white-space: normal;
+    background-color: #ffffff;
+}
+    .k-grid-header .k-header>.k-link, .k-header, .k-treemap-title {
+    color: #333333;
+        font-size: 15px;
+    font-family: 'open_sansregular';
+      background-color: #ffffff;
+}
+    .k-grid .k-alt {
+        background-color: #f1f5fa; /* specify the alternate background-color */
+    }
+
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+    }
+
+        .k-grid .k-grid-header .k-header .k-link {
+            height: auto;
+        }
+
+    #performanceGrid .k-grid-content, #performanceGrid tr td:last-child {
+        overflow: visible;
+    }
+
+    #performanceGrid .k-grid-header {
+        padding-right: 0 !important;
+    }
+
+     #performanceGridNew .k-grid-content, #performanceGridNew tr td:last-child {
+        overflow: visible;
+    }
+
+    #performanceGridNew .k-grid-header {
+        padding-right: 0 !important;
+    }
+
+    .navbar-top .navbar-header {
+        width: 250px !important;
+        text-align: center;
+    }
+
+    #dvSiteFooter {
+        top: 4% !important;
+    }
+</style>
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+@*<div class="wrapper">*@
+<!-- End aside-->
+<div class="main-content">
+    <h3>Dashboard</h3>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="#" data-perform="panel-dismiss" data-toggle="tooltip" title="Close Panel" class="pull-right">
+                            <em class="fa fa-times"></em>
+                        </a>
+                        <a href="#" data-perform="panel-collapse" data-toggle="tooltip" title="Collapse Panel" class="pull-right">
+                            <em class="fa fa-minus"></em>
+                        </a>
+
+                        <div class="panel-title">Athletes by sport</div>
+                    </div>
+                    <div class="panel-collapse">
+                        <div class="panel-body">
+
+                            <div class="indicator show">
+                                <span class="spinner"></span>
+                            </div>
+                            <div data-source="@Url.Action("ChartData", "Coach")?chartType=barStackedAtheleteBysport" class="chart-bar-stacked flot-chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="#" data-perform="panel-dismiss" data-toggle="tooltip" title="Close Panel" class="pull-right">
+                            <em class="fa fa-times"></em>
+                        </a>
+                        <a href="#" data-perform="panel-collapse" data-toggle="tooltip" title="Collapse Panel" class="pull-right">
+                            <em class="fa fa-minus"></em>
+                        </a>
+
+                        <div class="panel-title">Active Athletes (Sport Vs Team)</div>
+                    </div>
+                    <div class="panel-collapse">
+                        <div class="panel-body">
+
+                            <div class="indicator show">
+                                <span class="spinner"></span>
+                            </div>
+                            <div data-source="@Url.Action("ChartData", "Coach")?chartType=barStackedAtheleteSportVsTeam" class="chart-bar flot-chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="#" data-perform="panel-dismiss" data-toggle="tooltip" title="Close Panel" class="pull-right">
+                            <em class="fa fa-times"></em>
+                        </a>
+                        <a href="#" data-perform="panel-collapse" data-toggle="tooltip" title="Collapse Panel" class="pull-right">
+                            <em class="fa fa-minus"></em>
+                        </a>
+                        <div class="pull-right">
+                            <select style="width: 80px; height:31px;padding:0px 18px;" class="form-control">
+                                <option value="1">GV</option>
+                                <option value="2">BV</option>
+                                <option value="3">B Group</option>
+                            </select>
+                        </div>
+                        <div class="panel-title">Team Session RPE</div>
+                       
+                    </div>
+                    <div class="panel-collapse">
+                        <div class="panel-body">
+
+                            <div class="indicator show">
+                                <span class="spinner"></span>
+                            </div>
+                            <div data-source="@Url.Action("ChartData", "Coach")?chartType=barStackedTeamSessionRPE" class="chart-line flot-chart"></div>
+                            <div style="text-align:center">
+                                Session
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="#" data-perform="panel-dismiss" data-toggle="tooltip" title="Close Panel" class="pull-right">
+                            <em class="fa fa-times"></em>
+                        </a>
+                        <a href="#" data-perform="panel-collapse" data-toggle="tooltip" title="Collapse Panel" class="pull-right">
+                            <em class="fa fa-minus"></em>
+                        </a>
+                       <div class="pull-right">
+                            <select style="width: 80px; height:31px;padding:0px 18px;" class="form-control">
+                                <option value="1">GV</option>
+                                <option value="2">BV</option>
+                                <option value="3">B Group</option>
+                            </select>
+                        </div>
+                        <div class="panel-title">Team Volume Vs Intensity</div>
+                        
+
+                    </div>
+                    <div class="panel-collapse">
+                        <div class="panel-body">
+
+                            <div class="indicator show">
+                                <span class="spinner"></span>
+                            </div>
+                            <div id="placeholder" style="width:450px; height:250px;"></div>
+                            @*<div data-source="@Url.Action("ChartData", "Coach")?chartType=barStackedFloatTeamVolume" class="chart-bar flot-chart"></div>*@
+                            <div style="text-align:center">
+                                Session
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            @*<div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="#" data-perform="panel-dismiss" data-toggle="tooltip" title="Close Panel" class="pull-right">
+                            <em class="fa fa-times"></em>
+                        </a>
+                        <a href="#" data-perform="panel-collapse" data-toggle="tooltip" title="Collapse Panel" class="pull-right">
+                            <em class="fa fa-minus"></em>
+                        </a>
+
+                        <div class="panel-title">Muscular Balance Ratio</div>
+                    </div>
+                    <div class="panel-collapse">
+                        <div class="panel-body">
+
+                            <div class="indicator show">
+                                <span class="spinner"></span>
+                            </div>
+                            <div data-source="@Url.Action("ChartData", "Coach")?chartType=barMultiple" class="chart-bar flot-chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="#" data-perform="panel-dismiss" data-toggle="tooltip" title="Close Panel" class="pull-right">
+                            <em class="fa fa-times"></em>
+                        </a>
+                        <a href="#" data-perform="panel-collapse" data-toggle="tooltip" title="Collapse Panel" class="pull-right">
+                            <em class="fa fa-minus"></em>
+                        </a>
+
+                        <div class="panel-title">Athletes in Sports - 2016</div>
+                    </div>
+                    <div class="panel-collapse">
+                        <div class="panel-body">
+                            <div class="indicator show">
+                                <span class="spinner"></span>
+                            </div>
+                            <div data-source="@Url.Action("ChartData", "Coach")?chartType=bar" class="chart-bar flot-chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+            @*<div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="#" data-perform="panel-dismiss" data-toggle="tooltip" title="Close Panel" class="pull-right">
+                            <em class="fa fa-times"></em>
+                        </a>
+                        <a href="#" data-perform="panel-collapse" data-toggle="tooltip" title="Collapse Panel" class="pull-right">
+                            <em class="fa fa-minus"></em>
+                        </a>
+                        <div class="panel-title">Muscular Balance Ratio</div>
+                    </div>
+                    <div class="panel-collapse">
+                        <div class="panel-body">
+                            <div data-source="@Url.Action("ChartData", "Coach")?chartType=barMultiple2" class="chart-bar flot-chart"></div>
+
+                            <div class="indicator show">
+                                <span class="spinner"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="#" data-perform="panel-dismiss" data-toggle="tooltip" title="Close Panel" class="pull-right">
+                            <em class="fa fa-times"></em>
+                        </a>
+                        <a href="#" data-perform="panel-collapse" data-toggle="tooltip" title="Collapse Panel" class="pull-right">
+                            <em class="fa fa-minus"></em>
+                        </a>
+                        <div class="panel-title">Leaderboard</div>
+                    </div>
+                    <div id="collapseCustomerDetailsEdit" class="panel-collapse">
+                        <div class="panel-body">
+                            <form class="">
+                                <div class="col-lg-12">
+                                    <div class="form-group col-lg-3" style="padding:0px;">
+                                        <label class="control-label" style="text-align: left; padding-left: 0;">Leaderboard:</label>
+                                    </div>
+                                    <div class="form-group col-lg-4" style="padding:0px;">
+                                        <label class="" style="padding-left: 0; font-weight:normal;">Standing Long Jump</label>
+                                    </div>
+                                    <div class="form-group col-lg-2" style="padding:0px;">
+                                        <label class="control-label" style="text-align: left">Scale:</label>
+                                    </div>
+                                    <div class="form-group col-lg-3" style="padding:0px;">
+                                        <label class="" style="text-align: left;  font-weight:normal;">Relative Strength</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group col-lg-3" style="padding:0px;">
+                                        <label class="control-label" style="text-align: left; padding-left: 0;">Group:</label>
+                                    </div>
+                                    <div class="form-group col-lg-4" style="padding:0px;">
+                                        <label class="" style="padding-left: 0; font-weight:normal;">Baseball Pitchers</label>
+                                    </div>
+                                    <div class="form-group col-lg-2" style="padding:0px;">
+                                        <label class="control-label" style="text-align: left">Formula:</label>
+                                    </div>
+                                    <div class="form-group col-lg-3" style="padding:0px;">
+                                        <label class="" style="text-align: left;  font-weight:normal;">Athlete's Weight * Distance Jumped</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group col-lg-12">
+
+                                        <div id="performanceGrid" style="margin-top: 8px;" class="clearfix"></div>
+                                        <div id="performancePager"></div>
+                                    </div>
+                                    @*<div class="form-group col-lg-4">
+                                        <div class="col-lg-2" style="text-align: left">
+                                        </div>
+                                        <label class="col-lg-4 control-label" style="text-align: Left; margin-left: 14px">Formula</label>
+                                        <br />
+                                        <br />
+                                        <div class="col-lg-2" style="text-align: left">
+                                        </div>
+                                        <div class="col-lg-4 panel panel-default" style="margin-left: 25px; width: 72%">
+                                            Athelete's Weight * Distance Jumped
+                                        </div>
+                                    </div>*@
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="#" data-perform="panel-dismiss" data-toggle="tooltip" title="Close Panel" class="pull-right">
+                            <em class="fa fa-times"></em>
+                        </a>
+                        <a href="#" data-perform="panel-collapse" data-toggle="tooltip" title="Collapse Panel" class="pull-right">
+                            <em class="fa fa-minus"></em>
+                        </a>
+                        <div class="panel-title">Leaderboard</div>
+                    </div>
+                    <div id="collapseCustomerDetailsEdit" class="panel-collapse">
+                        <div class="panel-body">
+                            <form class="">
+                                <div class="col-lg-12">
+                                    <div class="form-group col-lg-3" style="padding:0px;">
+                                        <label class="control-label" style="text-align: left; padding-left: 0;">Leaderboard:</label>
+                                    </div>
+                                    <div class="form-group col-lg-4" style="padding:0px;">
+                                        <label class="" style="padding-left: 0; font-weight:normal;">Standing Long Jump</label>
+                                    </div>
+                                    <div class="form-group col-lg-2" style="padding:0px;">
+                                        <label class="control-label" style="text-align: left">Scale:</label>
+                                    </div>
+                                    <div class="form-group col-lg-3" style="padding:0px;">
+                                        <label class="" style="text-align: left;  font-weight:normal;">Absolute Strength</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group col-lg-3" style="padding:0px;">
+                                        <label class="control-label" style="text-align: left; padding-left: 0;">Group:</label>
+                                    </div>
+                                    <div class="form-group col-lg-4" style="padding:0px;">
+                                        <label class="" style="padding-left: 0; font-weight:normal;">Soccer Glubs</label>
+                                    </div>
+                                    <div class="form-group col-lg-2" style="padding:0px;">
+                                        <label class="control-label" style="text-align: left">Formula:</label>
+                                    </div>
+                                    <div class="form-group col-lg-3" style="padding:0px;">
+                                        <label class="" style="text-align: left;  font-weight:normal;">Athlete's Weight * Distance Jumped</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12">
+                                    <div class="form-group col-lg-12">
+
+                                        <div id="performanceGridNew" style="margin-top: 8px;" class="clearfix"></div>
+                                        <div id="performancePagerNew"></div>
+                                    </div>
+                                    @*<div class="form-group col-lg-4">
+                                    <div class="col-lg-2" style="text-align: left">
+                                    </div>
+                                    <label class="col-lg-4 control-label" style="text-align: Left; margin-left: 14px">Formula</label>
+                                    <br />
+                                    <br />
+                                    <div class="col-lg-2" style="text-align: left">
+                                    </div>
+                                    <div class="col-lg-4 panel panel-default" style="margin-left: 25px; width: 72%">
+                                        Athelete's Weight * Distance Jumped
+                                    </div>
+                                </div>*@
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END chart-->
+        </div>
+    </div>
+</div>
+@*</div>*@
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script src="../Scripts/kendo.all.min.js"></script>
+    <script src="../Scripts/slider/js/bootstrap-slider.js"></script>
+    <script src="../Scripts/sparklines/jquery.sparkline.min.js"></script>
+    <script src="../Scripts/slimscroll/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        function gd(year, month, day) {
+            var timeTicks = ((new Date(year, month, day).getTime() * 10000) + 621355968000000000);
+            return timeTicks;
+        }
+        var data1 = [
+       [1, 153], [2, 553], [3, 658], [4, 498],
+       [5, 663], [6, 801]];
+
+        var data2 = [
+            [1, 153], [2, 253], [3, 600], [4, 438],
+            [5, 388], [6, 320]];
+        var data = [{
+            label: "Pounds Lifted",
+            data: data1,
+            bars: {
+                show: true,
+                barWidth: 0.5
+            },
+        }, {
+            label: "Intensity",
+            data: data2,
+            lines: {
+                show: true
+            },
+            points: {
+                show: true
+            }
+        }];
+
+        var options = {
+            xaxis: {                
+                ticks: [[1, '1'], [2, '2'], [3, '3'], [4, '4'], [5, '5'], [6, '6']],
+            },
+            grid: {
+                backgroundColor: { colors: ["#ffffff", "#fcfcfc"] }
+            }
+        };
+        $(document).ready(function () {
+            chart = $.plot($("#placeholder"), data, options);
+        });
+        var performancedataSource = new kendo.data.DataSource({
+            data: [
+                { SrNo: "1", Name: "Athlete A", Performance: '17,160', ImagePath: "../images/user/03.jpg" },
+                { SrNo: "2", Name: "Athlete B", Performance: "13,640", ImagePath: "../images/user/05.jpg" },
+                { SrNo: "3", Name: "Athlete C", Performance: "11,960", ImagePath: "../images/user/10.jpg" },
+                { SrNo: "4", Name: "Athlete D", Performance: "9,750", ImagePath: "../images/user/09.jpg" }
+            ],
+            pageSize: 10
+
+        });
+
+        $("#liDashboard").addClass("active");
+        $("#performanceGrid").kendoGrid({
+            selectable: "multiple cell",
+            allowCopy: true,
+            //height: 550,
+            scrollable: true,
+            sortable: true,
+            filterable: false,
+
+            //pageable: {
+            //    input: true,
+            //    numeric: false
+            //},
+            columns: [
+                                {
+                                    field: "Rank",
+                                    template: '#=SrNo#',
+                                    width: 60,
+                                    attributes: {
+                                        style: 'white-space: nowrap '
+                                    }
+                                },
+                {
+                    field: "Name",
+                    //template: '#=Name#',
+                    template: ' <img src="#=ImagePath#" alt="Image" width=45 height=45 class="img-thumbnail img-circle"> &nbsp;#=Name#',
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "Performance",
+                    template: '#=Performance#',
+                    width: 100,
+                }
+            ],
+            dataSource: performancedataSource
+        });
+        performancedataSource.read();
+        $("#performancePager").kendoPager({
+            autoBind: true,
+            dataSource: performancedataSource
+        });
+
+        $("#performanceGridNew").kendoGrid({
+            selectable: "multiple cell",
+            allowCopy: true,
+            //height: 550,
+            scrollable: true,
+            sortable: true,
+            filterable: false,
+
+            //pageable: {
+            //    input: true,
+            //    numeric: false
+            //},
+            columns: [
+                                {
+                                    field: "Rand",
+                                    template: '#=SrNo#',
+                                    width: 60,
+                                    attributes: {
+                                        style: 'white-space: nowrap '
+                                    }
+                                },
+                {
+                    field: "Name",
+                    //template: '#=Name#',
+                    template: ' <img src="#=ImagePath#" alt="Image" width=45 height=45 class="img-thumbnail img-circle"> &nbsp;#=Name#',
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "Performance",
+                    template: '#=Performance#',
+                    width: 100,
+                }
+            ],
+            dataSource: performancedataSource
+        });
+        performancedataSource.read();
+        $("#performancePagerNew").kendoPager({
+            autoBind: true,
+            dataSource: performancedataSource
+        });
+    </script>
+}

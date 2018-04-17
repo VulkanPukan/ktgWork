@@ -1,0 +1,450 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Profile";
+    Layout = "~/Views/Coach/_LayoutNew.cshtml";
+}
+
+<div class="top-bar clearfix">
+    <!-- Container fluid starts -->
+    <div class="container-fluid">
+        <!-- Row starts -->
+        <div class="row gutter">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                <h3 class="page-title">Profile</h3>
+            </div>
+        </div>
+        <!-- Row ends -->
+    </div>
+    <!-- Container fluid ends -->
+</div>
+<div class="main-container">
+    <div id="profileDiv">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <input type="image" src="../images/noimage.jpg" width="80" height="80" id="profilePicture" />
+                <input type="file" id="my_file" style="display: none;" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="panel panel-light">
+                    <div class="panel-heading">
+
+                        <div class="page-title pull-right" style="color:#ffffff"><a href="javascript:void(0)" style="padding:10px;color:#ffffff;text-decoration:underline" onclick="ShowChangePasswordDiv()">Change Password</a> * Required fields</div>
+                        <h4 class="panel-title">Profile Details</h4>
+                    </div>
+                    <div class="panel-body">
+                        <form class="form-horizontal">
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">First Name *</label>
+                                <div class="col-lg-7">
+                                    <input placeholder="First Name" id="txtUserFirstName" class="form-control">
+                                    <input type="hidden" id="hdnUserID" />
+                                    <input type="hidden" id="hdnProfileUserType" />
+                                </div>
+                            </div>
+
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">Last Name *</label>
+                                <div class="col-lg-7">
+                                    <input placeholder="Last Name" id="txtUserLastName" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">Username *</label>
+                                <div class="col-lg-7">
+                                    <input placeholder="Username" id="txtUserName" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">Email *</label>
+                                <div class="col-lg-7">
+                                    <input type="email" id="txtUserEmail" placeholder="Email" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">Phone No.</label>
+                                <div class="col-lg-7">
+                                    <input placeholder="Phone No" class="form-control" id="txtCoachPhone">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">Alt Phone No.</label>
+                                <div class="col-lg-7">
+                                    <input placeholder="Alternate Phone No" class="form-control" id="txtCoachAlternatePhone">
+                                </div>
+                            </div>
+                            @*<div class="form-group col-lg-6">
+                    <label class="col-lg-5 control-label">DOB *</label>
+                    <div class="col-lg-7">
+                        <div data-pick-date="true" data-pick-time="false" class="datetimepicker input-group date mb-lg" style="margin-bottom:0px !important;">
+                            <input type="text" class="form-control" placeholder="Date of Birth" id="txtUserDOB">
+                            <span class="input-group-addon">
+                                <span class="fa fa-calendar fa-clock-o"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>*@
+                            @*<div class="form-group col-lg-6">
+                    <label class="col-lg-5 control-label">Gender *</label>
+                    <div class="col-lg-7">
+                        <select name="Gender" id="ddlUserGender" class="form-control m-b">
+                            <option value="1">Male</option>
+                            <option value="2">Female</option>
+                        </select>
+                    </div>
+                </div>*@
+                            @*<div class="form-group col-lg-6">
+                    <label class="col-lg-5 control-label">Address2</label>
+                    <div class="col-lg-7">
+                        <textarea placeholder="Address2" id="txtUserAddress2" class="form-control"></textarea>
+                    </div>
+                </div>*@
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">Address *</label>
+                                <div class="col-lg-7">
+                                    <textarea placeholder="Address" id="txtUserAddress1" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">City</label>
+                                <div class="col-lg-7">
+                                    <input placeholder="City" id="txtUserCity" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6"></div>
+                            <div class="form-group col-lg-6"></div>
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">State</label>
+                                <div class="col-lg-7">
+                                    <select name="state" class="form-control" id="ddlCoachState">
+                                        <option>Select State</option>
+                                        <option value="1">AL</option>
+                                        <option value="2">AK</option>
+                                        <option value="3">AZ</option>
+                                        <option value="4">AR</option>
+                                        <option value="5">CA</option>
+                                        <option value="6">CO</option>
+                                        <option value="7">CT</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">Zip</label>
+                                <div class="col-lg-7">
+                                    <input placeholder="Zip" id="txtUserZip" class="form-control">
+                                </div>
+                            </div>
+                            @* <div class="form-group col-lg-6">
+                    <label class="col-lg-5 control-label">Password *</label>
+                    <div class="col-lg-7">
+                        <input type="password" placeholder="Password" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label class="col-lg-5 control-label">Confirm Password *</label>
+                    <div class="col-lg-7">
+                        <input type="password" placeholder="Confirm Password" class="form-control">
+                    </div>
+                </div>*@
+                            @*<div class="form-group col-lg-12">
+                    <label class="col-lg-4 control-label" style="width: 20% !important;">Profile Picture*</label>
+                    <div class="col-lg-8" style="width: 79% !important;">
+                        <input type="text" class="form-control inline" style="width: 71.8% !important;" disabled="">
+                        <label for="filestyle-0" style="width: 25% !important;" class="btn btn-primary">
+                            <span class="fa fa-plus-circle fa-fw"></span>Choose File
+                        </label>
+                    </div>
+                </div>*@
+                            @*  <div class="form-group col-lg-12">
+                    <label class="col-lg-4 control-label" style="width:18% !important;">Role(s)</label>
+                    <div class="col-lg-8" style="width:79% !important;">
+                        <div class="checkbox checkbox-inline c-checkbox"><label><input type="checkbox" checked="" value=""><span class="fa fa-check"></span>TKG Admin</label></div>
+                        <div class="checkbox checkbox-inline c-checkbox"><label><input type="checkbox" checked="" value=""><span class="fa fa-check"></span>Customer Admin</label></div>
+                        <div class="checkbox checkbox-inline c-checkbox"><label><input id="chkCoachDetailsEdit" type="checkbox" value="" onclick="ToggleCoachControlEdit();"><span class="fa fa-check"></span>Coach</label></div>
+                        <div class="checkbox checkbox-inline c-checkbox"><label><input type="checkbox" value=""><span class="fa fa-check"></span>Role1</label></div>
+                        <div class="checkbox checkbox-inline c-checkbox"><label><input type="checkbox" value=""><span class="fa fa-check"></span>Role2</label></div>
+                        <div class="checkbox checkbox-inline c-checkbox"><label><input type="checkbox" value=""><span class="fa fa-check"></span>Role3</label></div>
+                    </div>
+                </div>
+                <div id="divCoachRoleDetailsEdit" style="display:none;">
+                    <div class="form-group col-lg-12">
+                        <label class="col-lg-4 control-label" style="width:18% !important;">Sport(s)</label>
+                        <div class="col-lg-8" style="width:79% !important;">
+                            <div class="checkbox checkbox-inline c-checkbox"><label><input type="checkbox" value=""><span class="fa fa-check"></span>Baseball</label></div>
+                            <div class="checkbox checkbox-inline c-checkbox"><label><input type="checkbox" value=""><span class="fa fa-check"></span>Boxing</label></div>
+                            <div class="checkbox checkbox-inline c-checkbox"><label><input type="checkbox" value=""><span class="fa fa-check"></span>Cycling</label></div>
+                            <div class="checkbox checkbox-inline c-checkbox"><label><input type="checkbox" value=""><span class="fa fa-check"></span>Fencing</label></div>
+                            <div class="checkbox checkbox-inline c-checkbox"><label><input type="checkbox" value=""><span class="fa fa-check"></span>Football</label></div>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-12">
+                        <label class="col-lg-4 control-label" style="width:20% !important;"></label>
+                        <div class="col-lg-8" style="width:77% !important;">
+                            <div id="coachAthleteGridEdit" style="margin-top:15px; overflow:visible !important;" class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>*@
+
+                            @*<div class="form-group col-lg-12">
+                    <label class="col-lg-4 control-label" style="width:20% !important;">Permissions*</label>
+                    <div class="col-lg-8" style="width:79% !important;padding-left:0px !important;">
+                        <div class="checkbox checkbox-inline c-checkbox" style="padding-left:15px !important;"><label><input type="checkbox" checked="" value=""><span class="fa fa-check"></span>Create Program</label></div>
+                        <div class="checkbox checkbox-inline c-checkbox"><label><input type="checkbox" checked="" value=""><span class="fa fa-check"></span>Add Exercise</label></div>
+                        <div class="checkbox checkbox-inline c-checkbox"><label><input type="checkbox" checked="" value=""><span class="fa fa-check"></span>Add User</label></div>
+                        <div class="checkbox checkbox-inline c-checkbox"><label><input type="checkbox" value=""><span class="fa fa-check"></span>Evaluation</label></div>
+                        <div class="checkbox checkbox-inline c-checkbox"><label><input type="checkbox" value=""><span class="fa fa-check"></span>Add Schedule</label></div>
+                    </div>
+                </div>*@
+                            @*<div class="form-group col-lg-6">
+                    <div class="user-block-picture">
+                        <div class="user-block-status">
+                            <img src="../images/02.jpg" alt="Avatar" width="60" height="60" class="">
+                        </div>
+                    </div>
+                </div>*@
+                            @*  <div class="form-group col-lg-12">&nbsp;</div>
+
+
+                <div class="form-group col-lg-12">
+                    <div id="usersEditPermisssionGrid" style="margin-top:15px; overflow:visible !important;" class="clearfix"></div>
+                    <div id="editPermissionPager"></div>
+                </div>                                        *@
+                            <div class="form-group col-lg-12">
+
+                                <div class="pull-right" style="width:10%">
+                                    @*<button type="button" onclick="SaveUserProfile();">Save1</button>*@
+                                    <input type="button" class="btn btn-primary btn-sm" value="Save" onclick="SaveUserProfile();" />
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+                    
+                </div>
+
+                <div id="ChangePasswordDiv" class="row" style="display:none;">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="panel panel-light">
+                                <div class="panel-heading">
+                                    <div class="pull-right" style="color:#ffffff">
+                                        * Required fields
+                                    </div>
+                                    <h4 class="panel-title"> Select New Password</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="panel-body">
+                                        <form class="form-horizontal">
+
+                                            <div class="form-group col-lg-6">
+                                                <input type="hidden" id="hdnChangePasswordUserID" />
+                                                <label class="col-lg-5 control-label">New Password*</label>
+                                                <div class="col-lg-7">
+                                                    <input type="password" placeholder="First Name" id="txtProfileNewPassword" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-lg-6">
+                                                <label class="col-lg-5 control-label">Confirm Password *</label>
+                                                <div class="col-lg-7">
+                                                    <input type="password" placeholder="Last Name" id="txtProfileConfirmPassword" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-lg-12">&nbsp;</div>
+
+                                            <div class="pull-right" style="" width:25%">
+                                                <button type="button" onclick="ShowProfileDiv();" class="btn btn-primary btn-sm">Reset Password</button>
+
+                                            </div>
+
+
+
+                                        </form>
+                                    </div>
+                                </div>
+                             
+                            </div>
+                        </div>
+                 </div>
+            </div>
+
+
+
+            @section Scripts {
+                @Scripts.Render("~/bundles/jquery")
+                <script src="../Scripts/slider/js/bootstrap-slider.js"></script>
+                <script src="../Scripts/sparklines/jquery.sparkline.min.js"></script>
+                <script src="../Scripts/slimscroll/jquery.slimscroll.min.js"></script>
+                <script src="../Scripts/kendo.all.min.js"></script>
+                <script src="~/Scripts/moment/min/moment.min.js"></script>
+                <script src="~/Scripts/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+                <script src="~/Scripts/jquery.maskedinput.js"></script>
+                <script type="text/javascript" charset="utf-8">
+                    function ShowProfileDiv() {
+                        if ($("#txtProfileNewPassword").val() !== $("#txtProfileConfirmPassword").val()) {
+                            alert("Password should be same");
+                            return false;
+                        }
+                        $.ajax({
+                            url: '../Admin/ChangePassword',
+                            type: "POST",
+                            data: JSON.stringify({ 'athleteID': $("#hdnChangePasswordUserID").val(), 'newPassword': $("#txtProfileNewPassword").val() }),
+                            contentType: 'application/json',
+                            dataType: "json",
+                            success: function (result) {
+                                $("#profileDiv").show();
+                                $("#ChangePasswordDiv").hide();
+                                if (result.Status === 1) {
+                                    alert("Password changed successfully");
+                                }
+                                else {
+                                    alert("Change password failed");
+                                }
+                            },
+                            error: function (req, status, errorObj) {
+                                alert('Error: Please try again');
+                            }
+                        });
+                    }
+
+                    function ShowChangePasswordDiv() {
+                        $("#hdnChangePasswordUserID").val($("#hdnUserID").val());
+                        $("#profileDiv").hide();
+                        $("#ChangePasswordDiv").show();
+
+                    }
+
+                    //$(document).ready(function () {
+                    //    $("#nominee_one_dob").datepicker({
+                    //        changeMonth: true,
+                    //        changeYear: true,
+                    //        dateFormat: 'yy-mm-dd',
+
+                    //        onSelect: function (date) {
+                    //            var dob = new Date(date);
+                    //            var today = new Date();
+
+                    //            if (dob.getFullYear() + 18 < today.getFullYear()) {
+                    //                alert("Under 18");
+                    //            }
+                    //            else {
+                    //                alert(" Over 18");
+                    //            }
+                    //        }
+
+                    //    });
+                    //});
+                    function LoadProfile() {
+
+                        $.ajax({
+                            url: '../Coach/GetLoggedInUserProfile',
+                            type: "POST",
+                            contentType: 'application/json',
+                            dataType: "json",
+                            success: function (result) {
+                                userProfileModel = result;
+                                $("#txtUserFirstName").val(result.FirstName);
+                                $("#hdnUserID").val(result.UserId);
+                                $("#hdnProfileUserType").val(result.UserType);
+                                $("#txtUserLastName").val(result.LastName);
+                                $("#txtUserName").val(result.UserName);
+                                $("#txtUserAddress1").val(result.ContactInformation.AddressOne);
+                                $("#txtCoachPhone").val(userProfileModel.Phone);
+                                $("#txtCoachAlternatePhone").val(userProfileModel.AlternatePhone);
+                                //$("#txtUserAddress2").val(result.ContactInformation.AddressTwo);
+                                $("#txtUserCity").val(result.ContactInformation.City);
+                                $("#txtUserZip").val(result.ContactInformation.Zip);
+                                $("#txtUserEmail").val(result.ContactInformation.Email);
+                                (result.StateID == null) ? $("#ddlCoachState").val(1) : $("#ddlCoachState").val(result.StateID);
+                                //$("#txtUserDOB").val(result.DOB);
+                                //$("#ddlUserGender").val(result.GenderId);
+                                $("#profilePicture").attr("src", (result.ProfilePicture != null && result.ProfilePicture.length) > 1 ? result.ProfilePicture : "../images/noimage.jpg");
+                            },
+                            error: function (req, status, errorObj) {
+                                alert('Error: Please try again');
+                            }
+                        });
+                    }
+
+                    $(document).ready(function () {
+                        $("#txtCoachPhone").mask("(999) 999-9999");
+                        $("#txtCoachAlternatePhone").mask("(999) 999-9999");
+                        LoadProfile();
+                    });
+
+                    $("input[type='image']").click(function () {
+                        $("input[id='my_file']").click();
+                    });
+                    document.getElementById("my_file").onchange = function () {
+
+                        var reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            // get loaded data and render thumbnail.
+                            document.getElementById("profilePicture").src = e.target.result;
+                        };
+
+                        if (this.files[0]) {
+                            // read the image file as a data URL.
+                            reader.readAsDataURL(this.files[0]);
+                        }
+                    };
+                    function SaveUserProfile() {
+                        // Checking whether FormData is available in browser
+                        if (window.FormData !== undefined) {
+
+                            var fileUpload = $("input[id='my_file']").get(0);
+                            var files = fileUpload.files;
+
+                            // Create FormData object
+                            var fileData = new FormData();
+
+                            // Looping over all files and add it to FormData object
+                            for (var i = 0; i < files.length; i++) {
+                                fileData.append(files[i].name, files[i]);
+                            }
+                            userProfileModel.UserID = $("#hdnUserID").val();
+                            userProfileModel.UserName = $("#txtUserName").val();
+                            userProfileModel.UserType = $("#hdnProfileUserType").val();
+                            userProfileModel.FirstName = $("#txtUserFirstName").val();
+                            userProfileModel.LastName = $("#txtUserLastName").val();
+                            //userProfileModel.DOB = $("#txtUserDOB").val();
+                            //userProfileModel.Gender = $("#ddlUserGender").val();
+                            userProfileModel.ContactInformation.AddressOne = $("#txtUserAddress1").val();
+                            userProfileModel.Phone = $("#txtCoachPhone").val();
+                            userProfileModel.AlternatePhone = $("#txtCoachAlternatePhone").val();
+                            //userProfileModel.ContactInformation.AddressTwo = $("#txtUserAddress2").val();
+                            userProfileModel.ContactInformation.City = $("#txtUserCity").val();
+                            userProfileModel.ContactInformation.Email = $("#txtUserEmail").val();
+                            userProfileModel.ContactInformation.Zip = $("#txtUserZip").val();
+                            if (files.length > 0) {
+                                userProfileModel.UserImage.ImagePath = files[0].name;
+                            }
+
+                            // Adding one more key to FormData object
+                            fileData.append('userViewModel', JSON.stringify(userProfileModel));
+                            $.ajax({
+                                url: "@Url.Action("SaveUser", "Admin")",
+                                data: JSON.stringify({ 'UserModel': userProfileModel }),
+                                type: "POST",
+                                data: fileData,
+                                contentType: false, // Not to set any content header
+                                processData: false, // Not to process data
+                                dataType: "json",
+                                success: function (result) {
+                                    //alert(result.Message);
+                                    window.location.reload();
+                                },
+                                error: function (req, status, errorObj) {
+                                    alert('Error: Please try again');
+                                }
+                            });
+                        }
+                        else {
+                            alert("FormData is not supported.");
+                        }
+                    }
+                </script>
+            }

@@ -1,0 +1,240 @@
+﻿@{
+    var isSuperUser = false;
+    var isPersonalTrainer = false;
+    if (Session["CustomerObj"] != null)
+    {
+        var customerObj = ((StrengthTracker2.Core.Repository.Entities.TKGMaster.CustomerMaster)(Session["CustomerObj"]));
+        if (customerObj != null)
+        {
+            isSuperUser = customerObj.IsSuperAdmin;
+        }
+    }
+    if (Session["CustomerType"] != null)
+    {
+        var CustomerCategoryType = ((StrengthTracker2.Core.DataTypes.CustomerCategoryType)(Session["CustomerType"]));
+        if (CustomerCategoryType == StrengthTracker2.Core.DataTypes.CustomerCategoryType.PersonalTrainer)
+        {
+            isPersonalTrainer = true;
+        }
+    }
+    var welcomeUrl = Url.Action("Welcome", "Admin");
+    var adminDashboardUrl = Url.Action("DashboardNew", "Admin");
+    var coachDashboardUrl = Url.Action("CoachDashboardNew", "Admin");
+    var adminProgramUrl = Url.Action("Program", "Admin");
+    var customerCustomersUrl = Url.Action("Customers", "Customer");
+    var adminLocationsUrl = Url.Action("Locations", "Admin");
+    var adminAthletesUrl = Url.Action("Athletes", "Admin");
+    var securityRolesUrs = Url.Action("Roles", "Security");
+    var adminUsersUrl = Url.Action("Users", "Admin");
+    var adminTeamsUrl = Url.Action("Teams", "Admin");
+    var adminAssessmentUrl = Url.Action("AthleteAssessment", "Admin");
+    var dailyWorkoutURL = Url.Action("Home", "Athlete");
+    var canViewWelcomeTab = true;
+    var canViewAdminDashboard = true;
+    var canViewCoachDashboard = true;
+    var canViewCustomer = false;
+    var canViewLocations = true;
+    var canViewAthletes = true;
+    var canViewRoles = true;
+    var canViewUsers = true;
+    var canViewTeams = true;
+    var canViewProgram = true;
+    var canViewAssessment = true;
+    var canViewDW = false;
+
+    if (Session["UserRole"] != null)
+    {
+        var userRole = (StrengthTracker2.Core.Repository.Entities.Security.RoleDetails)(Session["UserRole"]);
+        var userPermissons = userRole.RolePermissions;
+        canViewProgram = userPermissons.Any(p => p.PermissionID == 1 && p.CanView == true);
+        canViewAdminDashboard = userPermissons.Any(p => p.PermissionID == 8 && p.CanView == true);
+        canViewCoachDashboard = userPermissons.Any(p => p.PermissionID == 9 && p.CanView == true);
+        canViewCustomer = userPermissons.Any(p => p.PermissionID == 3 && p.CanView == true);
+        canViewLocations = userPermissons.Any(p => p.PermissionID == 4 && p.CanView == true);
+        canViewAthletes = userPermissons.Any(p => p.PermissionID == 5 && p.CanView == true);
+        canViewRoles = userPermissons.Any(p => p.PermissionID == 6 && p.CanView == true);
+        canViewUsers = userPermissons.Any(p => p.PermissionID == 7 && p.CanView == true);
+        canViewTeams = userPermissons.Any(p => p.PermissionID == 11 && p.CanView == true);
+        canViewAssessment = userPermissons.Any(p => p.PermissionID == 13 && p.CanView == true);
+    }
+    if (isPersonalTrainer == true)
+    {
+        canViewUsers = false;
+    }
+    if (Session["AuthenticatedUser"] != null)
+    {
+        StrengthTracker2.Core.Repository.Entities.Actors.UserDetails userDetails = (StrengthTracker2.Core.Repository.Entities.Actors.UserDetails)(Session["AuthenticatedUserDetails"]);
+        canViewWelcomeTab = userDetails.Users.FirstOrDefault().ShowWelcome;
+    }
+    if(Session["AuthenticatedUser"] != null) //For Individual Athlete
+    {
+
+        var authenticatedUser = Session["AuthenticatedUser"] as StrengthTracker2.Core.Repository.Entities.Actors.User;
+        
+        if(authenticatedUser.IsIndividualAthlete)
+        {
+            canViewProgram = true;
+            canViewAdminDashboard = false;
+            canViewCoachDashboard = true;
+            canViewCustomer = false;
+            canViewLocations = false;
+            canViewAthletes = true;
+            canViewRoles = false;
+            canViewUsers = false;
+            canViewTeams = false;
+            canViewAssessment = true;
+            canViewDW = false;
+        }
+    }
+    //canViewAdminDashboard = false;
+    //canViewCoachDashboard = true;
+    //canViewCustomer = false;
+    //canViewLocations = false;
+    //canViewAthletes = false;
+    //canViewRoles = false;
+    //canViewUsers = false;
+    //canViewTeams = false;
+    //canViewProgram = false;
+}
+<style>
+    .navbar-top .navbar-header {
+        width: 250px !important;
+        text-align: center;
+    }
+
+    .disabledLink {
+        color: lightgrey !important;
+        pointer-events: none;
+        cursor: default;
+    }
+    .navbar-nav{
+        margin-bottom: 5px;
+    }
+</style>
+<nav class="navbar navbar-default">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+    </div>
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+            @if(canViewWelcomeTab)
+            {
+                <li id="liWelcome">
+                    <a href="@welcomeUrl" onclick='window.location="@welcomeUrl";'><i class="icon-home4"></i>Welcome</a>
+                </li>
+            }
+            <li id="liDashboard">
+                @if (canViewAdminDashboard)
+                {
+                    <a href="@adminDashboardUrl" onclick='window.location="@adminDashboardUrl";'><i class="icon-graphic_eq"></i>Dashboards</a>
+                }
+                else
+                {
+                    if (canViewCoachDashboard)
+                    {
+                        <a href="@coachDashboardUrl" onclick='window.location="@coachDashboardUrl";'><i class="icon-graphic_eq"></i>Dashboards</a>
+                    }
+                    else
+                    {
+                        @*<a href="JavaScript:void(0);" class="disabledLink"><i class="icon-graphic_eq"></i>Dashboard</a>*@
+                    }
+                }
+            </li>
+            <li id="liProgram">
+                @if (canViewProgram)
+                {
+                    <a href="@adminProgramUrl" onclick='window.location="@adminProgramUrl";'><i class="fa fa-file-text-o"></i>Programs</a>
+                }
+                else
+                {
+                    @*<a href="JavaScript:void(0);" class="disabledLink"><i class="fa fa-file-text-o"></i>Program</a>*@
+                }
+            </li>
+            <li id="liTeam">
+                @if (canViewTeams)
+                {
+                    <a href="@adminTeamsUrl" onclick='window.location="@adminTeamsUrl";'><i class="fa fa-users"></i>Teams</a>
+                }
+                else
+                {
+                    @*<a href="JavaScript:void(0);" class="disabledLink"><i class="fa fa-users"></i>Teams</a>*@
+                }
+            </li>
+            <li id="liAthlete">
+                @if (canViewAthletes)
+                {
+                    <a href="@adminAthletesUrl" onclick='window.location="@adminAthletesUrl";'><i class="fa fa-users"></i>Athletes</a>
+                }
+                else
+                {
+                    @*<a href="JavaScript:void(0);" class="disabledLink"><i class="fa fa-users"></i>Athletes</a>*@
+                }
+            </li>
+            <li id="liAssessment">
+                @if (canViewAssessment)
+                {
+                    <a href="@adminAssessmentUrl" onclick='window.location="@adminAssessmentUrl";'><i class="fa fa-users"></i>Assessments</a>
+                }
+                else
+                {
+                    @*<a href="JavaScript:void(0);" class="disabledLink"><i class="fa fa-users"></i>Assessments</a>*@
+                }
+            </li>
+            <li id="liDW">
+                @if (canViewDW)
+                {
+                    <a href="@dailyWorkoutURL" onclick='window.location="@dailyWorkoutURL";'><i class="fa fa-users"></i>Daily Workout</a>
+                }
+                else
+                {
+                    @*<a href="JavaScript:void(0);" class="disabledLink"><i class="fa fa-users"></i>Assessments</a>*@
+                }
+            </li>
+            <li id="liUser">
+                @if (canViewUsers)
+                {
+                    <a href="@adminUsersUrl" onclick='window.location="@adminUsersUrl";'><i class="fa fa-users"></i>Users</a>
+                }
+                else if (isPersonalTrainer)
+                {
+                    <a href="@adminUsersUrl" onclick='window.location="@adminUsersUrl";'><i class="fa fa-users"></i>My Profile</a>
+                }
+                else
+                {
+                    @*<a href="JavaScript:void(0);" class="disabledLink"><i class="fa fa-users"></i>Users</a>*@
+                }
+            </li>
+            @if (canViewCustomer && isSuperUser)
+            {
+                <li id="liCustomer">
+                    <a href="@customerCustomersUrl" onclick='window.location="@customerCustomersUrl";'><i class="fa fa-plus"></i>Customers</a>
+                </li>
+            }
+            <li id="liLocation">
+                @if (canViewLocations)
+                {
+                    <a href="@adminLocationsUrl" onclick='window.location="@adminLocationsUrl";'><i class="fa fa-dot-circle-o"></i>Locations</a>
+                }
+                else
+                {
+                    @*<a href="JavaScript:void(0);" class="disabledLink"><i class="fa fa-dot-circle-o"></i>Locations</a>*@
+                }
+            </li>
+            <li id="liRole">
+                @if (canViewRoles)
+                {
+                    <a href="@securityRolesUrs" onclick='window.location="@securityRolesUrs";'><i class="fa fa-users"></i>Roles</a>
+                }
+                else
+                {
+                    @*<a href="JavaScript:void(0);" class="disabledLink"><i class="fa fa-users"></i>Roles</a>*@
+                }
+            </li>
+        </ul>
+    </div>
+</nav>

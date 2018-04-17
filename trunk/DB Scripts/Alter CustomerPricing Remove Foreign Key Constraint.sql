@@ -1,0 +1,1 @@
+ALTER TABLE [CustomerPricing] DROP CONSTRAINT FK_CustomerPricing_Customer

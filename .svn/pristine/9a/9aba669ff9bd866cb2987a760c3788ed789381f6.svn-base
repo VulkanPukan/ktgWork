@@ -1,0 +1,98 @@
+﻿@model StrengthTracker2.Web.Models.ResetPassword
+@{
+    ViewBag.Title = "Reset Password";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<style>
+    .row {
+        margin-left: 100px;
+    }
+    .button_row {
+        margin-top:10px;
+        margin-left:210px;
+    }
+</style>
+<div class="modal fade" id="ResetPasswordModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
+                <h4 class="modal-title" style="text-align: center;">Enter Desired Password</h4>
+            </div>
+            <div class="modal-body">
+                <div id="dvDeleteSuccessMessage"></div>
+                @using (Ajax.BeginForm("ResetPassword", "Home", new AjaxOptions {HttpMethod = "POST", InsertionMode = InsertionMode.Replace}, new {id = "ResetPasswordForm", name = "ResetPasswordForm"}))
+                {
+                    @Html.ValidationSummary()
+                    <div id="ResetPasswordDiv">
+                        <div class="Form_warper">
+                            <div class="row">
+                                <div class="col">New Password</div>
+                                <div class="col">
+                                    <input type="password" id="NewPassword" class="form-control" style="width:75%;" />
+                                    @Html.HiddenFor(m => m.UserID)
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">Confirm Password</div>
+                                <div class="col">
+                                    <input type="password" id="ConfirmPassword" class="form-control" style="width:75%;" />
+                                </div>
+                            </div>
+                            <div class="button_row">
+                                <button type="button" class="btn btn-primary" id="btnOk" value="Ok" data-dismiss="modal" onclick="ResetPassword();">Reset Password</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" charset="utf-8">
+
+        $(document).ready(function() {
+            $('#ResetPasswordModal').modal('show');
+        });
+        $("#ConfirmPassword").on("keyup", function() {
+            if ($("#ConfirmPassword").val() !== $("#NewPassword").val()) {
+                $("#dvDeleteSuccessMessage").html("Confirm Password and New Password do not match.").css('color', 'red');
+
+            } else {
+                $("#dvDeleteSuccessMessage").html("").css('color', 'white');
+
+            }
+
+        });
+
+        function ResetPassword() {
+            var resetPasswordModel = {
+                'NewPassword': $("#NewPassword").val(),
+                'ConfirmPassword': $("#ConfirmPassword").val(),
+                'UserID': $("#UserID").val()
+            };
+            $.ajax({
+                url: "ResetPassword",
+                type: "POST",
+                data: JSON.stringify({ "resetPasswordModel": resetPasswordModel }),
+                dataType: "json",
+                contentType: "application/json",
+                success: function (resp) {
+                    debugger;
+                    if (resp.Status === 3) {
+                        alert(resp.Message);
+                        window.location.href = resp.RedirectLocation;
+                    } else {
+                        alert(resp.Message);
+                    }
+                },
+                error: function(resp) {
+                    $("#dvDeleteSuccessMessage").html(resp).css('color', 'red');
+                }
+            });
+        }
+    </script>
+}

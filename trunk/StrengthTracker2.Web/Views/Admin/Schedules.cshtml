@@ -1,0 +1,568 @@
+﻿@{
+	ViewBag.Title = "Strength Tracker | Schedules";
+	Layout = "~/Views/Admin/_Layout.cshtml";
+}
+
+<style>
+	
+	 .k-grid .k-alt {
+        background-color: #fafbfc; /* specify the alternate background-color */
+    }
+
+
+    #SchedulesGrid .k-grid-header {
+        padding: 0 !important;
+    }
+
+    #SchedulesGrid .k-grid-content {
+        overflow-y: visible;
+    }
+      #SchedulesGrid tr td:last-child {
+        overflow: visible;
+    }
+   
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+    }
+    
+    #SchedulesGrid .k-grid-header {
+        padding-right: 0 !important;
+    }
+
+    #dvSiteFooter {
+        top: 70px !important;
+    }
+    #SchedulesGrid .k-grid-content-locked {
+        height: 100% !important;
+    }
+
+    #SchedulesGrid .k-grid-header-locked {
+        vertical-align: bottom !important;
+        height: auto !important;
+    }
+    /*Exception Grid*/
+    #ExceptionsGrid .k-grid-header {
+        padding: 0 !important;
+    }
+
+    #ExceptionsGrid .k-grid-content {
+        overflow-y: visible;
+    }
+      #ExceptionsGrid tr td:last-child {
+        overflow: visible;
+    }
+    #ExceptionsGrid .k-grid-header {
+        padding-right: 0 !important;
+    }
+    #ExceptionsGrid .k-grid-content-locked {
+        height: 100% !important;
+    }
+
+    #ExceptionsGrid .k-grid-header-locked {
+        vertical-align: bottom !important;
+        height: auto !important;
+    }
+	 .custom-dropdown {
+		 display: none;
+		 position: fixed;
+		 top: auto;
+		 z-index: 99;
+		 border: 1px solid #e1e1e1;
+		 margin-left: 0;
+		 padding-left: 0;
+		 box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+		 background: #fff;
+		 border-radius: 3px;
+		 margin-top: 36px;
+	 }
+
+	.custom-dropdown li a {
+		color: #5f5f5f;
+		font-size: 13px;
+	}
+
+	.custom-dropdown li {
+		list-style-type: none;
+		padding: 3px 20px;
+		display: block;
+		text-decoration: none;
+	}
+
+	.custom-dropdown.show-div {
+		display: block;
+	}
+</style>
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+
+<div class="main-content">
+	<h3 style="margin-bottom:0px;">Schedules</h3>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel-default">
+				<div class="panel-body" style="padding-top:10px;padding-bottom:0px;">
+					<div id="ScheduleGridContainer">
+						<div class="panel panel-default" style="border-color:white;margin-bottom: 0px;">
+							<div class="panel-body">
+								<form role="form" class="form-inline">
+									<div class="form-group pull-right">
+										<label class="control-label"></label>
+										<br>
+										<button type="button" onclick="AddSchedules();" class="btn btn-primary pull-right  mb-sm" style="margin-right:-15px;">
+											<em class="fa fa-plus-circle fa-fw mr-sm"></em>Add Schedule
+										</button>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div id="SchedulesGrid" style="margin-top: 8px !important;"></div>
+						<div id="SchedulesPager"></div>
+                        <label style="text-decoration:underline;margin-top:30px;">Exceptions</label>
+                        <button type="button" onclick="AddExceptions();" class="btn btn-primary pull-right  mb-sm" style="margin-top:20px;">
+						    <em class="fa fa-plus-circle fa-fw mr-sm"></em>Add Exceptions
+						</button>
+                        <div id="ExceptionsGrid" style="margin-top:10px;"></div>
+                        <div id="ExceptionsPager"></div>
+					</div>
+					
+					<div id="AddSchedule" style="display: none;">
+						<div class="">
+							<div class="panel-heading" style="display: none;">Add Schedule</div>
+							<div class="panel-body">
+								<div id="accordionAdd" class="panel-group">
+									<!-- START panel-->
+									<div class="">
+										<div class="panel-heading bb">
+											Schedule Details
+											<div class="required pull-right">* Required fields</div>
+											<h4 class="panel-title" style="display: none;">
+												<a data-toggle="collapse" data-parent="#accordionAdd" href="#collapseLocationDetailsAdd"></a>
+											</h4>
+										</div>
+										<div id="collapseLocationDetailsAdd" class="panel-collapse">
+											<div class="panel-body">
+												<form class="form-horizontal">
+													<div class="form-group col-lg-6">
+														<label class="col-lg-5 control-label">From *</label>
+														<div class="col-lg-7">
+															<select id="lstFromDay" class="form-control" >
+                                                                    <option value="0">Select Day of the Week</option>
+                                                                    <option value="1">Monday</option>
+                                                                    <option value="2">Tuesday</option>
+                                                                    <option value="3">Wednesday</option>
+                                                                    <option value="4">Thursday</option>
+                                                                    <option value="5">Friday</option>
+                                                                    <option value="6">Saturday</option>
+                                                                    <option value="7">Sunday</option>
+																</select>
+														</div>
+													</div>
+													<div class="form-group col-lg-6">
+														<label class="col-lg-5 control-label">To *</label>
+														<div class="col-lg-7">
+															<select id="lstToDay" class="form-control">
+                                                                    <option value="0">Select Day of the Week</option>
+                                                                    <option value="1">Monday</option>
+                                                                    <option value="2">Tuesday</option>
+                                                                    <option value="3">Wednesday</option>
+                                                                    <option value="4">Thursday</option>
+                                                                    <option value="5">Friday</option>
+                                                                    <option value="6">Saturday</option>
+                                                                    <option value="7">Sunday</option>
+																</select>
+														</div>
+													</div>
+                                                    <div class="form-group col-lg-6">
+														<label class="col-lg-5 control-label">From *</label>
+														<div class="col-lg-7">
+															<input type="text" id="txtFromTime" data-toggle="masked" data-inputmask="'mask': '99:99'" placeholder="Enter Time" class="form-control">
+														</div>
+													</div>
+                                                    <div class="form-group col-lg-6">
+														<label class="col-lg-5 control-label">To *</label>
+														<div class="col-lg-7">
+															<input type="text"id="txtToTime" data-toggle="masked" data-inputmask="'mask': '99:99'" placeholder="Enter Time" class="form-control">
+														</div>
+													</div>
+													<div class="form-group col-lg-6">
+														<label class="col-lg-5 control-label">Schedule For *</label>
+														<div class="col-lg-7">
+                                                            <select id="lstTypeofHour" class="form-control">
+                                                                    <option value="0">Select Schedule For</option>
+                                                                    <option value="1">Free Evaluation</option>
+                                                                    <option value="2">Workout</option>
+																</select>
+														</div>
+													</div>
+                                                    <div class="form-group col-lg-6">
+														<div class="col-lg-5">&nbsp;</div>
+														<div class="pull-right">
+															<button type="button" onclick="HideSchedulesGrid();" class="btn btn-sm btn-default">Cancel</button>
+															<button type="button" onclick="HideSchedulesGrid();" style="margin-right: 15px;margin-left: 15px;"  class="btn btn-primary btn-sm">Save</button>
+														</div>
+													</div>
+												</form>
+											</div>
+
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+                    <div id="AddException" style="display: none;">
+						<div class="">
+							<div class="panel-heading" style="display: none;">Add Schedule</div>
+							<div class="panel-body">
+								<div id="accordionAddException" class="panel-group">
+									<!-- START panel-->
+									<div class="">
+										<div class="panel-heading bb">
+											Exception Details
+											<div class="required pull-right">* Required fields</div>
+											<h4 class="panel-title" style="display: none;">
+												<a data-toggle="collapse" data-parent="#accordionAdd" href="#collapseLocationDetailsAdd"></a>
+											</h4>
+										</div>
+										<div id="collapseExceptionDetailsAdd" class="panel-collapse">
+											<div class="panel-body">
+												<form class="form-horizontal">
+													<div class="form-group col-lg-6">
+														<label class="col-lg-5 control-label">Date *</label>
+														<div class="col-lg-7">
+															<div id="exceptionDatepickerFT1" class="input-group date datetimepicker1">
+																<input type="text" id="txtExceptionDate" class="form-control">
+																<span class="input-group-addon">
+																	<span class="fa-calendar fa"></span>
+																</span>
+															</div>
+														</div>
+													</div>
+													<div class="form-group col-lg-6">
+														<label class="col-lg-5 control-label">Exception For *</label>
+														<div class="col-lg-7">
+															<select id="lstExceptionType" class="form-control">
+                                                                    <option value="0">Select Schedule For</option>
+                                                                    <option value="1">Free Evaluation</option>
+                                                                    <option value="2">Workout</option>
+																</select>
+														</div>
+													</div>
+                                                    <div class="form-group col-lg-6">
+														<label class="col-lg-5 control-label">From *</label>
+														<div class="col-lg-7">
+															<input type="text" id="txtExceptionFromTime" data-toggle="masked" data-inputmask="'mask': '99:99'" placeholder="Enter Time" class="form-control">
+														</div>
+													</div>
+                                                    <div class="form-group col-lg-6">
+														<label class="col-lg-5 control-label">To *</label>
+														<div class="col-lg-7">
+															<input type="text"id="txtExceptionToTime" data-toggle="masked" data-inputmask="'mask': '99:99'" placeholder="Enter Time" class="form-control">
+														</div>
+													</div>
+													<div class="form-group col-lg-6">
+														
+													</div>
+                                                    <div class="form-group col-lg-6">
+														<div class="col-lg-5">&nbsp;</div>
+														<div class="pull-right">
+															<button type="button" onclick="HideSchedulesGrid();" class="btn btn-sm btn-default">Cancel</button>
+															<button type="button" onclick="HideSchedulesGrid();" style="margin-right: 15px;margin-left: 15px;"  class="btn btn-primary btn-sm">Save</button>
+														</div>
+													</div>
+												</form>
+											</div>
+
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- START confirm deletion modal-->
+<div id="confirmDeletion" tabindex="-1" role="dialog" aria-labelledby="confirmDeletionLabel" aria-hidden="true" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+				<h4 id="confirmDeletionLabel" class="modal-title">Confirm Deletion</h4>
+			</div>
+			<div class="modal-body">
+				Delete Record?
+			</div>
+			<div class="modal-footer">
+				<button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+				<button type="button" id="btnDeleteFreeEvaluation" class="btn btn-primary">Delete</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	@Scripts.Render("~/bundles/jquery")
+	<script src="../Scripts/kendo.all.min.js"></script>
+	<script src="~/Scripts/moment/min/moment.min.js"></script>
+	<script src="~/Scripts/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+	@*<script src="~/Scripts/jquery.maskedinput.js"></script>*@
+    <script src="~/Scripts/inputmask/jquery.inputmask.bundle.min.js"></script>
+	<script type="text/javascript" charset="utf-8">
+
+		function ShowActionsDiv(obj, event) {
+			$('.custom-dropdown').removeClass('show-div');
+			event.stopPropagation();
+			var leftP = $(obj).offset();
+			var l = leftP.left;
+			var t = leftP.top;
+			debugger;
+			if (navigator.userAgent.match(/Trident/i)) {
+				l = leftP.left;
+				if ($(obj)[0].innerHTML.indexOf('caret') != -1) {
+					l = leftP.left - 86;
+				}
+			}
+			else if (navigator.userAgent.match(/AppleWebKit/i)) {
+				l = leftP.left - 250;
+				if ($(obj)[0].innerHTML.indexOf('caret') != -1) {
+					l = leftP.left - 200;
+				}
+			}
+			else if (navigator.userAgent.match(/Firefox/i)) {
+				l = leftP.left - 250;
+				if ($(obj)[0].innerHTML.indexOf('caret') != -1) {
+					l = leftP.left - 332;
+				}
+			}
+			else {
+			}
+
+			$($(obj)[0].parentNode).find('.custom-dropdown').css('left', l);
+			$($(obj)[0].parentNode).find('.custom-dropdown').css('top', t)
+			$($(obj)[0].parentNode).find('.custom-dropdown').toggleClass('show-div');
+		}
+
+		function CustomDropdownClick(event) {
+			event.stopPropagation();
+		}
+
+		$(document).click(function () {
+			$('.custom-dropdown').removeClass('show-div');
+		});
+
+		var SchedulesdataSource = new kendo.data.DataSource({
+			data: [
+				{ id: 4, FromEvaluationDay: "Monday", ToEvaluationDay: "Sunday", EvaluationTime: "08:00 AM - 11:30 AM", HoursType: "Free Evaluation" },
+				{ id: 5, FromEvaluationDay: "Wednesday", ToEvaluationDay: "Thursday", EvaluationTime: "03:00 PM - 06:00 PM", HoursType: "Free Evaluation" },
+				{ id: 6, FromEvaluationDay: "Saturday", ToEvaluationDay: "Saturday", EvaluationTime: "07:00 PM - 08:00 PM", HoursType: "Free Evaluation" },
+                { id: 7, FromEvaluationDay: "Monday", ToEvaluationDay: "Friday", EvaluationTime: "07:00 AM - 08:00 PM", HoursType: "Workout" },
+				{ id: 8, FromEvaluationDay: "Saturday", ToEvaluationDay: "Saturday", EvaluationTime: "07:00 AM - 10:00 PM", HoursType: "Workout" },
+				{ id: 9, FromEvaluationDay: "Sunday", ToEvaluationDay: "Sunday", EvaluationTime: "07:00 AM - 05:00 PM", HoursType: "Workout" }
+			],
+			pageSize: 10
+
+		});
+
+		var ExceptionsdataSource = new kendo.data.DataSource({
+		    data: [
+				{ id: 4, ExceptionDate: "5th July 2017", FromExceptionTime: "08:00 AM", ToExceptionTime: "11:30 AM", HoursType: "Free Evaluation" },
+                { id: 5, ExceptionDate: "9th September 2017", FromExceptionTime: "07:00 PM", ToExceptionTime: "08:00 PM", HoursType: "Free Evaluation" },
+                { id: 4, ExceptionDate: "5th September 2017", FromExceptionTime: "07:00 AM", ToExceptionTime: "10:00 PM", HoursType: "Workout" },
+                { id: 6, ExceptionDate: "25th December 2017", FromExceptionTime: "07:00 AM", ToExceptionTime: "10:00 PM", HoursType: "Workout" },
+		    ],
+		    pageSize: 10
+
+		});
+
+		$("#SchedulesGrid").kendoGrid({
+			allowCopy: true,
+			width: '800px',
+			scrollable: false,
+			sortable: true,
+			filterable: true,
+			resizable: true,
+
+			columns: [
+				{
+					field: "FromEvaluationDay",
+					title: "From",
+					width: "150px",
+					locked: true,
+					lockable: true,
+					attributes: {
+						style: 'white-space: nowrap '
+					}
+				},
+                {
+                    field: "ToEvaluationDay",
+                    title: "To",
+                    width: "150px",
+                    locked: true,
+                    lockable: true,
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+				{
+					field: "EvaluationTime",
+					title: "Time",
+					width: "130px",
+					locked: true,
+					lockable: true,
+					attributes: {
+						style: 'white-space: nowrap '
+					}
+				},
+                {
+                    field: "HoursType",
+                    title: "Schedule For",
+                    width: "130px",
+                    locked: true,
+                    lockable: true,
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+				{
+					field: "Actions",
+					filterable: false,
+					width: "110px",
+					template: '<div class="btn-group mb-sm">' + 
+                        '<button type="button" data-toggle="dropdown"  class="btn btn-default" style="padding:7px 10px;">Select…</button>' +
+                        '<button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">' +
+                        '<span class="caret"></span></button>' +
+						'<ul role="menu" class="dropdown-menu" style="min-width:110px !important;">' +
+						//'<li><a href="javascript:void(0);" onclick="ShowEditConfirmationPopup();">Edit</a></li>' +
+						'<li><a href="javascript:void(0);" onclick="ShowDeleteConfirmationPopup();">Delete</a></li>' +
+						'</ul>' +
+						'</div>'
+				}
+			],
+			dataSource: SchedulesdataSource
+		});
+
+		//LocationdataSource.read();
+
+		$("#SchedulesPager").kendoPager({
+			autoBind: true,
+			dataSource: SchedulesdataSource
+		});
+
+		$("#ExceptionsGrid").kendoGrid({
+		    allowCopy: true,
+		    width: '800px',
+		    scrollable: false,
+		    sortable: true,
+		    filterable: true,
+		    resizable: true,
+
+		    columns: [
+				{
+				    field: "ExceptionDate",
+				    title: "Date",
+				    width: "150px",
+				    locked: true,
+				    lockable: true,
+				    attributes: {
+				        style: 'white-space: nowrap '
+				    }
+				},
+                {
+                    field: "FromExceptionTime",
+                    title: "From Time",
+                    width: "150px",
+                    locked: true,
+                    lockable: true,
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+				{
+				    field: "ToExceptionTime",
+				    title: "To Time",
+				    width: "130px",
+				    locked: true,
+				    lockable: true,
+				    attributes: {
+				        style: 'white-space: nowrap '
+				    }
+				},
+                {
+                    field: "HoursType",
+                    title: "Exception For",
+                    width: "130px",
+                    locked: true,
+                    lockable: true,
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+				{
+				    field: "Actions",
+				    title: "Actions",
+				    filterable: false,
+				    width: "110px",
+				    template: '<div class="btn-group mb-sm"><button type="button" data-toggle="dropdown" class="btn btn-default" style="padding:7px 10px;">Select…</button><button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="caret"></span></button>' +
+						'<ul role="menu" class="dropdown-menu" style="min-width:110px !important;" onclick="javascript:CustomDropdownClick(event);">' +
+						//'<li><a href="javascript:void(0);" onclick="ShowEditConfirmationPopup();">Edit</a></li>' +
+						'<li><a href="javascript:void(0);" onclick="ShowDeleteExceptionConfirmationPopup();">Delete</a></li>' +
+						'</ul>' +
+						'</div>'
+				}
+		    ],
+		    dataSource: ExceptionsdataSource
+		});
+		$("#ExceptionsPager").kendoPager({
+		    autoBind: true,
+		    dataSource: ExceptionsdataSource
+		});
+
+		function ShowDeleteConfirmationPopup() {
+			ConfirmationMessageBox({
+				confirmationMessage: "Are you sure you want to delete a schedule?",
+				popupTitle: "Confirm Deletion",
+				callback: function () {
+					deleteFreeEvaluation(id);
+				}
+			});
+		}
+
+		function ShowDeleteExceptionConfirmationPopup() {
+		    ConfirmationMessageBox({
+		        confirmationMessage: "Are you sure you want to delete an exception?",
+		        popupTitle: "Confirm Deletion",
+		        callback: function () {
+		            deleteFreeEvaluation(id);
+		        }
+		    });
+		}
+
+		function AddSchedules() {
+		    $('#AddSchedule').show();
+		    $('#ScheduleGridContainer').hide();
+		    $("#AddException").hide();
+		}
+		function HideSchedulesGrid() {
+		    $('#AddSchedule').hide();
+		    $("#AddException").hide();
+		    $('#ScheduleGridContainer').show();
+		}
+		function AddExceptions() {
+		    $('#AddSchedule').hide();
+		    $('#ScheduleGridContainer').hide();
+		    $("#AddException").show();
+		}
+		$(function () {
+		    $('.datetimepicker1').datetimepicker({
+		        disabledHours: true,
+		        format: 'MM/DD/YYYY'
+		    });
+		});
+	</script>
+}

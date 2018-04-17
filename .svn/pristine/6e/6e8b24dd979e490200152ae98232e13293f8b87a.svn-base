@@ -1,0 +1,134 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Web;
+using StrengthTracker2.Core.DataTypes;
+using StrengthTracker2.Core.Functional.DBEntities.ProgramManagement;
+
+namespace StrengthTracker2.Web.Models
+{
+	[DataContract]
+	public class UserRegistrationModel
+    {
+        public int UserId { get; set; }
+
+        /// <summary>
+        /// Program Commencement Date
+        /// </summary>
+        public Nullable<DateTime> StartDate { get; set; }
+
+		[Required]
+		[DataMember(Name = "userName")]
+        public string UserName { get; set; }
+
+		[Required]
+		[DataMember(Name = "firstName")]
+		public string FirstName { get; set; }
+
+		[Required]
+		[DataMember(Name= "lastName")]
+        public string LastName { get; set; }
+
+
+		[DataMember(Name = "dob")]
+		public DateTime? DOB { get; set; }
+
+        public string DOBRng { get; set; }
+
+        public string SchoolName { get; set; }
+
+        public string SchoolTeamName { get; set; }
+
+        public int PlayingforSchoolTeam { get; set; }
+
+        public int? YearsPlayingOrganizedSport { get; set; }
+
+        public int? InjuryConcerns { get; set; }
+
+        public int? ParticipateinTravelTeam { get; set; }
+
+        public string TravelTeamName { get; set; }
+
+        public int? PlayingLevel { get; set; }
+
+		[Required]
+		[DataMember(Name = "profileGender")]
+		public Gender Gender { get; set; }
+
+		[Required]
+		[DataMember(Name = "email")]
+		[DataType(DataType.EmailAddress)]
+		public string Email { get; set; }
+
+		[DataMember(Name = "addressOne")]
+		public string AddressOne { get; set; }
+
+		[DataMember(Name = "addressTwo")]
+		public string AddressTwo { get; set; }
+
+		[DataMember(Name = "city")]
+		public string City { get; set; }
+
+		[DataMember(Name = "stateID")]
+		public int StateID { get; set; }
+
+		[DataMember(Name = "zip")]
+		[DataType(DataType.PostalCode)]
+		public string ZipCode { get; set; }
+
+		[Phone]
+		[DataMember(Name = "phoneNumber")]
+		[DataType(DataType.PhoneNumber)]
+		public string PhoneNumber { get; set; }
+
+        public string Photo { get; set; }
+
+        public string ContactType { get; set; }
+        //*** Ends here
+
+        public bool IsAccountEnabled { get; set; }
+
+        public int UserType { get; set; }
+
+        public int? Grade { get; set; }
+
+        public string OtherGrade { get; set; }
+
+        [DataMember(Name = "sport")]
+        public int? SportID { get; set; }
+		[DataMember(Name = "sportsName")]
+		public string SportsName { get; set; }
+
+        public int? PositionID { get; set; }
+        public string PositionName { get; set; }
+
+        public int? ProgramID { get; set; }
+        public int? AvailablePrograms { get; set; }
+
+        public string ProgramName { get; set; }
+
+        public int LocationID { get; set; }
+        
+        public string LocationName { get; set; }
+
+        public DateTime? DateAndTimeOfInterest { get; set; }
+
+        public DateTime? FreeEvaluationDate { get; set; }
+        
+        public int? FreeEvaluationTime { get; set; }
+
+        public int? HowdidYouHearAboutUs { get; set; }
+
+        public bool IAgreeToPhotoDoc { get; set; }
+
+        public int? AgeRangeForAdults { get; set; }
+
+		[Required]
+		[DataMember(Name = "DOBIsBefore94")]
+		public bool DOBIsBefore94 { get; set; }
+
+        public int Country { get; set; }
+    }
+}

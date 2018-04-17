@@ -1,0 +1,160 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Athlete Dashboard";
+    Layout = "~/Views/Admin/_Layout.cshtml";
+}
+<style>
+    .k-grid .k-alt {
+        background-color: #fafbfc; /* specify the alternate background-color */
+    }
+
+    .k-grid .k-grid-header .k-header .k-link {
+        height: auto;
+    }
+
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+    }
+
+    #dvSiteFooter {
+        top: 550px !important;
+    }
+
+    .center-label {
+        text-align: center;
+    }
+</style>
+@*<div class="wrapper">*@
+<!-- End aside-->
+<div class="main-content">
+    <h3>@{ @Request.Params["aname"]}'s Dashboard</h3>
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- START panel-->
+            <div class="panel panel-default">
+                <div class="panel-heading"><h4>Upcoming Session</h4></div>
+                <div class="panel-body ">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Session</label>
+                                <div class="controls mt">
+                                    13 of 19
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Program</label>
+                                <div class="controls mt">
+                                    Football - Summer
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Track</label>
+                                <div class="controls mt">
+                                    Track2
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Step</label>
+                                <div class="controls mt">
+                                    1B
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+        <div class="col-lg-4">
+            <!-- START panel-->
+            <div class="panel panel-default">
+                <div class="panel-heading"><h4>StrengthTracker Quotient</h4></div>
+                <div class="panel-body center-label ">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><a href="#">Results</a></label>
+                                <div class="controls mt">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <a href="#">0</a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a href="#">1</a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            222.56
+                                        </div>
+                                        <div class="col-md-6">
+                                            284.22
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><a href="#">Compare</a></label>
+                                <div class="controls mt">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <a href="#">2</a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a href="#">3</a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            N/A
+                                        </div>
+                                        <div class="col-md-6">
+                                            N/A
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- START panel-->
+            <div class="panel panel-default">
+                <div class="panel-heading"><h4>Volume Of Weight</h4></div>
+                <div class="panel-body">
+                    <div class="panel panel-default">
+                        <div class="panel-collapse">
+                            <div class="panel-body">
+                                <div data-source="@Url.Action("ChartData", "Athlete")?chartType=bar" class="chart-bar flot-chart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+    </div>
+</div>
+@*</div>*@
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script src="../Scripts/slider/js/bootstrap-slider.js"></script>
+    <script src="../Scripts/sparklines/jquery.sparkline.min.js"></script>
+    <script src="../Scripts/slimscroll/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $("#liDashboard").addClass("active");
+    </script>
+}

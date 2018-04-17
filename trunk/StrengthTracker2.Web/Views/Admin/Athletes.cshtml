@@ -1,0 +1,595 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Athletes";
+
+    Layout = "~/Views/Admin/_LayoutNew.cshtml";
+
+
+    var isIndividualAthlete = false;
+    if (Session["AuthenticatedUser"] != null) //For Individual Athlete
+    {
+        var authenticatedUser = Session["AuthenticatedUser"] as StrengthTracker2.Core.Repository.Entities.Actors.User;
+        isIndividualAthlete = authenticatedUser.IsIndividualAthlete;
+    }
+}
+<style>
+    .k-grid .k-alt {
+        background-color: #f1f5fa; /* specify the alternate background-color */
+    }
+
+    .k-grid .k-grid-header .k-header .k-link {
+        height: auto;
+    }
+
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+    }
+
+    #athleteGrid .k-grid-content, #athleteGrid tr td:last-child {
+        overflow: visible;
+    }
+
+    #athleteGrid .k-grid-header {
+        padding-right: 0 !important;
+    }
+
+    #dvSiteFooter {
+        top: 70px !important;
+    }
+
+    .navbar-top .navbar-header {
+        width: 250px !important;
+        text-align: center;
+    }
+
+    td > a {
+        color: #337ab7;
+    }
+
+        td > a:hover {
+            color: #337ab7;
+        }
+
+    athleteSelectCheckbox {
+        vertical-align: text-top;
+        margin-top: 0px;
+    }
+    #btnSendReg {
+        background:none!important;
+        color:inherit;
+        border:none; 
+        padding:0!important;
+        font: inherit;
+        margin: 10px;
+        /*border is optional*/
+        border-bottom:1px solid #444; 
+        cursor: pointer;
+    }
+</style>
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+<link href="~/Scripts/bootstrap/css/bootstrap-multiselect.css" rel="stylesheet" />
+<div class="top-bar clearfix">
+    <div class="container-fluid">
+        <div class="row gutter">
+            <div class="col-md-12 col-sm-6 col-xs-12">
+                <h3 class="page-title" style="float:left;">Athletes</h3> 
+                <div style="float: right; font-size: small; line-height: 20px; margin-top: 5px; margin-right: 18px;">
+                    <div style="display: inline-flex; flex-direction: column">
+                        <div style="@ViewBag.ShowReginLink">
+                            <button type="button" id="btnSendReg" onclick="ShowSendRegistrationDialog()">Send Registration Link</button>
+                        </div>
+                        <div>
+                            <span style="margin:10px !important;">Active Athlete count: @ViewBag.ActiveAthletes</span>
+                        </div>
+                    </div>
+                    <div style="display: inline-flex">
+                        <ul>
+                            <li><i class="fa fa-circle" aria-hidden="true" style="color: green;"></i> Active</li>
+                            <li><i class="fa fa-circle" aria-hidden="true" style="color: red;"></i> Deactivated</li>
+                            <li><i class="fa fa-circle" aria-hidden="true" style="color: orange;"></i> Pending</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="hdSelectedUsers" />
+<div class="main-container">
+    <div class="row gutter">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div id="usergridcontainer">
+                <div id="divSaveClearFilters" style="text-align: right; margin-bottom: 10px; display: none;">
+                    <button type="button" class="btn btn-info" onclick="FilterSave();">
+                        <em class="fa fa-plus-circle fa-fw mr-sm"></em>Make Default
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="FilterClear();">
+                        Clear
+                    </button>
+                </div>
+                <div class="clearfix">
+                    <label style="text-decoration: underline;"></label>
+                    <form role="form" class="form-inline">
+                        <div class="form-group">
+                            <label class="control-label">Filter by sports</label>
+                            <br>
+                            <div class="input-group">
+                                <select onchange="FilterChange();" style="width: 190px;" id="lstFilterOptions" name="account" class="form-control">
+                                    <option value="">All</option>
+                                    <option value="Archery">Archery</option>
+                                    <option value="Australian Rules Football">Australian Rules Football</option>
+                                    <option value="Baseball">Baseball</option>
+                                    <option value="Basketball">Basketball</option>
+                                    <option value="Biathlon">Biathlon</option>
+                                    <option value="Body Building">Body Building</option>
+                                    <option value="Boxing">Boxing</option>
+                                    <option value="Canoeing/Kayaking">Canoeing/Kayaking</option>
+                                    <option value="Cricket">Cricket</option>
+                                    <option value="Cycling">Cycling</option>
+                                    <option value="Diving">Diving</option>
+                                    <option value="Driving">Driving</option>
+                                    <option value="Equestrian">Equestrian</option>
+                                    <option value="Fencing">Fencing</option>
+                                    <option value="Field Hockey">Field Hockey</option>
+                                    <option value="Figure Skating">Figure Skating</option>
+                                    <option value="Firefighters">Firefighters</option>
+                                    <option value="Football">Football</option>
+                                    <option value="Golf">Golf</option>
+                                    <option value="Gymnastics">Gymnastics</option>
+                                    <option value="Handball (European)">Handball (European)</option>
+                                    <option value="Ice Hockey">Ice Hockey</option>
+                                    <option value="Lacrosse">Lacrosse</option>
+                                    <option value="Marital Arts">Marital Arts</option>
+                                    <option value="Police Officers">Police Officers</option>
+                                    <option value="Rhythmic Sportive Gymnastics">Rhythmic Sportive Gymnastics</option>
+                                    <option value="Rowing">Rowing</option>
+                                    <option value="Rugby">Rugby</option>
+                                    <option value="Sailing">Sailing</option>
+                                    <option value="Shooting">Shooting</option>
+                                    <option value="Skiing">Skiing</option>
+                                    <option value="Soccer">Soccer</option>
+                                    <option value="Speedskating">Speedskating</option>
+                                    <option value="Squash/Handball">Squash/Handball</option>
+                                    <option value="Swimming">Swimming</option>
+                                    <option value="Tennis">Tennis</option>
+                                    <option value="Track & Field">Track & Field</option>
+                                    <option value="Volleyball">Volleyball</option>
+                                    <option value="Water Polo">Water Polo</option>
+                                    <option value="Wrestling">Wrestling</option>
+                                    <option value="Life">Life</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Filter by location</label>
+                            <br>
+                            <div class="input-group">
+                                <select onchange="FilterChange();" style="width: 190px;" id="lstLocation" name="status" class="form-control"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Filter By Status</label>
+                            <br>
+                            <div class="input-group">
+                                <select id="lstAthleteStatus" onchange="FilterChange();" name="Status" class="form-control" style="width: 200px;">
+                                    <option selected="selected" value="">All</option>
+                                    <option value="Active">Active</option>
+                                    <option value="Deactivated">Deactivated</option>
+                                    <option value="Pending">Pending</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group pull-right">
+                            <label class="control-label"></label>
+                            <br>
+                            <div class="location_list">
+                                <input type="text" onkeyup="SearchFilter();" id="txtSearch" placeholder="Search..." class="form-control" style="width: 120px; display: none;" autocomplete="off">
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div id="someplaceholderGrid" class="clearfix"></div>
+            </div>
+            <div id="dvActionBar" style="float: right; display: none;margin-top:-50px;text-align:center;">
+                <div style="font-size:small;font-weight:bold;margin-bottom:5px;">Multi Select Actions</div>
+                <a href="JavaScript:void(0);" onclick="OpenReassignmentDialog();" class="btn btn-info">Reassign</a>
+                <a href="JavaScript:void(0);" onclick="ShowDeleteConfirmation();" class="btn btn-danger">Delete</a>
+                <a href="JavaScript:void(0);" onclick="SetStatusForSelectedAthletes(false);" class="btn btn-info">Deactivate</a>
+                <a href="JavaScript:void(0);" onclick="SetStatusForSelectedAthletes(true);" class="btn btn-info">Activate</a>
+            </div>
+            <div id="someplaceholderGrid1" class="clearfix">
+            </div>
+            <div id="athleteGrid" style="margin-top: 8px;" class="clearfix"></div>
+            <div id="athletePager"></div>
+        </div>
+    </div>
+</div>
+<div id="reassignmentModal" tabindex="-1" role="dialog" aria-labelledby="confirmReassignmentLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmReassignmentModalLabel" class="modal-title">Reassignment</h4>
+            </div>
+            <div class="modal-body">
+                <div id="dvActivate">
+                    <table>
+                        <tr>
+                            <td style="padding-right:10px;">Reassign</td>
+                            <td style="padding-bottom:10px;">
+                                <select id="lstReassignChoice" class="form-control" onchange="ReassignChoiceChange();">
+                                    <option selected="selected" value="0">Select</option>
+                                    @*<option value="1">Coach</option>*@
+                                    @if (!isIndividualAthlete)
+                                    {
+                                        <option value="2">Team</option>
+                                    }
+                                    <option value="3">Program</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr id="trReassignCoach" style="display:none;">
+                            <td style="padding-right:10px;">Coach</td>
+                            <td><select id="lstCoachForReassignment" class="form-control"></select></td>
+                        </tr>
+                        <tr id="trReassignTeam" style="display:none;">
+                            <td style="padding-right:10px;">Team</td>
+                            <td><select id="lstTeamForReassignment" class="form-control"></select></td>
+                        </tr>
+                        <tr id="trReassignProgram" style="display:none;">
+                            <td style="padding-right:10px;">Program</td>
+                            <td><select id="lstProgramForReassignment" class="form-control"></select></td>
+                        </tr>
+                    </table>
+                </div>
+                <input type="hidden" id="hdUserCurrentStatus" />
+                <input type="hidden" id="hdstatusUserID" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <input type="button" class="btn btn-primary" value="Reassign" onclick="ReassignChoiceToUser();" />
+            </div>
+        </div>
+    </div>
+</div>
+<div id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmDeleteModalLabel" class="modal-title">Delete Athlete</h4>
+            </div>
+            <div class="modal-body">
+                <div>Confirm Deletion?</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <input type="button" class="btn btn-primary" value="Delete" onclick="DeleteConfirmation();" />
+            </div>
+        </div>
+    </div>
+</div>
+<!-- START confirm activation modal-->
+<div id="confirmActivationModal" tabindex="-1" role="dialog" aria-labelledby="confirmActivationLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmActivationModalLabel" class="modal-title">Confirm Status Change</h4>
+            </div>
+            <div class="modal-body">
+                <div id="dvDeactivate" style="display:none;">
+                    Update user status?
+                </div>
+                <div id="dvActivate">
+                    <table>
+                        <tr>
+                            <td style="padding-right:10px;">Program</td>
+                            <td style="padding-bottom:10px;"><select id="lstActiveProgram" class="form-control"></select></td>
+                        </tr>
+                        <tr>
+                            <td style="padding-right:10px;">Activation Date</td>
+                            <td><input type="text" id="txtAthleteActivationDate" class="form-control" placeholder="MM/DD/YYYY"></td>
+                        </tr>
+                    </table>
+                </div>
+                <input type="hidden" id="hdUserCurrentActivationStatus" />
+                <input type="hidden" id="hdActivationstatusUserID" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <input type="button" class="btn btn-primary" value="Update" onclick="UpdateUserStatus();" />
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END confirm deletion modal-->
+<!-- START send registration modal-->
+<div id="sendRegistrationModal" tabindex="-1" role="dialog" aria-labelledby="sendRegistrationLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">x</button>
+                <h4 class="modal-title">Send Registration Link</h4>
+            </div>
+            <div class="modal-body">
+                <form action="">
+                    <div>
+                        <table style="width: 100%; padding: 20px;">
+                            <tr>
+                                <td style="padding-right: 10px; width: 30%;">Send emails to:</td>
+                                <td><input type="text" id="txtEmailList" onblur="CheckBlankValue();" class="form-control" placeholder="Type emails splitted by comma"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <input type="button" id="sendButton" class="btn btn-info" value="Send" onclick="SendLink('sendRegistrationModal');"/>
+                                    <label id="labelSendMessage" style="display: none; color: green;">-</label>
+                                </td>
+                            </tr>
+                            <tr><td colspan="2">&nbsp;</td></tr>
+                            <tr>
+                                <td></td>
+                                <td><label>OR</label></td>
+                            </tr>
+                            <tr><td colspan="2">&nbsp;</td></tr>
+                            <tr>
+                                <td style="padding-right: 10px;">I will send the <a target="_blank" id="RegnLink" href="@ViewBag.RegistrationLink">link</a> myself</td>
+                                <td>
+                                    <input type="button" class="btn btn-info" value="Copy" id="btnCopyLink"/>
+                                    <label id="labelCopyMessage" style="color: green; display: none;">-</label>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default" onclick="CancelSend();">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END send registration modal-->
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script src="../Scripts/kendo.all.min.js"></script>
+    <script src="~/Scripts/moment/min/moment.min.js"></script>
+    <script src="~/Scripts/bootstrap/js/bootstrap-multiselect.min.js"></script>
+    <script src="~/Scripts/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/StrengthTracker2/Common.js"></script>
+    <script src="~/Scripts/StrengthTracker2/Athletes.js"></script>    
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.2/jquery.cookie.js"></script>
+    <script src="~/Scripts/jquery.maskedinput.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.4.0/clipboard.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+        $(function() {
+            $("#liAthlete").addClass("active");
+            SetColumnVisibility("@ViewBag.IsIndividualAthlete");
+            $('.datetimepicker1').datetimepicker({
+                disabledHours: true,
+                format: 'MM/DD/YYYY'
+            });
+
+            $('#txtAthleteActivationDate').blur(function() {
+                var activationDate = $("#txtAthleteActivationDate").val();
+                if (isNaN(Date.parse(activationDate))) {
+                    $("#txtAthleteActivationDate").css('border-color', 'red');
+                    $("#txtAthleteActivationDate").focus();
+                    return false;
+                } else {
+                    $("#txtAthleteActivationDate").css('border-color', '#d4dae2');
+                }
+            });
+
+            PopulateCoaches();
+            PopulateTeams();
+            PopulatePrograms();
+            var locationListItems = "<option value='' selected='selected'>All</option>";
+            $.ajax({
+                url: '@Url.Action("GetLocationsList", "Admin")',
+                type: "POST",
+                contentType: 'application/json',
+                dataType: "json",
+                success: function(data) {
+                    $.each(data,
+                        function(index, item) {
+
+                            locationListItems += "<option value='" + item.ID + "'>" + item.LocationName + "</option>";
+                        });
+
+                    $("#lstLocation").html(locationListItems);
+                    FilterChange();
+                }
+            });
+            $.ajax({
+                url: '@Url.Action("GetActiveProgramList", "Coach")',
+                type: "POST",
+                contentType: 'application/json',
+                dataType: "json",
+                success: function(resp) {
+                    $("#lstActiveProgram").empty();
+                    $("#lstActiveProgram").append("<option value='0'>Select Program</option>");
+                    for (var i = 0; i < resp.length; i++) {
+                        $("#lstActiveProgram")
+                            .append("<option value='" + resp[i].Id + "'>" + resp[i].Title + "</option>");
+                    }
+                }
+            });
+
+        });
+
+        function GenerateEmailTo(dataItem) {
+            var html = [];
+            var dataItems = dataItem.split('|');
+            console.log(dataItems.length)
+            for (var i = 0; i < dataItems.length; i++) {
+                console.log(dataItem[i]);
+                html.push('<a target="_top" href=mailto:' + dataItems[i] + '>' + dataItems[i] + '</a>');
+            }
+            return html.join(', ');
+        }
+
+        function ShowFreeEvaluation() {
+            $("#athleteGridcontainer").hide();
+            $("#renewusers").hide();
+            $("#freeevaluation").show();
+        }
+
+        function CheckActualScoreOnFocus(ctrl) {
+        }
+
+        function ShowAthleteProfile(userId) {
+            window.location.href = "AthleteProfile?UserId=" + userId;
+        }
+
+        function ShowDashboard(atheleteName) {
+            window.location.href = "AthleteDashboard?aname=" + atheleteName;
+        }
+
+        function FilterSave() {
+            var athleteFilter = $("#lstFilterOptions").val();
+            var locationFilter = $("#lstLocation").val();
+            var statusFilter = $("#lstAthleteStatus").val()
+
+            if (athleteFilter) {
+                $.cookie("AthleteFilter", athleteFilter);
+            }
+            if (locationFilter) {
+                $.cookie("LocationFilter", locationFilter);
+            }
+
+            if (statusFilter) {
+                $.cookie("StatusFilter", statusFilter);
+            }
+        }
+
+        function FilterLoad() {
+            var athlete = $.cookie("AthleteFilter");
+            var location = $.cookie("LocationFilter");
+            var status = $.cookie("StatusFilter");
+            $("#lstFilterOptions").val(athlete);
+            $("#lstLocation").val(location);
+            $("#lstAthleteStatus").val(status);
+        }
+
+        function FilterClear() {
+            $.cookie("AthleteFilter", "");
+            $.cookie("LocationFilter", "");
+            $.cookie("StatusFilter", "");
+            FilterLoad();
+            FilterChange();
+        }
+
+        function UpdateUserStatus() {
+            var athleteStatus = false;
+            var programID = 0;
+
+            if ($("#hdUserCurrentActivationStatus").val() === "false") {
+                athleteStatus = true;
+                programID = $("#lstActiveProgram").val();
+            }
+            loading_img(true);
+            $.ajax({
+                url: "@Url.Action("ChangeAthleteStatus", "Coach")",
+                type: "POST",
+                async: false,
+                data: {
+                    "userID": $("#hdActivationstatusUserID").val(),
+                    "userStatus": athleteStatus,
+                    "programID": programID,
+                    "activationDate": $("#txtAthleteActivationDate").val()
+                },
+                success: function (result) {
+                    if (result.Status == 1) {
+                        $("dvAthleteMessage").show();
+                        $("#dvAthleteMessage").html("Athlete Status changed successfully");
+                        $("dvAthleteMessage").hide(1000);
+                        athletedataSource.read();
+                    } else {
+                        alert("Athlete Status changed successfully");
+                    }
+                    $('#confirmActivationModal').modal('hide');
+                    loading_img(false);
+                },
+                error: function () {
+                    loading_img(false);
+                    alert("Error! Please try again");
+                    $('#confirmActivationModal').modal('hide');
+                }
+            });
+        }
+
+        function ShowSendRegistrationDialog() {
+            $("#sendRegistrationModal").modal('show');
+        }
+        function CheckBlankValue() {
+            if ($("#txtEmailList").val() === "") {
+                $('#txtEmailList').css('border-color', 'red');
+            }
+            else {
+                $('#txtEmailList').css('border', '1px solid #d4dae2');
+            }
+        }
+        function SendLink() {
+            if ($("#txtEmailList").val() === "") {
+                $("#txtEmailList").focus();
+                $('#txtEmailList').css('border-color','red');
+                return false;
+            }
+            loading_img(true);
+            $.ajax({
+                url: '@Url.Action("SendRegistrationMail", "Admin")',
+                type: "POST",
+                contentType: 'application/json',
+                data: JSON.stringify({ "emailList": $("#txtEmailList").val() }),
+                success: function (resp) {
+                    if (resp.Status === 1) {
+                        $("#txtEmailList").val("");
+                        $("#labelSendMessage").text("Registration Link has been sent to emails.");
+                        $("#labelSendMessage").css("color", "green");
+                        $("#labelSendMessage").show();
+                        $("#labelSendMessage").fadeOut(5000);
+                    }
+                    else if (resp.Status === 2) {
+                        $("#labelSendMessage").text("Error when sending registration link email.");
+                        $("#labelSendMessage").css("color", "red");
+                        $("#labelSendMessage").show();
+                        $("#labelSendMessage").fadeOut(5000);
+                    }
+                    loading_img(false);
+                },
+                error: function () {
+                    $("#labelSendMessage").text("Error when sending Registration Link email.");
+                    $("#labelSendMessage").css("color", "red");
+                    $("#divSendMessage").show();
+                    $("#divSendMessage").fadeOut(3000);
+
+                    loading_img(false);
+                }
+            });
+        }
+        function CancelSend() {
+            $("#txtEmailList").val("");
+            load_img(false);
+        }
+    </script>
+    <script>
+        var clip = new Clipboard('#btnCopyLink', {
+            text: function () {
+                var link = $("#RegnLink").attr("href");
+                return link;
+            }
+        });
+        clip.on('success', function (e) {
+            $("#labelCopyMessage").text("Registration Link copied successfully");
+            $("#labelCopyMessage").show();
+            $("#labelCopyMessage").fadeOut(3000);
+        });
+    </script>
+}

@@ -1,0 +1,62 @@
+﻿table.scroll {
+    width: 100%;
+}
+
+    table.scroll th,
+    table.scroll td,
+    table.scroll tr,
+    table.scroll thead,
+    table.scroll tbody {
+        display: block;
+    }
+
+        table.scroll thead tr {
+            width: 103%;
+            width: -webkit-calc(100% + 18px);
+            width: -moz-calc(100% + 18px);
+            width: calc(100% + 18px);
+        }
+
+        table.scroll tr:after {
+            content: ' ';
+            display: block;
+            visibility: hidden;
+            clear: both;
+        }
+
+    table.scroll tbody {
+        height: 500px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+        table.scroll tbody td,
+        table.scroll thead th {
+            width: 33%;
+            float: left;
+        }
+
+tbody td:last-child, thead th:last-child {
+    width: 53% !important;
+}
+
+tbody td:first-child, thead th:first-child {
+    width: 13% !important;
+}
+
+thead tr th {
+    height: 30px;
+    line-height: 30px;
+}
+
+.selectAllUserDataVisibility{
+    float: left;
+    color: #ffffff;
+    padding-right: 4px;
+    cursor: pointer;
+}
+
+.userDataVisibilityDisabled{
+    pointer-events:none;
+    opacity: 0.7;
+}

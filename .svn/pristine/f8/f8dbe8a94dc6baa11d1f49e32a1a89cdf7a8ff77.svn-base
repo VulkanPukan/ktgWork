@@ -1,0 +1,1494 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Add Exercise(s) To Program";
+    Layout = "~/Views/Admin/_LayoutNew.cshtml";
+
+    var isSuperUser = false;
+    if (Session["CustomerObj"] != null)
+    {
+        var customerObj = ((StrengthTracker2.Core.Repository.Entities.TKGMaster.CustomerMaster)(Session["CustomerObj"]));
+        if (customerObj != null)
+        {
+            isSuperUser = customerObj.IsSuperAdmin;
+        }
+    }
+
+    var canViewExercises = false;
+    var canAddExercises = false;
+
+    if (Session["UserRole"] != null)
+    {
+        var userRole = (StrengthTracker2.Core.Repository.Entities.Security.RoleDetails)(Session["UserRole"]);
+        var userPermissons = userRole.RolePermissions;
+        canViewExercises = userPermissons.Any(p => p.PermissionID == 2 && p.CanView == true);
+        canAddExercises = userPermissons.Any(p => p.PermissionID == 2 && p.CanAdd == true);
+    }
+    var programName = Model.CurrentProgram.Title;
+}
+<style>
+    .navbar-top .navbar-header {
+        width: 250px !important;
+        text-align: center;
+    }
+
+    .row {
+        margin-left: -30px;
+        margin-right: -30px;
+    }
+
+    .k-grid .k-grid-header .k-header .k-link {
+        height: auto;
+    }
+
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+        text-align: center;
+    }
+
+    .k-grid-cancel {
+        color: red;
+    }
+
+    .breadcrumbs2 .active a {
+        color: #ffffff;
+        background-color: #3a86c8;
+    }
+
+        .breadcrumbs2 .active a:after {
+            border-left-color: #3a86c8;
+        }
+
+        .breadcrumbs2 .active a:before {
+            border-color: #3a86c8 #3a86c8 #3a86c8 transparent;
+        }
+
+    .breadcrumbs2 > li:last-child a {
+        color: #2a303e;
+    }
+</style>
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+<div class="top-bar clearfix">
+    <div class="container-fluid">
+        <div class="row gutter">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                <h3 class="page-title">Create Program - Exercise - @programName</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-container">
+    <ul class="breadcrumbs2" style="margin-bottom:20px;">
+        <li><a href="@Url.Action("Program", "Admin")"><span class="icon-home2"></span></a></li>
+        <li class="">
+            <a href="JavaScript:void(0);" onclick="ChangeTabs('ManageProgram');" data-toggle="tab">Create Program - Add Structure</a>
+        </li>
+        <li class="active">
+            <a href="JavaScript:void(0);" data-toggle="tab">Create Program - Exercise</a>
+        </li>
+        <li class="">
+            <a href="JavaScript:void(0);" onclick="ChangeTabs('ProgramExercises');" data-toggle="tab">Create Program - View Program</a>
+        </li>
+        <li class="">
+            <a href="JavaScript:void(0);" onclick="ChangeTabs('ProgramDWSession');" data-toggle="tab">Create Program - DW Session</a>
+        </li>
+    </ul>
+    <div class="row gutter">
+        <div class="col-lg-12">
+            <div class="panel-default">
+                <div class="panel-body">
+                    <div class="well">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Sport</label>
+                                        <div class="controls">
+                                            <label id="lstSport" class="controls">@ViewBag.Sport</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Position</label>
+                                        <div class="controls">
+                                            <label id="lstSeason" class="controls">@ViewBag.Position</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Training Season</label>
+                                        <div class="controls">
+                                            <label id="lblTrainingSeason" class="controls">@ViewBag.TrainingSeason</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Training Phase</label>
+                                        <div class="controls">
+                                            <label id="lblTrainingPhase" class="controls">@ViewBag.TrainingPhase</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Exercise Steps</label>
+                                        <div class="controls">
+                                            <div class="controls">
+                                                <select id="lstExerciseStep" class="form-control m-b">
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Exercise Groups</label>
+                                        <div class="controls">
+                                            <div class="controls">
+                                                <select id="lstExerciseGroup" name="exercisegroup" class="form-control m-b">
+                                                    <option value="1">A</option>
+                                                    <option value="2">B</option>
+                                                    <option value="3">C</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-5">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Order</label>
+                                        <div class="controls">
+                                            <input type="text" name="order" id="txtOrder" data-parsley-group="step1" placeholder="Order" required="" class="form-control" data-parsley-id="9600">
+                                            <input type="hidden" id="txtProgramExerciseID" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Paired Exercise</label>
+                                        <div class="controls">
+                                            <select name="exercisename" id="lstPairedExercise" class="form-control m-b" onchange="CheckIsPairedExercise();">
+                                                <option value="false">No</option>
+                                                <option value="true">Yes</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Primary Movement</label>
+                                        <div class="controls">
+                                            @Html.DropDownList("lstMovementType", new System.Web.Mvc.SelectList(Model.ListMovementTypes, "Id", "Name"), "Select Movement", new { @class = "form-control m-b" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Primary Exercise</label>
+                                        <div class="controls">
+                                            @if (canViewExercises)
+                                            {
+                                            @Html.DropDownList("lstExercise", new System.Web.Mvc.SelectList(Model.ListExercises, "Id", "Name"), "-- Add your own Exercise --", new { @class = "form-control m-b" })
+                                            }
+                                            else
+                                            {
+                                            <select name="lstExercise" id="lstExercise" class="form-control m-b" onclick="alert('You do not have View Exercise permission. Please contact Administrator.');">
+                                                <option value=""></option>
+                                            </select>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <label># of Sets</label>
+                                    <div class="controls">
+                                        <input type="text" name="NumOfSets" id="txtNumofSets" data-parsley-group="step1" placeholder="# of Sets" required="" class="form-control" data-parsley-id="3212">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-5">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Paired Movement</label>
+                                        <div class="controls">
+                                            @Html.DropDownList("lstPairedMovementType", new System.Web.Mvc.SelectList(Model.ListMovementTypes, "Id", "Name"), "Select Movement", new { @class = "form-control m-b" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Paired Exercise</label>
+                                        <div class="controls">
+                                            @if (canViewExercises)
+                                            {
+                                            @Html.DropDownList("lstPairedExerciseList", new System.Web.Mvc.SelectList(Model.ListExercises, "Id", "Name"), "Select Exercise", new { @class = "form-control m-b" })
+                                            }
+                                            else
+                                            {
+                                            <select name="lstPairedExerciseList" id="lstPairedExerciseList" class="form-control m-b" onclick="alert('You do not have View Exercise permission. Please contact Administrator.');">
+                                                <option value=""></option>
+                                            </select>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Is Primary Exercise Bilateral</label>
+                                        <div class="controls">
+                                            <span style="margin-right:85px;">
+                                                <input type="radio" name="radPrimaryBilateral" value="1" />Yes
+                                            </span>
+                                            <span>
+                                                <input type="radio" name="radPrimaryBilateral" value="0" />No
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-5">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Is Paired Exercise Bilateral</label>
+                                        <div class="controls">
+                                            <span style="margin-right:85px;">
+                                                <input type="radio" name="radPairedBilateral" value="1" />Yes
+                                            </span>
+                                            <span>
+                                                <input type="radio" name="radPairedBilateral" value="0" />No
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5 text-center">
+                                <label>Primary Exercise</label>
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-5 text-center">
+                                <label>Paired Exercise</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Volume Unit</label>
+                                        <div class="controls">
+                                            <input type="hidden" id="txtExerciseTempoID" />
+                                            <select id="lstPrimaryVolumeUnit" class="form-control m-b">
+                                                <option value="1"># of Reps</option>
+                                                <option value="2">Time (Min)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Intensity Unit</label>
+                                        <div class="controls">
+                                            <select id="lstPrimaryIntensityUnit" class="form-control m-b">
+                                                <option value="1">% 1RM</option>
+                                                <option value="2">Load (Lbs)</option>
+                                                <option value="3">Body Weight</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-5">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Volume Unit</label>
+                                        <div class="controls">
+                                            <select id="lstPairedVolumeUnit" class="form-control m-b">
+                                                <option value="1"># of Reps</option>
+                                                <option value="2">Time (Min)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Intensity Unit</label>
+                                        <div class="controls">
+                                            <select id="lstPairedIntensityUnit" class="form-control m-b">
+                                                <option value="1">% 1RM</option>
+                                                <option value="2">Load (Lbs)</option>
+                                                <option value="3">Body Weight</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" style="display:none;">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Primary Exercise</label>
+                                    <div class="controls">
+                                        @if (canViewExercises)
+                                        {
+                                        @Html.DropDownList("lstExercise", new System.Web.Mvc.SelectList(Model.ListExercises, "Id", "Name"), "-- Add your own Exercise --", new { @class = "form-control m-b" })
+                                        }
+                                        else
+                                        {
+                                        <select name="lstExercise" id="lstExercise" class="form-control m-b" onclick="alert('You do not have View Exercise permission. Please contact Administrator.');">
+                                            <option value=""></option>
+                                        </select>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3" style="display:none;">
+                                <div class="form-group">
+                                    <label>Intensity Volume</label>
+                                    <div class="controls">
+                                        <input id="inlineCheckbox1" name="intensity" type="radio" value="1">% 1RM &nbsp;&nbsp;
+                                        <input id="inlineCheckbox2" name="intensity" type="radio" value="2"># of Reps
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Time to complete 1 Rep (Min)</label>
+                                        <div class="controls">
+                                            <input type="text" id="txtTimeto1Rep" value="0.1" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Rest between Paired Exercises (Min)</label>
+                                        <div class="controls">
+                                            <input type="text" id="txtRestPairedExercise" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Rest between Sets (Min)</label>
+                                        <div class="controls">
+                                            <input type="text" id="txtRestSets" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="pull-right">
+                                    <button type="button" id="btnSaveExerciseBaseInfo" onclick="SaveExerciseToDailyworkout(true);" class="mb-sm btn btn-success">Save</button>
+                                    <label style="display:none;">Time to Complete</label>
+                                    <div class="controls" style="display:none;">
+                                        <input type="text" id="txtTimetoComplete" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label></label>
+                                    <div class="controls">
+                                        <div id="tempogrid"></div>
+                                        <div id="tempoPager"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" id="dvProgramCompletion" style="display:none;">
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Foam Rollout (Minutes)</label>
+                                        <div class="controls">
+                                            <input type="text" id="txtFoamRollOut" disabled="disabled" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label style="color:white;">Foam Rollout</label>
+                                        <div class="controls" style="text-align: center;vertical-align: middle;font-size: x-large;">
+                                            <label>+</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Dynamic Warm-up (Minutes)</label>
+                                        <div class="controls">
+                                            <input type="text" id="txtDynamicWarmUp" disabled="disabled" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label style="color:white;">Dynamic Warmup</label>
+                                        <div class="controls" style="text-align: center;vertical-align: middle;font-size: x-large;">
+                                            <label>+</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Exercises (Minutes)</label>
+                                        <div class="controls">
+                                            <input type="text" id="txtExercisesTotal" disabled="disabled" style="width:70px;" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label style="color:white;">Exercise (Minutes)</label>
+                                        <div class="controls" style="text-align: center;vertical-align: middle;font-size: x-large;">
+                                            <label>=</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Estimated Time to Complete this Daily Workout (Minutes)</label>
+                                        <div class="controls">
+                                            <input type="text" id="txtProgramCompletion" disabled="disabled" class="form-control" style="width:262px;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="pull-right">
+                                    <button type="button" id="btnBack" onclick="GoBack('ManageProgram');" class="mb-sm btn btn-info">Back</button>
+                                    @if (canAddExercises)
+                                    {
+                                        <button type="button" id="btnAddNewExerciseToProgram" onclick="AddNewExercise();" class="mb-sm btn btn-primary">Add New Exercise</button>
+                                    }
+                                    <button type="button" onclick="ChangeTabs('ProgramExercises');" class="mb-sm btn btn-info">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" role="dialog" id="exerciseModal" style="display:none;" aria-labelledby="addExerciseLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
+                <h4 class="modal-title">Exercise</h4>
+            </div>
+            <div class="modal-body">
+                <table id="tblModalAddExercise" style="border-collapse: collapse;">
+                    <tr id="trMsg" style="display:none;">
+                        <td colspan="2" style="text-align:center;padding-top:.5em;padding-bottom:.5em;"><span id="exerciseModalMsg" style="color:red;font:bold;"></span></td>
+                    </tr>
+                    <tr>
+                        <td style="width:40%;vertical-align:top;padding-top:.5em;padding-bottom:.5em;">Name<span class="requiredAsterisk">*</span></td>
+                        <td style="vertical-align: top;"><input type="text" id="txtExerciseName" maxlength="100" class="form-control" /> <input type="hidden" id="hdExerciseID" /> <input type="hidden" id="hdUpdateSelectList" /> </td>
+                    </tr>
+                    <tr>
+                        <td>Movement Type<span class="requiredAsterisk">*</span></td>
+                        <td>@Html.DropDownList("lstMovementTypeAddExercise", new System.Web.Mvc.SelectList(Model.ListMovementTypes, "Id", "Name"), "Primary Movement", new { @class = "form-control" })</td>
+                    </tr>
+                    <tr style="display:none;">
+                        <td>
+                            <input type="hidden" id="hdWhichMoveMentTypeList" />
+                            % of Body Weight<span class="requiredAsterisk">*</span>
+                        </td>
+                        <td>
+                            <input type="text" id="txtBWPercentage" class="form-control" onkeypress="return isNumber(event);" />
+                        </td>
+                    </tr>
+                    <tr style="display:none;">
+                        <td>UOM<span class="requiredAsterisk">*</span></td>
+                        <td><select id="lstUOM" class="form-control"></select></td>
+                    </tr>
+                    <tr>
+                        <td>Formula<span class="requiredAsterisk">*</span></td>
+                        <td>@Html.DropDownList("lstFormula", ViewBag.Formulas as SelectList, new { @class = "form-control" })</td>
+                    </tr>
+                    <tr>
+                        <td style="width:25%;vertical-align: top;"><span style="font-weight:bold;">Description</span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"> <textarea style="width:100%;height:102px;" id="taExerciseDesc" rows="4" cols="49" maxlength="12000"></textarea> </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align:right;"><button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button> &nbsp; <input type="button" id="btnModalSaveExercise" value="Save" class="btn btn-primary" onclick="SaveExercise();" /></td>
+                    </tr>
+                </table>
+                <table id="tblModalAddExercise1"></table>
+                <table id="tblModalAddExercise2"></table>
+            </div>
+        </div>
+        <div class="modal-footer">
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script src="../Scripts/kendo.all.min.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
+        $("#liProgram").addClass("active");
+        var arrExerciseTempo = [];
+        var globalProgId = '';
+        var globalExerciseID = '';
+        var tempodataSource = null;
+        var setList = "@Html.Raw(Model.CurrentProgram.Steps)";
+        $("#lstExerciseStep").empty();
+        for (var i = 1; i <= setList; i++) {
+            var selected = "";
+            if (i == 1) {
+                selected = "selected='selected'";
+            }
+            var data = '<option ' + selected + ' value=' + i + '>' + i + '</option>';
+            $("#lstExerciseStep").append(data);
+        }
+        var grpList = '@Html.Raw(Json.Encode(Model.ListGroups))';
+        var arrGrp = grpList.replace("\"]", "").replace("[\"", "").split(",");
+        $("#lstExerciseGroup").empty();
+        for (var i = 1; i <= arrGrp.length; i++) {
+            var selected = "";
+            if (i == 1) {
+                selected = "selected='selected'";
+            }
+            var data = '<option ' + selected + ' value=' + i + '>' + arrGrp[i - 1].replace("\"", "") + '</option>';
+            data = data.replace("\"", "");
+            $("#lstExerciseGroup").append(data);
+        }
+        var tempoDropdownDataSource = new kendo.data.DataSource({
+            data:
+              [
+                { kkey: "3-0-X-1", vvalue: "1" },
+                { kkey: "Slow", vvalue: "2" },
+                { kkey: "Medium", vvalue: "3" },
+                { kkey: "Fast", vvalue: "4" }
+              ]
+        });
+        var pairedTempoDropdownDataSource = new kendo.data.DataSource({
+            data:
+              [
+                { kkey: "3-0-X-1", vvalue: "1" },
+                { kkey: "Slow", vvalue: "2" },
+                { kkey: "Medium", vvalue: "3" },
+                { kkey: "Fast", vvalue: "4" }
+              ]
+        });
+        function tempoDropDownEditor(container, options) {
+            if (options.model.Tempo === "3-0-X-1") {
+                options.model.Tempo = "1";
+            }
+            else if (options.model.Tempo === "Slow") {
+                options.model.Tempo = "2";
+            }
+            else if (options.model.Tempo === "Medium") {
+                options.model.Tempo = "3";
+            }
+            else if (options.model.Tempo === "Fast") {
+                options.model.Tempo = "4";
+            }
+            $('<input data-text-field="kkey" data-value-field="vvalue" data-bind="value:' + options.field + '"/>')
+                        .appendTo(container)
+                       .kendoDropDownList({
+                           dataSource: tempoDropdownDataSource,
+                           dataTextField: "kkey",
+                           dataValueField: "vvalue"
+                       });
+        };
+        function pairedTempoDropDownEditor(container, options) {
+            if (options.model.PairedTempo === "3-0-X-1") {
+                options.model.PairedTempo = "1";
+            }
+            else if (options.model.PairedTempo === "Slow") {
+                options.model.PairedTempo = "2";
+            }
+            else if (options.model.PairedTempo === "Medium") {
+                options.model.PairedTempo = "3";
+            }
+            else if (options.model.PairedTempo === "Fast") {
+                options.model.PairedTempo = "4";
+            }
+            $('<input data-text-field="kkey" data-value-field="vvalue" data-bind="value:' + options.field + '"/>')
+                        .appendTo(container)
+                       .kendoDropDownList({
+                           dataSource: tempoDropdownDataSource,
+                           dataTextField: "kkey",
+                           dataValueField: "vvalue"
+                       });
+        };
+        $(document).ready(function () {
+            CheckIsPairedExercise();
+            PopulateUOM();
+            globalProgId = Number(getUrlVars()["programID"]);
+            globalExerciseID = Number(getUrlVars()["exerciseID"]);
+            var isTKGProgram = getUrlVars()["p"];
+
+            if (isTKGProgram === "true") {
+                $("#btnAddExerciseandGotoList").hide();
+                $("#btnAddExerciseToDailyWorkout").hide();
+            }
+            else {
+                $("#btnAddExerciseandGotoList").show();
+                $("#btnAddExerciseToDailyWorkout").show();
+            }
+            if (!isNaN(globalExerciseID) && globalExerciseID !== "") {
+                $("#tempogrid").show();
+                $("#tempoPager").show();
+            }
+            else {
+                $("#tempogrid").hide();
+                $("#tempoPager").hide();
+            }
+
+            tempodataSource = new kendo.data.DataSource({
+                transport: {
+                    read: function (options) {
+                        var pID = getUrlVars()["programID"];
+                        var exerciseID = getUrlVars()["exerciseID"];
+                        if (exerciseID) {
+                            $.ajax({
+                                url: '@Url.Action("GetProgramExercise", "Admin")',
+                                type: "POST",
+                                data: JSON.stringify({ 'programID': pID, 'exerciseID': exerciseID }),
+                                contentType: 'application/json',
+                                dataType: "json",
+                                success: function (result) {
+                                    if (result != null) {
+                                        $("#lstSport").text(result[1]);
+                                        $("#lstSeason").text(result[2]);
+                                        $("#lblTrainingSeason").text(result[3]);
+                                        $("#lblTrainingPhase").text(result[4]);
+                                        var progExercise = $.grep(result[0].ProgramExercises, function (e) { return e.ExerciseID == exerciseID })[0];
+                                        //var exerciseTempo = result[0].ExerciseTempos[0]
+                                        var exerciseTempo = result[5];
+                                        $("#txtProgramExerciseID").val(progExercise.ID);
+                                        $("#lstExerciseGroup").val(progExercise.ExerciseGroupID);
+                                        $("#lstExerciseStep").val(progExercise.ExerciseStepID);
+                                        $("#txtOrder").val(progExercise.OrderNum);
+                                        $("#lstMovementType").val(progExercise.MovementTypeID);
+                                        $("#lstPairedMovementType").val(progExercise.PairedExerciseMovementID);
+
+                                        $("#lstExercise").val(progExercise.ExerciseID);
+                                        PopulateExerciseList(progExercise.MovementTypeID, "lstExercise", progExercise.ExerciseID);
+                                        if (progExercise.PairedExercise == true) {
+                                            $("#lstPairedExercise").val("true");
+                                        }
+                                        else {
+                                            $("#lstPairedExercise").val("false");
+                                        }
+                                        $("#lstPairedExerciseList").val(progExercise.PairedExerciseID);
+                                        $("#txtRestPairedExercise").val(progExercise.RestBetweenPairedExercises);
+                                        $("#txtRestSets").val(progExercise.RestBetweenSets);
+                                        $("#dvProgramCompletion").show();
+                                        //if (progExercise.IntensityVol == 1) {
+                                        //    $("input[name=intensity][value=1]").attr('checked', 'checked');
+                                        //}
+                                        //else {
+                                        //    $("input[name=intensity][value=2]").attr('checked', 'checked');
+                                        //}
+                                        //$('input[name=intensity]:checked').val(progExercise.IntensityVol);
+                                        $("#txtNumofSets").val(progExercise.NumeofSets);
+                                        if (progExercise.IsPrimaryBilateral == false) {
+                                            $("input[name=radPrimaryBilateral][value=0]").attr("checked", "checked");
+                                        }
+                                        else {
+                                            $("input[name=radPrimaryBilateral][value=1]").attr("checked", "checked");
+                                        }
+                                        if (progExercise.IsPairedBilateral == false) {
+                                            $("input[name=radPairedBilateral][value=0]").prop('checked', "checked");
+                                        }
+                                        else {
+                                            $("input[name=radPairedBilateral][value=1]").prop('checked', "checked");
+                                        }
+                                        $("#lstPrimaryVolumeUnit").val(progExercise.PrimaryExerciseUnits);
+                                        $("#lstPairedVolumeUnit").val(progExercise.PairedExerciseUnits);
+                                        $("#lstPrimaryIntensityUnit").val(progExercise.PrimaryIntensityUnit);
+                                        $("#lstPairedIntensityUnit").val(progExercise.PairedIntensityUnit);
+                                        $("#txtProgramCompletion").val(result[6]);
+                                        $("#txtFoamRollOut").val(result[7]);
+                                        $("#txtDynamicWarmUp").val(result[8]);
+                                        $("#txtExercisesTotal").val(result[9]);
+                                        PrimaryUnitChange();
+                                        PairedUnitChange();
+                                        if (progExercise.PrimaryExerciseUnits == 2) {
+                                            $("#lstPrimaryIntensityTarget").val(progExercise.PrimaryExerciseTarget);
+                                            //$("input[name=radPrimaryTarget][value=1]").attr("checked", "checked");
+                                            //$("input[name=radPrimaryTarget][value=0]").attr("checked", "");
+                                        }
+                                        else {
+                                            $("#lstPrimaryVolumeTarget").val(progExercise.PrimaryExerciseTarget);
+                                            //$("input[name=radPrimaryTarget][value=0]").attr("checked", "checked");
+                                            //$("input[name=radPrimaryTarget][value=1]").attr("checked", "");
+                                        }
+                                        if (progExercise.PairedExerciseUnits == 2) {
+                                            $("#lstPairedIntensityTarget").val(progExercise.PairedExerciseTarget);
+                                            //$("input[name=radPairedTarget][value=1]").attr("checked", "checked");
+                                            //$("input[name=radPairedTarget][value=0]").attr("checked", "");
+                                        }
+                                        else {
+                                            $("#lstVolumeIntensityTarget").val(progExercise.PairedExerciseTarget);
+                                            //$("input[name=radPairedTarget][value=0]").attr("checked", "checked");
+                                            //$("input[name=radPairedTarget][value=1]").attr("checked", "");
+                                        }
+                                        if (progExercise.UnilateralExercise == "false") {
+                                            $("#lstUnilateralExercise").val("false");
+                                        }
+                                        else {
+                                            $("#lstUnilateralExercise").val("true");
+                                        }
+                                        if (exerciseTempo != null) {
+                                            $("#txtRestInterval").val(exerciseTempo.RestInterval);
+                                            $("#txtTargetIntensity").val(exerciseTempo.TargetIntensity);
+                                            $("#txtTargetReps").val(exerciseTempo.TargetReps);
+                                            $("#txtTimetoComplete").val(exerciseTempo.TimeToComplete);
+                                            //$("#lstExerciseTempo").val(result[0].ExerciseTempos[0].Tempo);
+                                            $("#lstExerciseTempo").val(result[5].Tempo);
+
+                                            //$.each(result[0].ExerciseTempos, function (key, value) {
+                                            $.each(result[5], function (key, value) {
+                                                if (value.Tempo == "1") {
+                                                    value.Tempo = "3-0-X-1";
+                                                }
+                                                else if (value.Tempo == "2") {
+                                                    value.Tempo = "Slow";
+                                                }
+                                                else if (value.Tempo == "3") {
+                                                    value.Tempo = "Medium";
+                                                }
+                                                else if (value.Tempo == "4") {
+                                                    value.Tempo = "Fast";
+                                                }
+                                                if (value.PairedTempo == "1") {
+                                                    value.PairedTempo = "3-0-X-1";
+                                                }
+                                                else if (value.PairedTempo == "2") {
+                                                    value.PairedTempo = "Slow";
+                                                }
+                                                else if (value.PairedTempo == "3") {
+                                                    value.PairedTempo = "Medium";
+                                                }
+                                                else if (value.PairedTempo == "4") {
+                                                    value.PairedTempo = "Fast";
+                                                }
+                                                if (value.TimeToComplete == "0") {
+                                                    value.TimeToComplete = "";
+                                                }
+                                                if (value.PrimaryTarget == 0) {
+                                                    value.PrimaryTarget = "";
+                                                }
+                                                if (value.PairedIntensityTarget == 0) {
+                                                    value.PairedIntensityTarget = "";
+                                                }
+                                                if (value.PrimaryIntensityTarget == 0) {
+                                                    value.PrimaryIntensityTarget = "";
+                                                }
+                                                if (value.PairedTarget == 0) {
+                                                    value.PairedTarget = "";
+                                                }
+                                            });
+
+                                            $("#tempogrid thead [data-field=PrimaryTarget]").html(result[5][0].PrimaryExerciseTarget);
+                                            $("#tempogrid thead [data-field=PairedTarget]").html(result[5][0].PairedExerciseTarget);
+                                            $("#tempogrid thead [data-field=PrimaryIntensityTarget]").html(result[5][0].PrimaryIntensityUnit);
+                                            $("#tempogrid thead [data-field=PairedIntensityTarget]").html(result[5][0].PairedIntensityUnit);
+                                            $("#tempogrid thead [data-field=Tempo]").html('Down-Pause-Up-Pause');
+                                            $("#tempogrid thead [data-field=PairedTempo]").html('Down-Pause-Up-Pause');
+                                            $("#tempogrid thead [data-field=Tempo]").css('font-size', '11px');
+                                            $("#tempogrid thead [data-field=PairedTempo]").css('font-size', '11px');
+                                            CheckIsPairedExercise();
+                                        }
+                                    }
+
+                                    var dataTempo = { Data: result[5], Total: result[5].length };
+                                    options.success(dataTempo.Data);
+                                },
+                                error: function (req, status, errorObj) {
+                                    alert('Error: Please try again');
+                                }
+                            });
+                        }
+                        else {
+                            var programID = getUrlVars()["programID"];
+                            if (programID == undefined) {
+                                programID = 0;
+                            }
+                            var isTKGProgram = getUrlVars()["p"];
+                            $.ajax({
+                                url: "@Url.Action("GetProgramByIDForAddExercise", "Admin")",
+                                type: "POST",
+                                data: { 'programID': programID, 'isTKGProgram': isTKGProgram },
+                                dataType: "json",
+                                success: function (result) {
+                                    if (result != null) {
+                                        $("#lstSport").text(result[0]);
+                                        $("#lstSeason").text(result[1]);
+                                        $("#lblTrainingSeason").text(result[2]);
+                                        $("#lblTrainingPhase").text(result[3]);
+                                    }
+                                },
+                                error: function (req, status, errorObj) {
+                                    alert("Error: Please try again later");
+                                }
+                            });
+                        }
+                    },
+                    update: function (e) {
+                        var updatedItem = e.data;
+                        $.ajax({
+                            url: '@Url.Action("SaveExerciseTempo", "Admin")',
+                            dataType: "jsonp",
+                            data: { 'exerciseTempo': updatedItem, 'restSets': $("#txtRestSets").val(), 'restPairedExercise': $("#txtRestPairedExercise").val() },
+                            type: "post",
+                            complete: function (e) {
+                                var result = $.parseJSON(e.responseText);
+                                if (result != null) {
+                                    if (result.Status == 1) {
+                                        $.ajax({
+                                            url: '@Url.Action("GetProgramExercise", "Admin")',
+                                            type: "POST",
+                                            data: JSON.stringify({ 'programID': globalProgId, 'exerciseID': globalExerciseID }),
+                                            contentType: 'application/json',
+                                            dataType: "json",
+                                            success: function (result) {
+                                                if (result != null) {
+                                                    //var exerciseTempo = result[0].ExerciseTempos[0]
+                                                    var exerciseTempo = result[5];
+                                                    if (exerciseTempo != null) {
+                                                        //$.each(result[0].ExerciseTempos, function (key, value) {
+                                                        $.each(result[5], function (key, value) {
+                                                            if (value.Tempo == "1") {
+                                                                value.Tempo = "3-0-X-1";
+                                                            }
+                                                            else if (value.Tempo == "2") {
+                                                                value.Tempo = "Slow";
+                                                            }
+                                                            else if (value.Tempo == "3") {
+                                                                value.Tempo = "Medium";
+                                                            }
+                                                            else if (value.Tempo == "4") {
+                                                                value.Tempo = "Fast";
+                                                            }
+                                                            if (value.PairedTempo == "1") {
+                                                                value.PairedTempo = "3-0-X-1";
+                                                            }
+                                                            else if (value.PairedTempo == "2") {
+                                                                value.PairedTempo = "Slow";
+                                                            }
+                                                            else if (value.PairedTempo == "3") {
+                                                                value.PairedTempo = "Medium";
+                                                            }
+                                                            else if (value.PairedTempo == "4") {
+                                                                value.PairedTempo = "Fast";
+                                                            }
+                                                            if (value.TimeToComplete == "0") {
+                                                                value.TimeToComplete = "";
+                                                            }
+                                                        });
+                                                        $("#txtProgramCompletion").val(result[6]);
+                                                        $("#txtFoamRollOut").val(result[7]);
+                                                        $("#txtDynamicWarmUp").val(result[8]);
+                                                        $("#txtExercisesTotal").val(result[9]);
+                                                        $("#dvProgramCompletion").show();
+                                                        //$("#tempogrid").data("kendoGrid").dataSource.data(result[0].ExerciseTempos);
+                                                        $("#tempogrid").data("kendoGrid").dataSource.data(result[5]);
+                                                        $("#tempogrid thead [data-field=PrimaryTarget]").html(result[5][0].PrimaryExerciseTarget);
+                                                        $("#tempogrid thead [data-field=PairedTarget]").html(result[5][0].PairedExerciseTarget);
+                                                        $("#tempogrid thead [data-field=PrimaryIntensityTarget]").html(result[5][0].PrimaryIntensityUnit);
+                                                        $("#tempogrid thead [data-field=PairedIntensityTarget]").html(result[5][0].PairedIntensityUnit);
+                                                        $("#tempogrid thead [data-field=Tempo]").html('');
+                                                        $("#tempogrid thead [data-field=PairedTempo]").html('');
+                                                        $("#tempogrid thead [data-field=Tempo]").html('Down-Pause-Up-Pause');
+                                                        $("#tempogrid thead [data-field=PairedTempo]").html('Down-Pause-Up-Pause');
+                                                        $("#tempogrid thead [data-field=Tempo]").css('font-size', '11px');
+                                                        $("#tempogrid thead [data-field=PairedTempo]").css('font-size', '11px');
+                                                        CheckIsPairedExercise();
+                                                    }
+                                                }
+                                            },
+                                            error: function (req, status, errorObj) {
+                                                debugger;
+                                                alert('Error: Please try again');
+                                            }
+                                        });
+
+                                    }
+                                    else if (result.Status == 2) {
+                                        alert(result.Message);
+                                    }
+                                }
+                            }
+                        })
+                    },
+                    //destroy: {
+                    //    url: '../Admin/DeleteExerciseTempo',
+                    //    dataType: "jsonp",
+                    //    type: "post",
+                    //    complete: function (e) {
+                    //        var result = $.parseJSON(e.responseText);
+                    //        if (result != null) {
+                    //            alert(result.Message);
+                    //            var grid = $("#tempogrid").data("kendoGrid");
+                    //            grid.refresh();
+                    //        }
+                    //    }
+                    //}
+                },
+                schema: {
+                    data: function (response) {
+                        return response;
+                    },
+                    total: function (response) {
+                        return response.length;
+                    },
+                    model: {
+                        id: "ID",
+                        fields: {
+                            ID: { editable: false, validation: { required: true } },
+                            Tempo: { editable: true },
+                            SetNum: { editable: false },
+                            PrimaryExerciseUnit: { editable: false },
+                            PairedExerciseUnit: { editable: false },
+                            PrimaryExerciseTarget: { editable: false },
+                            PairedExerciseUnit: { editable: false },
+                            PairedExerciseTarget: { editable: false },
+                            TargetIntensity: { editable: true },
+                            TargetReps: { editable: true },
+                            TimeToComplete: { editable: false }
+                        }
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("Error: Please try again");
+                },
+                pageSize: 10
+            });
+
+            $("#tempogrid").kendoGrid({
+                allowCopy: true,
+                pageable: {
+                    pageSizes: false
+                },
+                scrollable: true,
+                sortable: true,
+                filterable: false,
+                editable: "inline",
+                edit: function (e) {
+                    var commandCell = e.container.find("td:last");
+                    commandCell.html('<a class="k-grid-update" style="margin-left:18px !important;" ><em class="fa fa-1x fa-check"></em></a><div style="display: inline-block; margin: 0; text-align: center;" >&nbsp;</div><div style="display: inline-block; margin: 0; text-align: center;" >&nbsp;</div><a class="k-grid-cancel"><em class="fa fa-1x fa-ban"></em></a>');
+                    if (e.model.IsPairedExercise == false) {
+                        var pairedExerCell = e.container.find("td:eq(2) input");
+                        pairedExerCell.addClass("k-state-disabled");
+                        pairedExerCell.attr("disabled", "disabled");
+
+                        pairedExerCell = e.container.find("td:eq(4) input");
+                        pairedExerCell.addClass("k-state-disabled");
+                        pairedExerCell.attr("disabled", "disabled");
+
+                        pairedExerCell = e.container.find("td:eq(6) select");
+                        pairedExerCell.addClass("k-state-disabled");
+                        pairedExerCell.attr("disabled", "disabled");
+                    }
+                    else {
+                        var pairedExerCell = e.container.find("td:eq(2) input");
+                        pairedExerCell.attr("disabled", false);
+
+                        pairedExerCell = e.container.find("td:eq(4) input");
+                        pairedExerCell.attr("disabled", false);
+
+                        pairedExerCell = e.container.find("td:eq(6) select");
+                        pairedExerCell.attr("disabled", false);
+                    }
+                },
+                columns: [
+                    {
+                        field: "SetNum",
+                        title: "Set #",
+                        width: 60
+                    },
+                    {
+                        title: "Target Volume",
+                        columns: [{
+                            title: "Primary Exercise",
+                            columns: [{
+                                title: "Primary Target",
+                                field: "PrimaryTarget"
+                            }]
+                        },
+                        {
+                            title: "Paired Exercise",
+                            columns: [{
+                                title: "Paired Target",
+                                field: "PairedTarget"
+                            }]
+                        }]
+                    },
+                    {
+                        title: "Target Intensity",
+                        columns: [{
+                            title: "Primary Exercise",
+                            columns: [{
+                                title: "Primary Unit",
+                                field: "PrimaryIntensityTarget"
+                            }]
+                        },
+                        {
+                            title: "Paired Exercise",
+                            columns: [{
+                                title: "Paired Unit",
+                                field: "PairedIntensityTarget"
+                            }]
+                        }]
+                    },
+                    {
+                        title: "Exercise Tempo",
+                        columns: [{
+                            title: "Primary Exercise",
+                            columns: [{
+                                field: "Tempo",
+                                editor: tempoDropDownEditor,
+                                title: ""
+                            }]
+                        },
+                        {
+                            title: "Paired Exercise",
+                            columns: [{
+                                field: "PairedTempo",
+                                editor: pairedTempoDropDownEditor,
+                                title: ""
+                            }]
+                        }]
+                    },
+                    { field: "TimeToComplete", title: "Time to Complete (minutes)" },
+                    {
+                        command: [{
+                            template: ' <a class="k-grid-edit" href="javascript:void(0)" style="margin-left:18px !important;" ><em class="fa fa-1x fa-pencil"></em></a>',
+                            name: "edit", text: "",
+                            //iconClass: "fa",
+                            //imageClass: "fa-pencil",
+                            text: {
+                                cancel: "",
+                                update: "",
+                                edit: ""
+                            }
+                        },
+                        {
+                            template: ' <div style="display: inline-block; margin: 0; text-align: center;" >&nbsp;</div>',
+                        }],
+                        title: "Action",
+                        width: "90px",
+                    }
+                ],
+                dataSource: tempodataSource
+            });
+
+            $("#lstMovementType").change(function () {
+                var val = $(this).val();
+                if (val === "") {
+                    $("#lstExercise").empty();
+                    $("#lstExercise").append("<option>-- Add your own Exercise --</option>");
+                }
+                else {
+                    PopulateExerciseList(val, "lstExercise", 0);
+                }
+                //var numOfOptions = 0;
+                //$("#lstExercise > option").each(function () {
+                //    debugger;
+                //    numOfOptions++;
+                //    if (numOfOptions >= 2) {
+                //        alert("Greater than 1");
+                //        return false;
+                //    }
+                //});
+            });
+            $("#lstExercise").change(function () {
+                if ($("#lstExercise").val() === "-100") {
+                    $("#lstMovementTypeAddExercise").val($("#lstMovementType").val());
+                    $("#hdUpdateSelectList").val("lstExercise");
+                    $("#hdWhichMoveMentTypeList").val("lstMovementType");
+                    $('#exerciseModal').modal('show');
+                    $("#lstExercise").val("Select Exercise");
+                }
+            });
+            $("#lstPairedExerciseList").change(function () {
+                if ($("#lstPairedExerciseList").val() === "-100") {
+                    $("#lstMovementTypeAddExercise").val($("#lstPairedMovementType").val());
+                    $("#hdUpdateSelectList").val("lstPairedExerciseList");
+                    $("#hdWhichMoveMentTypeList").val("lstPairedMovementType");
+                    $("#lstPairedExerciseList option:contains(Select Exercise)").attr('selected', 'selected');
+                    $('#exerciseModal').modal('show');
+                    $("#lstPairedExerciseList").val("Select Exercise");
+                }
+            });
+            $("#lstPairedMovementType").change(function () {
+                var val = $(this).val();
+                var subItems = "";
+                if (val === "") {
+                    $("#lstPairedExerciseList").empty();
+                    $("#lstPairedExerciseList").append("<option>Select Exercise</option>");
+                }
+                PopulateExerciseList(val, "lstPairedExerciseList", 0);
+            });
+        });
+
+        function NavigateToProgramExerciseList() {
+            var programID = getUrlVars()["programID"];
+            var isTKGProgram = getUrlVars()["p"];
+            window.location.href = "../Admin/ProgramExercises?programID=" + programID + "&p=" + isTKGProgram;
+        }
+
+        function SaveExerciseToDailyworkout(saveExerciseTempo) {
+            var programID = getUrlVars()["programID"];
+            var intensityVal = '';
+            $('input[name="intensity"]:checked').each(function () {
+                intensityVal = this.value;
+            });
+            var primaryExerciseTarget = '';
+            var secondaryExerciseTarget = '';
+            if ($("#lstPrimaryUnit").val() == 1) {
+                primaryExerciseTarget = $("#lstPrimaryVolumeTarget").val();
+            }
+            else {
+                primaryExerciseTarget = $("#lstPrimaryIntensityTarget").val();
+            }
+            if ($("#lstPairedUnit").val() == 1) {
+                secondaryExerciseTarget = $("#lstPairedVolumeTarget").val();
+            }
+            else {
+                secondaryExerciseTarget = $("#lstPairedIntensityTarget").val();
+            }
+            var isPrimaryBilateral = false;
+            var isSecondaryBilateral = false;
+            if ($('input[name=radPrimaryBilateral]:checked').val() == 1) {
+                isPrimaryBilateral = true;
+            }
+            if ($('input[name=radPairedBilateral]:checked').val() == 1) {
+                isSecondaryBilateral = true;
+            }
+
+            var isPairedExercise = $("#lstPairedExercise").val();
+            var programExercise = {
+                Id: $("#txtProgramExerciseID").val(),
+                ProgramID: programID,
+                'ExerciseGroupID': $("#lstExerciseGroup").val(),
+                'OrderNum': $("#txtOrder").val(),
+                'MovementTypeID': $("#lstMovementType").val(),
+                'ExerciseID': $("#lstExercise").val(),
+                'PairedExercise': isPairedExercise,
+                'IntensityVol': intensityVal,//$('input[name=intensity]:checked').val(),
+                'NumeofSets': $("#txtNumofSets").val(),
+                'UnilateralExercise': $("#lstUnilateralExercise").val(),
+                'PairedExerciseMovementID': $("#lstPairedMovementType").val(),
+                'PairedExerciseID': $("#lstPairedExerciseList").val(),
+                'ExerciseStepID': $("#lstExerciseStep").val(),
+                'IsPrimaryBilateral': isPrimaryBilateral,
+                'IsPairedBilateral': isSecondaryBilateral,
+                'PrimaryExerciseUnits': $("#lstPrimaryVolumeUnit").val(),
+                'PairedExerciseUnits': $("#lstPairedVolumeUnit").val(),
+                'PrimaryIntensityUnit': $("#lstPrimaryIntensityUnit").val(),
+                'PairedIntensityUnit': $("#lstPairedIntensityUnit").val(),
+                'RestBetweenPairedExercises': $("#txtRestPairedExercise").val(),
+                'RestBetweenSets': $("#txtRestSets").val(),
+            };
+            var exerciseTempo = {
+                'ProgramExerciseID': $("#txtProgramExerciseID").val(),
+                'Tempo': $("#lstExerciseTempo").val(),
+                'SetNum': 1,
+                'RestInterval': $("#txtRestInterval").val(),
+                'TargetIntensity': $("#txtTargetIntensity").val(),
+                'TargetReps': $("#txtTargetReps").val(),
+                'TimeToComplete': $("#txtTimetoComplete").val()
+            };
+
+            var postData = JSON.stringify({ 'ProgramExercise': programExercise, 'ExerciseTempo': exerciseTempo, 'saveExerciseTempo': saveExerciseTempo });
+
+            $.ajax({
+                url: '@Url.Action("SaveProgramExercise", "Admin")',
+                type: "POST",
+                data: postData,
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (result) {
+                    alert(result.Message);
+                    if (result.Status == 3) {
+                        var progID = getUrlVars()["programID"];
+                        var isTKGProgram = getUrlVars()["p"];
+                        var exerID = $("#lstExercise").val();
+                        //window.location.href = "../Admin/ProgramExercises?programID=" + progID + "&p=" + isTKGProgram;
+                        window.location.href = "../Admin/AddExerciseToProgram?programID=" + progID + "&exerciseID=" + exerID + "&p=" + isTKGProgram;
+                    }
+                },
+                error: function (req, status, errorObj) {
+                    alert('Error: Please try again');
+                }
+            });
+        }
+
+        function AddExerciseToDailyworkout() {
+            var programID = getUrlVars()["programID"];
+            var intensityVal = '';
+            $('input[name="intensity"]:checked').each(function () {
+                intensityVal = this.value;
+            });
+            var programExercise = {
+                'Id': $("#txtProgramExerciseID").val(),
+                'ProgramID': programID,
+                'ExerciseGroupID': $("#lstExerciseGroup").val(),
+                'OrderNum': $("#txtOrder").val(),
+                'MovementTypeID': $("#lstMovementType").val(),
+                'ExerciseID': $("#lstExercise").val(),
+                'PairedExercise': $("#lstPairedExercise").val(),
+                'IntensityVol': intensityVal,//$('input[name=intensity]:checked').val(),
+                'NumeofSets': $("#txtNumofSets").val(),
+                'UnilateralExercise': $("#lstUnilateralExercise").val()
+            };
+            var exerciseTempo = {
+                'ProgramExerciseID': $("#txtProgramExerciseID").val(),
+                'Tempo': $("#lstExerciseTempo").val(),
+                'SetNum': 1,
+                'RestInterval': $("#txtRestInterval").val(),
+                'TargetIntensity': $("#txtTargetIntensity").val(),
+                'TargetReps': $("#txtTargetReps").val(),
+                'TimeToComplete': $("#txtTimetoComplete").val(),
+            };
+            $.ajax({
+                url: '@Url.Action("SaveProgramExercise", "Admin")',
+                type: "POST",
+                data: JSON.stringify({ 'ProgramExercise': programExercise, 'ExerciseTempo': exerciseTempo }),
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (result) {
+                    alert(result.Message);
+                    if (result.Status == 3) {
+                        var progID = getUrlVars()["programID"];
+                        var isTKGProgram = getUrlVars()["p"];
+                        var exerID = $("#lstExercise").val();
+                        window.location.href = "../Admin/AddExerciseToProgram?programID=" + progID + "&exerciseID=" + exerID + "&p=" + isTKGProgram;
+                        //window.location.reload();
+                    }
+                },
+                error: function (req, status, errorObj) {
+                    alert('Error: Please try again');
+                }
+            });
+        }
+
+        function PrimaryUnitChange() {
+            if ($("#lstPrimaryUnit").val() === "1") {
+                $("#lstPrimaryVolumeTarget").show();
+                $("#lstPrimaryIntensityTarget").hide();
+            }
+            else {
+                $("#lstPrimaryVolumeTarget").hide();
+                $("#lstPrimaryIntensityTarget").show();
+            }
+        }
+
+        function PairedUnitChange() {
+            if ($("#lstPairedUnit").val() === "1") {
+                $("#lstPairedVolumeTarget").show();
+                $("#lstPairedIntensityTarget").hide();
+            }
+            else {
+                $("#lstPairedVolumeTarget").hide();
+                $("#lstPairedIntensityTarget").show();
+            }
+        }
+
+        function AddNewExercise() {
+            var pID = Number(getUrlVars()["programID"]);
+            var isTKGProgram = getUrlVars()["p"];
+            window.location = "AddExerciseToProgram?programID=" + pID + "&p=" + isTKGProgram;
+        }
+
+        function CheckIsPairedExercise() {
+            var val = $("#lstPairedExercise").val();
+            if ($("#lstPairedExercise").val() === "false") {
+                $("#lstPairedMovementType").attr("disabled", "disabled");
+                $("#lstPairedExerciseList").attr("disabled", "disabled");
+                $("#lstPairedVolumeUnit").attr("disabled", "disabled");
+                $("#lstPairedIntensityUnit").attr("disabled", "disabled");
+                $("#txtRestPairedExercise").attr("disabled", "disabled");
+                $("input[name='radPairedBilateral']").attr("disabled", "disabled");
+            }
+            else {
+                $("#lstPairedMovementType").attr("disabled", false);
+                $("#lstPairedExerciseList").attr("disabled", false);
+                $("#lstPairedVolumeUnit").attr("disabled", false);
+                $("#lstPairedIntensityUnit").attr("disabled", false);
+                $("#txtRestPairedExercise").attr("disabled", false);
+                $("input[name='radPairedBilateral']").attr("disabled", false);
+            }
+        }
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+        function SaveExercise() {
+            if ($("#lstMovementTypeAddExercise").val() === "") {
+                $("#exerciseModalMsg").text("Please select Movement Type");
+                $("#trMsg").show();
+                $("#lstMovementTypeAddExercise").focus();
+                return false;
+            }
+            //if ($("#lstUOM").val() === "0") {
+            //    $("#exerciseModalMsg").text("Please select UOM");
+            //    $("#trMsg").show();
+            //    $("#lstUOM").focus();
+            //    return false;
+            //}
+            if ($("#txtExerciseName").val() === "") {
+                $("#exerciseModalMsg").text("Exercise Name cannot be blank");
+                $("#trMsg").show();
+                $("#txtExerciseName").focus();
+                return false;
+            }
+            //if ($("#taExerciseDesc").val() === "") {
+            //    $("#taExerciseDesc").focus();
+            //    return false;
+            //}
+            //if ($("#txtBWPercentage").val() === "") {
+            //    $("#exerciseModalMsg").text("% Body Weight cannot be blank");
+            //    $("#trMsg").show();
+            //    $("#txtBWPercentage").focus();
+            //    return false;
+            //}
+            if ($("#txtExerciseName").val().length > 100) {
+                $("#exerciseModalMsg").text("Exercise Name length cannot be greater than 100 characters");
+                $("#trMsg").show();
+                return false;
+            }
+            //if ($("#taExerciseDesc").val().length > 12000) {
+            //    alert("Description too long. Cannot Save");
+            //    return false;
+            //}
+            //var exerciseDesc = CKEDITOR.instances.taExerciseDesc.document.getBody().getHtml();
+            var exerciseDesc = $("#taExerciseDesc").val();
+            var exercise = {
+                'Id': $("#hdExerciseID").val(),
+                'Name': $("#txtExerciseName").val(),
+                'Description': exerciseDesc,
+                'MovementTypeID': $("#lstMovementTypeAddExercise").val(),
+                'UOMID': $("#lstUOM").val(),
+                //'BWPercentageforVolume': $("#txtBWPercentage").val(),
+                'BWPercentageforVolume': 0,//Adding default value as 0 as it is an int and for now as per Dennis comments not needed while creating exercise - Rohit - 15/02/2018
+                'Formula': $("#lstFormula").val()
+            };
+            $.ajax({
+                url: '@Url.Action("SaveExercise", "Admin")',
+                type: "POST",
+                data: JSON.stringify({ exerciseModel: exercise }),
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (result) {
+                    $("#exerciseModalMsg").text("");
+                    $("#trMsg").hide();
+                    $('#exerciseModal').modal('hide');
+                    if (result.Status === 1) {
+                        var newExerciseID = result.Message.split("|")[1];
+                        var valCtrl = $("#hdWhichMoveMentTypeList").val();
+                        var valUpdateList = $("#hdUpdateSelectList").val();
+                        alert('Exercise Added successfully');
+                        PopulateExerciseList($("#" + valCtrl).val(), valUpdateList, newExerciseID);
+                        $("#hdUpdateSelectList").val('');
+                        $("#hdWhichMoveMentTypeList").val('');
+                    }
+                    else {
+                        $("#exerciseModalMsg").text("Add Exercise failed");
+                    }
+                },
+                error: function (req, status, errorObj) {
+                    $("#exerciseModalMsg").text("Error! Please try again");
+                    $("#trMsg").show();
+                }
+            });
+        }
+        function PopulateUOM() {
+            $.ajax({
+                url: "../Admin/GetUOMs",
+                type: "POST",
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (resp) {
+                    if (resp != null) {
+                        $("#lstUOM").append("<option value='0'>Select UOM</option>");
+                        for (var i = 0; i < resp.length; i++) {
+                            if (i == 0) {
+                                $("#lstUOM").append("<option value='" + resp[i].Id + "' selected>" + resp[i].Name + "</option>");
+                            }
+                            else {
+                                $("#lstUOM").append("<option value='" + resp[i].Id + "'>" + resp[i].Name + "</option>");
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        function PopulateExerciseList(val, ctrl, valToSelect) {
+            $.ajax({
+                url: '@Url.Action("GetExerciseList", "Admin")',
+                type: "POST",
+                data: JSON.stringify({ movementTypeID: val }),
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (data) {
+                    var subItems = "";
+                    $("#" + ctrl).empty();
+                    $.each(data, function (index, item) {
+                        subItems += "<option value='" + item.Id + "'>" + item.Name + "</option>"
+                    });
+                    $("#" + ctrl).html(subItems);
+                    $("#" + ctrl).prepend("<option>Select Exercise</option>");
+                    $("#" + ctrl).prepend("<option value='-100'>-- Add your own Exercise --</option>");
+                    if (valToSelect != 0) {
+                        $("#" + ctrl).val(valToSelect);
+                    }
+                    else {
+                        $("#" + ctrl + " option:contains(Select Exercise)").attr('selected', 'selected');
+                    }
+                }
+            });
+        }
+    </script>
+}

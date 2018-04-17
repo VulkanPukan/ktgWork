@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Thank You";
+    Layout = "~/Views/Registration/_Layout.cshtml";
+    var imagePath = Session["CustomerImage"];
+}
+<form id="frmRegisterAthlete">
+    <div id="login-wrapper">
+        <div id="login_header">
+	        <img src="@imagePath" class="logo" alt="Strength Tracker" style="max-width:max-content;float:none !important;" />
+            <a href="@ViewBag.PersonalTrainerHomeURL" style="float: right; margin-top: -15px;}">Home</a>
+	    </div>
+        <h5>Thank you for registering with @ViewBag.CustomerNameForDisplay. Our Team will review your inputs and activate your account shortly. Customized login details will be sent by email.</h5>
+        <div style="margin-left:30px;"><strong>Powered by</strong> <img src="../images/saqs-headerlogo.png" class="logo" alt="Strength Tracker" style="float:none !important;" /></div>
+    </div>
+</form>

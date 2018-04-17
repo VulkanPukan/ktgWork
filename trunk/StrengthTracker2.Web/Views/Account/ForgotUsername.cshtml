@@ -1,0 +1,155 @@
+﻿@{
+    ViewBag.Title = "Forgot Username?";
+}
+<div class="row row-table page-wrapper">
+    <div class="col-lg-3 col-md-6 col-sm-8 col-xs-12 align-middle">
+
+        <div data-toggle="play-animation" data-play="fadeIn" data-offset="0" class="panel panel-dark panel-flat anim-running anim-done" style="">
+            <div class="panel-heading text-center">
+                <p class="text-center mt-lg" style="font-size:24px !important;">
+                <a href="#">
+                    @*<img src="../app/img/logo.png" alt="Image" class="block-center img-rounded">*@
+                    Strength Tracker
+                </a>
+                    </p>
+                <p class="text-center mt-lg">
+                    <strong>FORGOT YOUR USERNAME?</strong>
+                </p>
+            </div>
+            <div class="panel-body">
+                <form role="form" class="mb-lg">
+                    <p class="text-center">Select your username and fill in birthdate to receive your username.</p>
+                    <div class="form-group has-feedback">
+                        <label for="userFullName">Name</label>
+                        <select name="lstUserFullName" id="lstUserFullName" class="form-control m-b">
+                            <option>Aidan de Leon</option>
+                            <option>Alec Pierce</option>
+                            <option>Allison Church</option>
+                            <option>Ally Daca</option>
+                        </select>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label for="resetInputEmailUsrNm">Birthdate</label>
+                        <input id="resetInputUsrBirthDate" type="date" class="form-control">
+                        <span class="fa fa-calendar form-control-feedback text-muted"></span>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-block" onclick="RecoverUserName();">Recover</button>
+                </form>
+            </div>
+        </div>
+
+        @*<div data-offset="0" class="panel panel-dark b0">
+            <div class="panel-heading text-center p-lg">
+                <a href="#">
+                    Strength Tracker
+                </a>
+            </div>
+            <div class="panel-group">
+                <!-- START panel-->
+                <div class="panel radius-clear b0 shadow-clear">
+                    <div class="panel-heading radius-clear panel-heading-active">
+                        <a class="text-muted btn-block text-center">Forgot your username?</a>
+                    </div>
+                    <div class="panel-collapse">
+                        <div class="panel-body">
+                            <form role="form" class="mb-lg">
+                                <p class="text-center">Select your username and fill in birthdate to receive your username.</p>
+                                <div class="form-group has-feedback">
+                                    <label for="userFullName">Name</label>
+                                    <select name="userFullName" class="form-control m-b">
+                                        <option>Aidan de Leon</option>
+                                        <option>Alec Pierce</option>
+                                        <option>Allison Church</option>
+                                        <option>Ally Daca</option>
+                                    </select>
+                                </div>
+                                <div class="form-group has-feedback">
+                                    <label for="resetInputEmailUsrNm">Birthdate</label>
+                                    <input id="resetInputUsrBirthDate" type="date" class="form-control">
+                                    <span class="fa fa-calendar form-control-feedback text-muted"></span>
+                                </div>
+                                <button type="button" class="btn btn-danger btn-block" onclick="Login();">Recover</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- END panel-->
+                <!-- START panel-->
+                <div class="panel radius-clear b0 shadow-clear">
+                    <div class="panel-heading radius-clear">
+                        <a href="@Url.Action("Login", "Account")" class="text-muted btn-block text-center">SIGN IN TO CONTINUE.</a>
+                    </div>
+                </div>
+                <!-- END panel-->
+                <!-- START panel-->
+                <div class="panel radius-clear b0 shadow-clear">
+                    <div class="panel-heading radius-clear">
+                        <a href="@Url.Action("Register", "Account")" class="text-muted btn-block text-center">Need to Signup?</a>
+                    </div>
+                </div>
+                <!-- END panel-->
+                <!-- START panel-->
+                <div class="panel radius-clear b0 shadow-clear">
+                    <div class="panel-heading radius-clear">
+                        <a href="@Url.Action("ForgotPassword", "Account")" class="text-muted btn-block text-center">Forgot your password?</a>
+                    </div>
+                </div>
+                <!-- END panel-->
+            </div>
+        </div>*@
+
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $.ajax({
+                url: "@Url.Action("GetEnabledclients", "Account")",
+               type: "POST",
+               data: {},
+               dataType: "json",
+               success: function (result) {
+                    
+                   $("#lstUserFullName").empty();
+                   if (result.length > 0) {
+                       for (var i = 0; i < result.length; i++) {
+                           $("#lstUserFullName").append("<option value='" + result[i].UserID + "'>" + result[i].UserName + "</option>");
+                       }
+                   }
+                   else {
+                       
+                   }
+               },
+               error: function (req, status, errorObj) {
+                   
+               }
+           });
+        });
+        function Login() {
+            window.location = "@Url.Action("Login", "Account")";
+        }
+        function RecoverUserName() {
+            $.ajax({
+                url: '@Url.Action("SendUserName", "Account")',
+                type: "POST",
+                data: { 'userID': $("#lstUserFullName").val(), 'DOB': $("#resetInputUsrBirthDate").val() },
+                dataType: "json",
+                success: function (result) {
+                    if (result.Status === 1) {
+                        $("#tblForgotUserName").hide();
+                        $("#txtDOB").val("");
+                        alert("UserName sent to registered email address");
+                    }
+                    else {
+                        alert(result.Message);
+                    }
+                },
+                error: function (req, status, errorObj) {
+                    alert("Error: Please try again");
+                }
+            });
+        }
+    </script>
+}
+
+}

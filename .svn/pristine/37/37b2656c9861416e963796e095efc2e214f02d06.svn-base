@@ -1,0 +1,97 @@
+﻿@model StrengthTracker2.Core.Repository.Entities.Actors.User
+@{
+    ViewBag.Title = "Strength Tracker | Welcome";
+    Layout = "~/Views/Admin/_LayoutNew.cshtml";
+}
+
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+<div class="top-bar clearfix">
+    <div class="container-fluid">
+        <div class="row gutter">
+            <div class="col-md-12 col-sm-6 col-xs-12">
+                @if (Session["AuthenticatedUser"] != null)
+                {
+                    int userID = ((StrengthTracker2.Core.Repository.Entities.Actors.User)(Session["AuthenticatedUser"])).UserId;
+                    StrengthTracker2.Core.Repository.Entities.Actors.UserDetails userDetails = (StrengthTracker2.Core.Repository.Entities.Actors.UserDetails)(Session["AuthenticatedUserDetails"]);
+                    StrengthTracker2.Core.Repository.Entities.Actors.UserImage image = userDetails.UserImages.Where(ui => ui.UserId == userID).FirstOrDefault();
+                    var userFullName = ((StrengthTracker2.Core.Repository.Entities.Actors.User)(Session["AuthenticatedUser"])).FirstName + " " + ((StrengthTracker2.Core.Repository.Entities.Actors.User)(Session["AuthenticatedUser"])).LastName;
+                    <h3 class="page-title" style="float:left;">Let's get started, @userFullName</h3>
+                }
+                else
+                {
+                    <h3 class="page-title" style="float:left;">Welcome</h3>
+                }
+                <div class="pull-right" style="padding-top:30px; font-size: 20px;">
+                    <label style="vertical-align:top;">Do not show again on next logon @(Model.ShowWelcome == false ? "checked" : "")</label>
+                    <input type="checkbox" name="hideWelcomeCheckbox" id="hideWelcomeCheckbox" @(Model.ShowWelcome == false ? "checked" : "")>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel-default">
+                <div class="panel-body" style="background-color:#f5f8fb !important">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label><a href="@Url.Action("DashboardNew", "Admin")" style="color:#337ab7;">Dashboard</a></label>
+                                <div>
+                                    <ul>
+                                        <li>Go to Dashboard tab to view charts</li>
+                                        <li>Video Link</li>
+                                     </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label><a href="@Url.Action("Program", "Admin")" style="color:#337ab7;">Program</a></label>
+                                <div>
+                                    <ul>
+                                        <li>Go to Dashboard tab to view charts</li>
+                                        <li>Video Link</li>
+                                     </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script src="../Scripts/kendo.all.min.js"></script>
+    <script>
+        $("#liWelcome").addClass("active");
+        $("#hideWelcomeCheckbox").change(function () {
+            var value = !$("#hideWelcomeCheckbox")[0].checked;
+            loading_img(true);
+            $.ajax({
+                url: "../Admin/SetShowWelcome",
+                type: "POST",
+                data: JSON.stringify({
+                    'ShowWelcome': value,
+                }),
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (result) {
+                    loading_img(false);
+                    console.log("hideWelcomeCheckbox success!");
+                },
+                error: function (req, status, errorObj) {
+                    loading_img(false);
+                    console.log("hideWelcomeCheckbox error!");
+                }
+            });
+        })
+    </script>
+}

@@ -1,0 +1,267 @@
+﻿@{
+    Layout = null;
+    string[] _startChars = new string[] { "All","A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+    string[] _users = new string[] { "Arun Prasath", "Bishop Marc", "Clair Estil", "Dupilous", "Erick Becker", "Farhan Shaik", "Gauri Patil", "Henry Shoaurier", "Isteal Mathelo", "John Govious" , "Jason Keuro"};
+
+    string[] _months = new string[] { "Jan", "Feb", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+    string[] _days = new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" };
+}
+<!DOCTYPE html>
+<html lang="en" class="no-ie">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>@ViewBag.Title</title>
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="@Url.Content("~/Scripts/mustang/css/bootstrap.min.css")" rel="stylesheet" />
+    <link href="~/Scripts/mustang/css/common.css" rel="stylesheet" />
+    <link href="~/Scripts/mustang/css/main.css" rel="stylesheet" id="themeSwitcher" />
+    <!-- Icomoon Icons CSS -->
+    <link href="~/Scripts/mustang/fonts/icomoon/icomoon.css" rel="stylesheet" />
+    <link href="~/Scripts/mustang/css/c3/c3.css" rel="stylesheet" />
+    <!-- Vendor CSS-->
+    <link rel="stylesheet" href="~/content/fontawesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/content/animo/animateanimo.css">
+    <!-- App CSS-->
+    <link href="~/Content/StrengthTracker2/strengthtracker.common.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="~/Images/favicon.png">
+    <script src="~/Scripts/fastclick/fastclick.js" type="application/javascript"></script>
+
+    <style>
+        #dvSiteHeader {
+            width: 98.9% !important;
+        }
+
+        .titlebar {
+            color: #ffffff !important;
+            font-size: 17px;
+            line-height: 19px;
+            padding: 10px 15px !important;
+            padding-top: 20px !important;
+            background-color: #35394b !important;
+        }
+    </style>
+
+</head>
+<body style="background:#404040 !important;">
+    <!-- Loading wrapper starts -->
+    <div id="loading-wrapper">
+        <div id="loader">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+            <div class="line4"></div>
+            <div class="line5"></div>
+            <div class="line6"></div>
+        </div>
+    </div>
+    <header class="clearfix">
+        <div class="logo">
+            <a href="@Url.Action("DashboardNew", "Coach")" style="color:white;font-weight:bold;font-size:20px;">StrengthTracker</a>
+        </div> <!-- Logo div -->
+    </header>
+    <div class="container-fluid">
+        <div class="dashboard-wrapper-full">
+            <!-- Top bar starts -->
+            <div class="top-bar clearfix">
+                <!-- Container fluid starts -->
+                <div class="container-fluid">
+                    <!-- Row starts -->
+                    <div class="row gutter">
+                        <div class="col-md-8 col-sm-6 col-xs-12">
+                            <h3 class="page-title">Workout Session Login</h3>
+                        </div>
+                    </div>
+                    <!-- Row ends -->
+                </div>
+                <!-- Container fluid ends -->
+            </div>
+            <!-- Top bar ends -->
+            <!-- Main container starts -->
+            <div class="main-container">
+                <div class="row">
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <div class="panel panel-light">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">Initial Char</h4>
+                            </div>
+                            <div class="panel-body">
+                                <div >
+                                    @foreach (string chr in _startChars)
+                                    {
+                                        <div class="form-group" style="width:33.33%; float:left; display:block; text-align:center;">
+                                            <a href="javascript:void(0);" title="@chr" onclick="FilterByInitial(this)" class="charsclass badge-bdr badge badge-info" style="@(chr == "All"? "background-color:#3b76a0;color:#ffffff" : @"")">@chr</a>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                          
+                        </div>
+                    </div>
+                    <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                        <div class="panel panel-light">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">Users</h4>
+                            </div>
+                            <div class="panel-body">
+                                <div>
+                                    @foreach (string username in _users)
+                                    {
+                                        <div class="form-group" style="width:33.33%; float:left; display:block; text-align:center;">
+                                            <a href="javascript:void(0);" title="@username" onclick="SetName(this)" class="userclass label-bdr label label-info">@username</a>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                        <div class="panel panel-light">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">Birth Month & Day</h4>
+                            </div>
+                            <div class="panel-body">
+                                <div>
+                                    <div id="divMonths" style="display:none;">
+
+                                        @foreach (string month in _months)
+                                        {
+                                            <div class="form-group" style="width:33.33%; float:left; display:block; text-align:center;">
+                                                <a href="javascript:void(0);" title="@month" onclick="SetMonth(this)" class="monthclass badge-bdr badge badge-info">@month</a>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div id="divDays" style="display:none;" class="mt mb pt">
+                                        <label class="control-label pl bb mb" style="width:100%; float:left; display:block; text-align:center;">Birth Day</label>
+                                        @foreach (string day in _days)
+                                        {
+                                            <div class="form-group" style="width:16.66%; float:left; display:block; text-align:center;">
+                                                <a href="javascript:void(0);" title="@day" onclick="SetDay(this)" class="dayclass badge-bdr badge badge-info">@day</a>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div>
+                                        <button id="btnLogin" type="button" class="btn btn-success btn-block mt mb " style="display:none;" onclick="Login();">Let's Workout!</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*<!-- Main container ends -->
+                <!-- Footer starts -->
+                <footer class="footer">
+                    Copyright Mustang Admin App <span>2017</span>.
+                </footer>
+                <!-- Footer ends -->*@
+        </div>
+    </div>
+
+    <!-- Container fluid ends -->
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/Scripts/mustang/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/filestyle/bootstrap-filestyle.min.js"></script>
+    <script src="~/Scripts/storejson2.min.js"></script>
+    <script src="~/Scripts/slider/js/bootstrap-slider.js"></script>
+    <script src="~/Scripts/mustang/js/scrollup.min.js"></script>
+    <script src="~/Scripts/mustang/js/themeSwitcher.js"></script>
+    <script src="~/Scripts/mustang/js/common.js"></script>
+    <script src="~/Scripts/StrengthTracker2/Common.js"></script>
+
+    <script src="~/Scripts/kendo.all.min.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
+
+        function FilterByInitial(startChar) {
+            $("#divMonths").hide();
+            $("#divDays").hide();
+            $("#btnLogin").hide();
+
+            $(".charsclass").css("background-color", "white");
+            $(".charsclass").css("color", "#3b76a0");
+            $(".userclass").css("background-color", "white");
+            $(".userclass").css("color", "#3b76a0");
+            $(".monthclass").css("background-color", "white");
+            $(".monthclass").css("color", "#3b76a0");
+            $(".dayclass").css("background-color", "white");
+            $(".dayclass").css("color", "#3b76a0");
+
+
+            $(startChar).css("background-color", "#3b76a0");
+            $(startChar).css("color", "#ffffff");
+
+            $(".userclass").css("background-color", "white");
+            $(".monthclass").css("background-color", "white");
+            $(".dayclass").css("background-color", "white");
+
+            $("input[name^='news']").val("news here!");
+
+            if (startChar.text == "All") {
+                $("a.userclass").show();
+                $("a.userclass").parent().css("width", "33.33%");
+            }
+            else {
+                $("a.userclass").hide();
+                $("a.userclass").parent().css("width", "0%");
+                $("a.userclass[title^='" + startChar.text + "']").show();
+                $("a.userclass[title^='" + startChar.text + "']").parent().css("width", "33.33%");
+            }
+        }
+
+        function SetName(selectedName) {
+            $("#divMonths").show();
+            $("#divDays").hide();
+            $("#btnLogin").hide();
+
+            $(".userclass").css("background-color", "white");
+            $(".userclass").css("color", "#3b76a0");
+            $(".monthclass").css("background-color", "white");
+            $(".monthclass").css("color", "#3b76a0");
+            $(".dayclass").css("background-color", "white");
+            $(".dayclass").css("color", "#3b76a0");
+          
+
+            $(selectedName).css("background-color", "#3b76a0");
+            $(selectedName).css("color", "#ffffff");
+
+
+            $(".monthclass").css("background-color", "white");
+            $(".dayclass").css("background-color", "white");
+        }
+
+        function SetMonth(selectedMonth) {
+            $("#divDays").show();
+            $("#btnLogin").hide();
+
+           $(".monthclass").css("background-color", "white");
+            $(".monthclass").css("color", "#3b76a0");
+            $(".dayclass").css("background-color", "white");
+            $(".dayclass").css("color", "#3b76a0");
+            $(selectedMonth).css("background-color", "#3b76a0");
+            $(selectedMonth).css("color", "#ffffff");
+
+
+
+            $(".dayclass").css("background-color", "white");
+        }
+
+        function SetDay(selectedDay) {
+            $("#btnLogin").show();
+            $(".dayclass").css("background-color", "white");
+            $(".dayclass").css("color", "#3b76a0");
+            $(selectedDay).css("background-color", "#3b76a0");
+            $(selectedDay).css("color", "#ffffff");
+
+        }
+
+        function Login() {
+            window.location = "@Url.Action("DailyWorkoutSession", "Workout")";
+        }
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,180 @@
+﻿@{
+	ViewBag.Title = "My Exercise";
+	Layout = "~/Views/Athlete/_MobileLayout.cshtml";
+}
+
+<script>
+
+	function BindExercise(exerciseSetsDS) {
+		// $('#lblUserName').html(data.UserName);
+		$.each(exerciseSetsDS.exerciseSets, function (key, value) {
+			$("#ddlSets").append($("<option></option>").val(key).html(value.SetName));
+		});
+
+		var groupedData = _.groupBy(exerciseSetsDS.exerciseSets, function (d) { return d.ExerciseId });
+		var ds = [];
+		$.each(groupedData, function (key, value) {
+			var obj = { 'key': key, 'value': value[0].ExerciseSetName };
+			ds.push(obj)
+		});
+		var sortedData = _.sortBy(ds, function (d) { return d.value });
+		$.each(sortedData, function (key, value) {
+			$("#ddlSetsMain").append($("<option></option>").val(value.key).html(value.value));
+		});
+		currentExerciseSetIndex = 0;
+		BindViewExercise();
+		$("#loading-wrapper").hide();
+	}
+
+	$(document).ready(function () {
+		$.ajax({
+		    url: '../Athlete/GetExerciseSetsList',
+            cache:false,
+			success: function (data, textStatus, jqXHR) {
+				exerciseSetsDS = JSON.parse(data.Data);
+				BindExercise(exerciseSetsDS);
+			}
+		});
+	});
+
+	function ModifyExercise() {
+		var selExerciseSetIndex = $('#ddlSets').val();
+		var setId = exerciseSetsDS.exerciseSets[selExerciseSetIndex].SetId;
+		var exerciseId = exerciseSetsDS.exerciseSets[selExerciseSetIndex].ExerciseId;
+		window.location.href = '@Url.Action("ModifyExercise", "Athlete")?exerciseId=' + (exerciseId) + "&setId=" + (setId) ;
+
+    }
+   
+    function IamDone() {
+    	//SaveExercise();
+    	
+    	exerciseSetsDS.exerciseSets[currentExerciseSetIndex].ActualLoad = $('#txtActualLoad').val();
+    	exerciseSetsDS.exerciseSets[currentExerciseSetIndex].ActualReps = $('#txtActualReps').val();
+    	currentExerciseSet = exerciseSetsDS.exerciseSets[currentExerciseSetIndex];
+		$.ajax({
+			url: '../Athlete/SaveAthleteWorkout',
+			type: 'POST',
+			dataType: "json",
+			contentType: 'application/json',
+			data: JSON.stringify(currentExerciseSet),
+            success: function (data, textStatus, jqXHR) {
+                 exerciseSetsDS = null;
+				  window.location.href = '@Url.Action("WorkoutSummary", null, new { controller = "Athlete" }, Request.Url.Scheme)';
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+				alert(xhr.responseText);
+			}
+		});
+	}
+</script>
+<div class="top-bar clearfix">
+	<!-- Container fluid starts -->
+	<div class="container-fluid">
+		<!-- Row starts -->
+
+		<div class="row gutter">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<div class="workout-btn-group" style="text-align:center;margin-top:20px">
+					<a href="javascript:IamDone();" class="btn btn-danger" style="padding:7px;">I'm Done</a>
+					<a href="javascript:GoToMyWorkout();" class="btn btn-danger" style="padding:7px;">View Workout</a>
+				</div>
+				<h3 class="page-title" style="text-align:center;white-space:nowrap">My Exercise</h3>
+				<div class="progress no-margin progress-rounded" style="margin-bottom:10px">
+					<div class="progress-bar progress-rounded progress-bar-warning" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" style="width: 35%;">
+						&nbsp;
+					</div>
+				</div>
+				<div style="margin-bottom:10px;text-align:center">Workout Progress (10/14)</div>
+			</div>
+		</div>
+		<!-- Row ends -->
+	</div>
+	<!-- Container fluid ends -->
+
+</div>
+<!-- Top bar ends -->
+<!-- Main container starts -->
+<div class="container-fluid">
+	<div class="main-container" style="padding:10px 0px 10px 0px">
+		<!-- Row starts -->
+		<div class="row gutter">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<div class="form-group">
+					<div class="input-group">
+						<select class="form-control" id="ddlSets" onchange="ChangeExercise();" style="display:none">
+						</select>
+                        <select class="form-control" id="ddlSetsMain" onchange="ChangeExerciseNew();"></select>
+						<span class="input-group-addon" onclick="ModifyExercise();" style="cursor: pointer; cursor: hand;"><i class="icon-brightness_high icon-1x"></i></span>
+					</div>
+
+				</div>
+			</div>
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="table-responsive">
+					<table class="table no-margin">
+						<thead>
+							<tr>
+								<th>&nbsp;</th>
+								<th>Actual</th>
+								<th>Target</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><b>Load</b></td>
+								<td>
+									<div class="input-group">
+										<input class="form-control input-sm" type="number" value="150" id="txtActualLoad">
+										<span class="input-group-addon"><i class="icon-check_circle icon-1x"></i></span>
+									</div>
+								</td>
+
+								<td>
+									<label id="lblTargetLoad" style="font:bold">150</label>
+								</td>
+							</tr>
+							<tr>
+								<td><b>Reps</b></td>
+								<td>
+									<div class="input-group">
+										<input class="form-control input-sm" type="number" value="2000" id="txtActualReps">
+										<span class="input-group-addon "><i class="icon-cancel2 "></i></span>
+									</div>
+								</td>
+								<td>
+                                    <label id="lblTargetReps" style="font:bold">20</label>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="table-responsive" style="border:0px">
+					<table class="table no-margin table-no-border">
+						<tr>
+							<td class="col-lg-6 col-md-6 col-sm-6 col-xs-6"  align="left"><b>Tempo:</b><label id="lblTempo" style="font-weight:100;padding-left:3px">Fast</label> </td>
+							<td class="col-lg-6 col-md-6 col-sm-6 col-xs-6" align="right"><b>Rest:</b><label id="lblRest" style="font-weight:100;padding-left:3px;padding-right:5px">90 </label>Seconds</td>
+
+						</tr>
+						<tr>
+							<td class="col-lg-6 col-md-6 col-sm-6 col-xs-6" align="left"><b>1RM:</b><label id="lbl1RM" style="font-weight:100;padding-left:3px;">200</label></td>
+							<td class="col-lg-6 col-md-6 col-sm-6 col-xs-6" align="right"><b>Dynamic 1RM:</b><label id="lblDynamic1RM" style="font-weight:100;padding-left:3px">300</label></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="workout-btn-group" style="text-align:center;">
+					<a id="lnkPrev" href="javascript:PrevSet()" class="btn btn-primary" style="padding:7px;margin-right:50px">Previous</a>
+					<a id="lnkNext" href="javascript:NextSet()" class="btn  btn-primary" style="padding-top:7px;width:70px">Next</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+

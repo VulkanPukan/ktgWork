@@ -1,0 +1,393 @@
+﻿@model StrengthTracker2.Web.Models.Coach.AssesmentProfileViewModel
+@{
+	ViewBag.Title = "Strength Tracker | Clients";
+	Layout = "~/Views/Coach/_LayoutNew.cshtml";
+	string disabled = Model.Completed ? "disabled" : "";
+}
+
+<link rel="stylesheet" href="~/content/kendo.common.min.css" />
+<link rel="stylesheet" href="~/content/kendo.silver.min.css">
+<link href="~/Scripts/datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+<div class="top-bar clearfix">
+    <!-- Container fluid starts -->
+    <div class="container-fluid">
+        <!-- Row starts -->
+        <div class="row gutter">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                <h3 class="page-title">Initial Assessment</h3>
+            </div>
+        </div>
+        <!-- Row ends -->
+    </div>
+    <!-- Container fluid ends -->
+</div>
+
+<div class="main-container">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div id="freeevaluation">
+             
+                    <form class="form-horizontal" id="maturityForm">
+                        <div>
+                            <!-- Navbar starts -->
+                            <nav class="navbar navbar-default">
+                                <div class="navbar-header">
+                                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#Assessment-navbar-collapse-1" aria-expanded="false">
+                                        <span class="sr-only">Toggle navigation</span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                    </button>
+                                </div>
+                                <!-- Collect the nav links, forms, and other content for toggling -->
+                                <div class="collapse navbar-collapse" id="Assessment-navbar-collapse-1">
+                                    <ul class="nav navbar-nav">
+                                        <li id="liMaturityCalculation" class="tab" rel="#MaturityCalculation">
+                                            <a href="#" rel="#MaturityCalculation"><i class="icon-view_comfy" rel="#MaturityCalculation"></i>Maturity Calculation</a>
+                                        </li>
+                                        <li id="liStrengthTrackerData" class="tab" rel="#SAQStivityData">
+                                            <a href="#" rel="#SAQStivityData"><i class="icon-widgets" rel="#SAQStivityData"></i>StrengthTracker Data</a>
+                                        </li>
+                                      
+                                    </ul>
+                                </div>
+                            </nav>
+                            <div class="tab-content" style="border-top:5px solid #3b76a0;min-height:630px">
+                                <div id="MaturityCalculation" class="tab-pane">
+                                    <h4 >Client Maturity Data</h4>
+                                    <hr style="border:1px solid #e3ebf4"/>
+                                    <input type="hidden" id="userId" name="userId" value="@Model.UserId" />
+                                    <input type="hidden" id="id" name="id" value="@Model.Id" />
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">Height (inches)</label>
+                                        <div class="col-lg-3">
+                                            @Html.TextBoxFor(m => m.Height, new { @name = "height", @class = "form-control", @id = "height" })
+                                        </div>
+                                        <label class="col-lg-3 control-label">Sitting Height (inches)</label>
+                                        <div class="col-lg-3">
+                                            @Html.TextBoxFor(m => m.SittingHeight, new { @name = "sittingHeight", @class = "form-control", @id = "sittingHeight" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">Leg Length (inches)</label>
+                                        <div class="col-lg-3">
+                                            @Html.TextBoxFor(m => m.LegLength, new { @name = "sittingHeight", @class = "form-control", @id = "legLength", @readonly = "readonly" })
+                                        </div>
+                                        <label class="col-lg-3 control-label">Weight (Pounds)</label>
+                                        <div class="col-lg-3">
+                                            @Html.TextBoxFor(m => m.Weight, new { @name = "weight", @class = "form-control", @id = "weight" })
+                                        </div>
+                                    </div>
+                                    <div class="pull-right col-lg-3">
+                                        <button id="calculateMaturity" type="submit" class="btn btn-primary mb-lg" style="margin-left: 40px;">Calculate</button>
+                                    </div>
+                                    <br />
+                                    <br />
+                                    <h4>Result</h4>
+                                    <hr style="border:1px solid #e3ebf4" />
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">Predicted APHV</label>
+                                        <div>
+                                            @Html.TextBoxFor(m => m.PredictedAPHV, new { @name = "predictedAPHV", @class = "col-lg-2 form-control", @id = "predictedAPHV", @readonly = "readonly", @style = "width: 15%" })
+                                            @Html.TextBoxFor(m => m.PredictedAPHVByUser, new { @name = "predictedAPHVByUser", @class = "col-lg-2 form-control", @id = "predictedAPHVByUser", @style = "width: 15%; margin-left: 5px;" })
+                                        </div>
+                                        <label class="col-lg-2 control-label">Predicted years from APHV</label>
+                                        <div>
+                                            @Html.TextBoxFor(m => m.PredictedYearsFromAPHV, new { @name = "predictedYearsFromAPHV", @class = "col-lg-2 form-control", @id = "predictedYearsFromAPHV", @readonly = "readonly", @style = "width: 15%" })
+                                            @Html.TextBoxFor(m => m.PredictedYearsFromAPHVByUser, new { @name = "predictedYearsFromAPHVByUser", @class = "col-lg-2 form-control", @id = "predictedYearsFromAPHVByUser", @style = "width: 15%; margin-left: 5px;" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">Predicted Maturity Classification</label>
+                                        <div>
+                                            @Html.TextBoxFor(m => m.PredictedMaturityClassification, new { @name = "PredictedMaturityClassification", @class = "col-lg-2 form-control", @id = "predictedMaturityClassififcation", @readonly = "readonly", @style = "width: 15%" })
+                                            @Html.TextBoxFor(m => m.PredictedMaturityClassificationByUser, new { @name = "predictedMaturityClassificationByUser", @class = "col-lg-2 form-control", @id = "predictedMaturityClassififcationUser", @style = "width: 15%; margin-left: 5px;" })
+                                        </div>
+                                        <label class="col-lg-2 control-label">Predicted Growth Remaining</label>
+                                        <div>
+                                            @Html.TextBoxFor(m => m.PredictedGrowthRemaining, new { @name = "predictedGrowthRemaining", @class = "col-lg-2 form-control", @id = "predictedGrowth", @readonly = "readonly", @style = "width: 15%" })
+                                            @Html.TextBoxFor(m => m.PredictedGrowthRemainingByUser, new { @name = "predictedGrowthRemainingByUser", @class = "col-lg-2 form-control", @id = "predictedGrowthByUser", @style = "width: 15%; margin-left: 5px;" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">Predicted Adult Height</label>
+                                        <div>
+                                            @Html.TextBoxFor(m => m.PredictedAdultHeight, new { @name = "predictedAdultHeight", @class = "col-lg-2 form-control", @id = "predictedHeight", @readonly = "readonly", @style = "width: 15%" })
+                                            @Html.TextBoxFor(m => m.PredictedAdultHeightByUser, new { @name = "predictedAdultHeightByUser", @class = "col-lg-2 form-control", @id = "predictedHeightUser", @style = "width: 15%; margin-left: 5px;" })
+                                        </div>
+                                        <label class="col-lg-2 control-label">Age Equivalent</label>
+                                        <div>
+                                            @Html.TextBoxFor(m => m.AgeEquivalent, new { @name = "ageEquivalent", @class = "col-lg-4 form-control", @id = "ageEquivalent", @readonly = "readonly", @style = "width: 31%" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">Comments</label>
+                                        <div class="col-lg-9" style="width: 80% !important; padding-left: 1px !important;">
+                                            @Html.TextAreaFor(m => m.Comments, new { @rows = 3, @cols = 32, @maxlength = 12000, @name = "comments", @class = "col-lg-2 form-control", @id = "taComments" })
+                                        </div>
+
+                                    </div>
+                                    <div class="pull-right col-lg-2">
+                                        <button id="submitMaturity" type="submit" class="btn btn-primary mb-lg" style="margin-left: 45px;">Save</button>
+                                    </div>
+
+                                </div>
+                                <!-- Maturity end -->
+                                <div id="SAQStivityData" class="tab-pane">
+                                        <div class="form-group col-lg-12">
+                                            <table style="width: 100%">
+                                                <tbody>
+                                                    <tr>
+                                                        <th style="text-align: left">Movement Type</th>
+                                                        <th style="text-align: left">Exercise</th>
+                                                        <th style="text-align: left">Units Of Measure</th>
+                                                        <th style="text-align: left">Actual Score</th>
+                                                    </tr>
+                                                    @foreach (var row in @Model.Exercises)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @row.MovementType
+
+                                                            </td>
+                                                            <td>
+                                                                @row.ExerciseName
+
+                                                            </td>
+                                                            <td>
+                                                                @row.UOM
+
+                                                            </td>
+                                                            <td>
+                                                                <input type="hidden" value="@row.UOMId" name="UOMId" />
+                                                                <input type="hidden" value="@row.MovementTypeId" name="MovementTypeId" />
+                                                                <input type="hidden" value="@row.ExerciseId" name="ExerciseId" />
+                                                                <input type="hidden" value="@row.Id" name="Id" />
+                                                                <input class="actual" name="actual" data-val="true" data-val-number="The field ActualScore must be a number." data-val-required="The ActualScore field is required." name="[0].ActualScore" style="width: 60px;" type="text" value="@row.ActualScore">
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                    <tr>
+                                                        <td colspan="8">
+                                                            <hr style="border-color: black;">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="8">
+                                                            <div id="SAQRes"><b>StrengthTracker Quotient: @Html.Label(@Model.Quotient, new { @id = "quotientVal" })</b></div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="form-group col-lg-12">
+                                            <button type="button" id="saveExersice" style="margin-left:10px;width:75px"class="btn btn-primary btn-sm pull-right" @disabled>Save</button>
+                                            <button type="button"  id="completeAssessment" class="btn btn-primary btn-sm pull-right mr" @disabled >Assessment Complete</button>
+                                        </div>
+
+                                    </div>
+                            </div>
+                        </div>
+                    </form>
+           
+                </div>
+            </div>
+        </div>
+               
+            </div>
+            <!-- START confirm deletion modal-->
+            <div id="successPopup" tabindex="-1" role="dialog" aria-labelledby="successPopup" aria-hidden="true" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                            <h4 id="confirmDeletionLabel" class="modal-title">Success</h4>
+                        </div>
+                        <div class="modal-body">
+                            The data has been saved
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" data-dismiss="modal" class="btn btn-default">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @section Scripts {
+                @Scripts.Render("~/bundles/jquery")
+                <script src="~/Scripts/kendo.all.min.js"></script>
+                <script src="~/Scripts/moment/min/moment.min.js"></script>
+                <script src="~/Scripts/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+                <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+
+			$("#maturityForm  input.form-control").each(function (i, obj) {
+					if (+obj.value === 0) {
+						obj.value = "";
+					}
+				});
+			$("#height").change(function() {
+				calculateLegLength();
+			});
+			$("#sittingHeight").change(function() {
+				calculateLegLength();
+			});
+
+			$("#calculateMaturity").click(function(e) {
+				e.preventDefault();
+				$.ajax({
+					url: "@Url.Action("GetMaturityCalculation", "Coach")",
+					type: "GET",
+					data:
+					{
+						UserId: 5,
+						Height: $("#height").val(),
+						Weight: $("#weight").val(),
+						SittingHeight: $("#sittingHeight").val(),
+						LegLength: $("#legLength").val()
+					},
+					async: false,
+					success: function(response) {
+						$("#predictedAPHV").val(response.PredictedAPHV);
+						$("#predictedAPHVByUser").val(response.PredictedAPHV);
+						$("#predictedYearsFromAPHV").val(response.PredictedYearsFromAPHV);
+						$("#predictedYearsFromAPHVByUser").val(response.PredictedYearsFromAPHV);
+						$("#predictedMaturityClassififcation").val(response.PredictedMaturityClassification);
+						$("#predictedMaturityClassififcationUser").val(response.PredictedMaturityClassification);
+						$("#predictedGrowth").val(response.PredictedGrowthRemaining);
+						$("#predictedGrowthByUser").val(response.PredictedGrowthRemaining);
+						$("#predictedHeight").val(response.PredictedAdultHeight);
+						$("#predictedHeightUser").val(response.PredictedAdultHeight);
+						$("#ageEquivalent").val(response.AgeEquivalent);
+					},
+					error: function(err) {
+						alert("Error! Please try again");
+					}
+				});
+			});
+
+			$("#submitMaturity").click(function(e) {
+				e.preventDefault();
+
+				$.ajax({
+					type: "POST",
+					url: "@Url.Action("SaveMaturityCalculation", "Coach")",
+					data: $("#maturityForm").serialize(),
+					success: function () {
+						ShowSuccessPopup();
+					},
+					error: function(xhr, ajaxOptions, thrownError) {
+						alert(xhr.status);
+						alert(thrownError);
+					}
+				});
+			});
+
+			$("#saveExersice").click(function(e) {
+				e.preventDefault();
+				submitExersice(false);
+
+			});
+			$("#completeAssessment").click(function(e) {
+				e.preventDefault();
+				submitExersice(true);
+
+			});
+		});
+
+		function prepareExersiseModel() {
+			var model = [];
+			$.each($("#SAQStivityData td>input.actual"),
+				function(index, value) {
+					var $el = $(value);
+					if (+$el.val()) {
+						var $prev = $el.prev();
+						model.push({
+							ActualScore: $el.val(),
+							Id: $prev.val(),
+							UOMId: $prev.prev().prev().prev().val(),
+							MovementTypeId:$prev.prev().prev().val() ,
+							ExerciseId: $prev.prev().val()
+						});
+					}
+				});
+			return model;
+		}
+
+		function submitExersice(completeSession) {
+			$.ajax({
+				type: "POST",
+				contentType: 'application/json',
+				url: "@Url.Action("SaveStrengthTracker", "Coach")" +
+					"?completeSession=" + completeSession + "&userId=" + $("#userId").val(),
+				data: JSON.stringify({ model: prepareExersiseModel() }),
+				success: function (data) {
+				    $("#quotientVal").text(data.Quotient);
+				    $("#saveExersice").prop('disabled', data.Status);
+				    alert(data.Message);
+				},
+				error: function(xhr, ajaxOptions, thrownError) {
+					alert(xhr.status);
+					alert(thrownError);
+				}
+			});
+		    
+		}
+
+		function calculateLegLength() {
+			var $height = $("#height"), $sittingHeight = $("#sittingHeight");
+			if ($sittingHeight.val() !== "") {
+				if ($height.val() !== "") {
+					if (parseInt($height.val()) > parseInt($sittingHeight.val())) {
+						var legLength = $height.val() - $sittingHeight.val();
+						$("#legLength").val(legLength);
+					}
+				} else {
+					$("#legLength").val(0);
+				}
+			}
+		}
+
+		function ShowSuccessPopup() {
+			ConfirmationMessageBox({
+				confirmationMessage: 'The data has been saved.',
+				popupTitle: 'Success',
+				callback: function () {}
+			});
+		}
+
+		function CheckActualScoreOnFocus(ctrl) {
+		}
+
+		$('.tab').click(function (evt) {
+		    if (evt.target.attributes["rel"].nodeValue == '#MaturityCalculation')
+		    {
+		        $('#MaturityCalculation').show();
+		        $('#SAQStivityData').hide();
+		        $("#liStrengthTrackerData").removeClass("active");
+		        $("#liMaturityCalculation").addClass("active");
+		      
+		       
+		    }
+		    else if (evt.target.attributes["rel"].nodeValue == '#SAQStivityData') {
+		        $('#SAQStivityData').show();
+		        $('#MaturityCalculation').hide();
+		        $("#liMaturityCalculation").removeClass("active");
+		        $("#liStrengthTrackerData").addClass("active");
+		    
+		       
+		    }
+		});
+
+                </script>
+
+                <script type="text/javascript" charset="utf-8">
+                    $("#liAthlete").addClass("active");
+                    $('#MaturityCalculation').show();
+                    $('#SAQStivityData').hide();
+                    $("#liStrengthTrackerData").removeClass("active");
+                    $("#liMaturityCalculation").addClass("active");
+                </script>
+
+            }
+
+

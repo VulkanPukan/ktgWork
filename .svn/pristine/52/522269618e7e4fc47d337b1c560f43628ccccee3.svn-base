@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>@ViewBag.Title</title>
+    @*@Styles.Render("~/Content/css")*@
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="~/Scripts/mustang/css/main.css" id="themeSwitcher" />
+
+    <link href="~/Scripts/mustang/css/login.css" rel="stylesheet" />
+    <link href="~/Content/StrengthTracker2/strengthtracker.common.css" rel="stylesheet" />
+    <link href="~/Scripts/mustang/fonts/icomoon/icomoon.css" rel="stylesheet" />
+    <link href="~/Scripts/mustang/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="~/Images/favicon.png">
+</head>
+<body class="login loaded">
+    <div id="loading-wrapper">
+        <div id="loader">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+            <div class="line4"></div>
+            <div class="line5"></div>
+            <div class="line6"></div>
+        </div>
+    </div>
+    @RenderBody()
+    
+    @Scripts.Render("~/bundles/jquery")
+    @RenderSection("scripts", required: false)
+    <script src="~/Scripts/mustang/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.maskedinput.js"></script>
+    <script src="~/Scripts/verimail/verimail.jquery.js"></script>
+    <script src="~/Scripts/StrengthTracker2/Common.js"></script>
+    <script>
+
+        var checkeventcount = 1, prevTarget;
+        $('.modal').on('show.bs.modal', function (e) {
+            if (typeof prevTarget == 'undefined' || (checkeventcount == 1 && e.target != prevTarget)) {
+                prevTarget = e.target;
+                checkeventcount++;
+                e.preventDefault();
+                $(e.target).appendTo('body').modal('show');
+            }
+            else if (e.target == prevTarget && checkeventcount == 2) {
+                checkeventcount--;
+            }
+        });
+        var box = '<div tabindex="-1" id="alertModal" class="modal fade" id="confirmDeletion" role="dialog" aria-hidden="true" aria-labelledby="confirmDeletionLabel" style="display: none;"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button class="close" aria-hidden="true" type="button" data-dismiss="modal">×</button><h4 class="modal-title" id="confirmDeletionLabel">Message from webpage</h4></div><div id="alertModalBody" class="modal-body">Are you sure you want to Delete Customer?</div><div class="modal-footer"><button class="btn btn-default" type="button" data-dismiss="modal">OK</button></div></div></div></div>';
+        if ($('#alertModal').length == 0) {
+            $("body").append(box);
+        }
+        window.alert = function (dialog, button) {
+            $("#alertModalBody").html(dialog.replace(/\n/, "<br />"));
+            $('#alertModal').modal('show');
+
+            $(".btn-default").click(function () {
+                $(this).unbind('click');               //very important, DO NOT REMOVE!
+                $(".btn-primary").unbind('click');	   //very important, DO NOT REMOVE!
+            });
+
+            return false;
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+﻿using AutoMapper;
+using StrengthTracker2.Core.DataTypes;
+using StrengthTracker2.Core.Repository.Entities.Actors;
+using StrengthTracker2.Core.Repository.Entities.Customers;
+using StrengthTracker2.Core.Repository.Entities.WorkoutManagement;
+using StrengthTracker2.Web.Models;
+using StrengthTracker2.Web.Models.Coach;
+using StrengthTracker2.Web.Models.Registration;
+
+namespace StrengthTracker2.Web
+{
+	public class AutoMapperConfiguration
+	{
+		public static MapperConfiguration Configure()
+		{
+			return new MapperConfiguration(cfg =>
+			{
+				cfg.CreateMap<UserRegistrationModel, Contact>()
+					.ForMember(dest => dest.Zip, opt => opt.MapFrom(scr => scr.ZipCode));
+
+				cfg.CreateMap<UserRegistrationModel, User>()
+					.ForMember(dest => dest.UserType, opt => opt.UseValue(UserType.Athlete));
+
+			    cfg.CreateMap<UserRegistrationModel, Customer>()
+			        .ForMember(dest => dest.ContactFirstName, opt => opt.MapFrom(src => src.FirstName))
+			        .ForMember(dest => dest.ContactLastName, opt => opt.MapFrom(src => src.LastName))
+			        .ForMember(dest => dest.ContactEmail, opt => opt.MapFrom(src => src.Email))
+			        .ForMember(dest => dest.ContactPhone, opt => opt.MapFrom(src => src.PhoneNumber))
+			        .ForMember(dest => dest.CustomerPhone, opt => opt.MapFrom(src => src.PhoneNumber))
+			        .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.AddressOne))
+                    .ForMember(dest => dest.OrganizationName, opt => opt.MapFrom(src => src.UserName));
+
+                cfg.CreateMap<User, AthleteProfileViewModel>();
+
+				cfg.CreateMap<Contact, AthleteProfileViewModel>()
+					.ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.PhoneNumber));
+
+			    cfg.CreateMap<User, AthleteViewModel>()
+			        .ForMember(dest => dest.Experienced, opt => opt.MapFrom(src => src.YearsOfPlayOrgSport.HasValue && src.YearsOfPlayOrgSport.Value > 0))
+			        .ForMember(dest => dest.Program, opt => opt.MapFrom(src => src.Program.Title));
+			    
+                cfg.CreateMap<AthleteProfileViewModel, User>();
+
+				cfg.CreateMap<AthleteProfileViewModel, Contact>()
+					.ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.Phone));
+
+				cfg.CreateMap<AssessmentProfile, AssesmentProfileViewModel>()
+					.ForMember(dest => dest.Weight, opt => opt.MapFrom(src => src.BodyMass))
+					.ForMember(dest => dest.Height, opt => opt.MapFrom(src => src.StandingHeight))
+					.ForMember(dest => dest.SittingHeight, opt => opt.MapFrom(src => src.SeatedHeight))
+					.ForMember(dest => dest.PredictedAPHV, opt => opt.MapFrom(src => src.AgeAtPHV))
+					.ForMember(dest => dest.PredictedYearsFromAPHV, opt => opt.MapFrom(src => src.YearsAwayFromPHV))
+					.ForMember(dest => dest.AgeEquivalent, opt => opt.MapFrom(src => src.AverageAgeAtPHV))
+					.ForMember(dest => dest.PredictedGrowthRemaining, opt => opt.MapFrom(src => src.MaturityOffset))
+					.ForMember(dest => dest.PredictedAPHVByUser, opt => opt.MapFrom(src => src.AgeAtPHVByUser))
+					.ForMember(dest => dest.PredictedYearsFromAPHVByUser, opt => opt.MapFrom(src => src.YearsAwayFromPHVByUser))
+					.ForMember(dest => dest.PredictedGrowthRemainingByUser, opt => opt.MapFrom(src => src.MaturityOffsetByUser))
+					;
+
+				cfg.CreateMap<AssesmentProfileViewModel, AssessmentProfile>()
+					.ForMember(dest => dest.BodyMass, opt => opt.MapFrom(src => src.Weight))
+					.ForMember(dest => dest.StandingHeight, opt => opt.MapFrom(src => src.Height))
+					.ForMember(dest => dest.SeatedHeight, opt => opt.MapFrom(src => src.SittingHeight))
+					.ForMember(dest => dest.AgeAtPHV, opt => opt.MapFrom(src => src.PredictedAPHV))
+					.ForMember(dest => dest.YearsAwayFromPHV, opt => opt.MapFrom(src => src.PredictedYearsFromAPHV))
+					.ForMember(dest => dest.AverageAgeAtPHV, opt => opt.MapFrom(src => src.AgeEquivalent))
+					.ForMember(dest => dest.MaturityOffset, opt => opt.MapFrom(src => src.PredictedGrowthRemaining))
+					.ForMember(dest => dest.AgeAtPHVByUser, opt => opt.MapFrom(src => src.PredictedAPHVByUser))
+					.ForMember(dest => dest.YearsAwayFromPHVByUser, opt => opt.MapFrom(src => src.PredictedYearsFromAPHVByUser))
+					.ForMember(dest => dest.MaturityOffsetByUser, opt => opt.MapFrom(src => src.PredictedGrowthRemainingByUser));
+			});
+		}
+	}
+}

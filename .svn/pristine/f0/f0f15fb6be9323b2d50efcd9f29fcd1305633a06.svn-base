@@ -1,0 +1,318 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | AuditLog";
+    Layout = "~/Views/Admin/_Layout.cshtml";
+}
+<style>
+    .k-grid .k-alt {
+        background-color: #fafbfc; /* specify the alternate background-color */
+    }
+    #dvSiteFooter {
+        top: 30px !important;
+    }
+</style>
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+
+    
+@*<link rel="stylesheet" href="styles/kendo.default.min.css" />
+    <link rel="stylesheet" href="styles/kendo.default.mobile.min.css" />*@
+
+        <div class="main-content">
+            <h3>Audit Log</h3>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="">
+                        <div class="panel-body">
+                            <div id="auditLoggridcontainer">
+                                <div id="AuditLogGrid"></div>
+                                <div id="auditLogGridPager"></div>
+                            </div>
+                            <div id="showAdditionalLog" style='display:none'>
+                                <div id="AdditionalLogGrid"></div>
+                                <div id="additionalGridPager"></div>
+                                <br />
+                                                                 <div class="clearfix">
+                                    <button type="button" onclick="ShowAuditLogGrid();" class="btn btn-primary pull-right  mb-sm">
+                                        <em class="fa fa-plus-circle fa-fw mr-sm"></em>Back
+                                    </button>
+                                    @*<div class="pull-right">
+                                        <button type="button" onclick="AddProgram();" class="mb-sm btn btn-primary">Add Program</button>
+                                    </div>*@
+                                </div>
+
+                            </div>
+
+                            <div id="showAdditionalLog1" style='display:none'>
+                                <div id="AdditionalLogGrid1"></div>
+                                <div id="additionalGrid1Pager"></div>
+                                <br />
+                                                                 <div class="clearfix">
+                                    <button type="button" onclick="ShowAuditLogGrid();" class="btn btn-primary pull-right  mb-sm">
+                                        <em class="fa fa-plus-circle fa-fw mr-sm"></em>Back
+                                    </button>
+                                    @*<div class="pull-right">
+                                        <button type="button" onclick="AddProgram();" class="mb-sm btn btn-primary">Add Program</button>
+                                    </div>*@
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- START Copy program modal-->
+<!-- END confirm deletion modal-->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+
+    <script src="../Scripts/kendo.all.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+        var auditGriddataSource = new kendo.data.DataSource({
+            data: [
+                { Date: "4/28/2016 12:14:16 PM", IPAddress: '::1', Module: "Account", UserName: "Franchise Admin", RowClicked: 0, Role: "Franchisee", ActivityDescription: "User logged in to SAQSTivity app" },
+                { Date: "4/29/2016 12:14:16 PM", IPAddress: "::1", Module: "Account", UserName: "Admin User", RowClicked: 0, Role: "Admin", ActivityDescription: "User logged in to SAQSTivity app" },
+                { Date: "4/30/2016 12:14:16 PM", IPAddress: "::1", Module: "Account", UserName: "Admin User", RowClicked: 0, Role: "Admin", ActivityDescription: "User logged out" },
+                { Date: "4/31/2016 12:14:16 PM", IPAddress: "::1", Module: "Program", UserName: "TKG Admin", RowClicked: 4, Role: "Admin", ActivityDescription: "Program 5X5 MxS edited" },
+                { Date: "4/28/2016 12:14:16 PM", IPAddress: '::1', Module: "Account", UserName: "Franchise Admin", RowClicked: 0, Role: "Franchisee", ActivityDescription: "User logged in to SAQSTivity app" },
+                { Date: "4/29/2016 12:14:16 PM", IPAddress: "::1", Module: "Program", UserName: "TKG Admin", RowClicked: 6, Role: "Admin", ActivityDescription: "Adult GS program created" },
+                { Date: "4/30/2016 12:14:16 PM", IPAddress: "::1", Module: "Account", UserName: "Admin User", RowClicked: 0, Role: "Admin", ActivityDescription: "User logged out" },
+                { Date: "4/31/2016 12:14:16 PM", IPAddress: "::1", Module: "Account", UserName: "Franchise Admin", RowClicked: 0, Role: "Admin", ActivityDescription: "User logged in to SAQSTivity app" }
+            ],
+            pageSize: 10
+
+        });
+
+        var additionalGriddataSource = new kendo.data.DataSource({
+            data: [
+                { UserName: "TKG Admin", Module: "Program", Description: "Changed Sports from Baseball to Basketball in program 5X5 MxS" },
+                { UserName: "TKG Admin", Module: "Program", Description: "Changed # of Steps from 1 to 4 in program 5X5 MxS" },
+                { UserName: "TKG Admin", Module: "Program", Description: "Changed # of Sessions from 13 to 19 in program 5X5 MxS" },
+                { UserName: "TKG Admin", Module: "Program",  Description: "Changed # of Groups from 1 to 2 in program 5X5 MxS" },
+            ],
+            pageSize: 10
+
+        });
+
+        var additionalGrid1dataSource = new kendo.data.DataSource({
+            data: [
+                { UserName: "TKG Admin", Module: "Program", Description: "Adult GS program created" },
+
+            ],
+            pageSize: 10
+
+        });
+
+        $("#liAuditLog").addClass("active");
+        $("#AuditLogGrid").kendoGrid({
+            selectable: "multiple cell",
+            allowCopy: true,
+            //height: 550,
+            scrollable: true,
+            sortable: true,
+            filterable: true,
+            //pageable: {
+            //    input: true,
+            //    numeric: false
+            //},
+            columns: [
+                {
+                    field: "Date"
+                },
+                {
+                    field: "IPAddress",
+                    width: "130px",
+                },
+                {
+                    field: "Module",
+                    width: "130px",
+                },
+                {
+                    field: "UserName"
+                },
+                {
+                    field: "Role"
+                },
+                {
+                    field: "ActivityDescription",
+                    template: '# if( Module == \'Program\'  ) {#  <a href="javascript:void(0)" onclick="ShowAdditionalLog(#=RowClicked#);" >#=ActivityDescription#</a> #}  else {# #=ActivityDescription#  #}#',
+                    width: "230px",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                }
+            ],
+            dataSource: auditGriddataSource
+        });
+
+        auditGriddataSource.read();
+        $("#auditLogGridPager").kendoPager({
+            autoBind: true,
+            dataSource: auditGriddataSource
+        });
+
+        $("#AuditLogsGrid").kendoTooltip({
+            filter: "td:nth-child(2)", //this filter selects the second column's cells
+            position: "right",
+            content: function(e) {
+                var dataItem = $("#AuditLogsGrid").data("kendoGrid").dataItem(e.target.closest("tr"));
+                var content = dataItem.Description;
+                return content;
+            }
+        }).data("kendoTooltip");
+
+
+        /* showAdditionaLog */
+        </script>
+        <script type="text/javascript" charset="utf-8">
+        $("#liAuditLog").addClass("active");
+        $("#AdditionalLogGrid").kendoGrid({
+            selectable: "multiple cell",
+            allowCopy: true,
+            //height: 550,
+            scrollable: true,
+            sortable: true,
+            filterable: true,
+            //pageable: {
+            //    input: true,
+            //    numeric: false
+            //},
+            columns: [
+                {
+                    field: "UserName",
+                    width: "60px"
+                },
+                
+                {
+                    field: "Module",
+                    width: "60px",
+                },
+                
+                {
+                    field: "Description",
+                    title: "Activity Description",
+                    //template: '# if( Module == \'Program\' ) {#  <a href="javascript:void(0)" onclick="ShowAdditionalLog();" >#=ActivityDescription#</a> #}  else {# #=ActivityDescription#  #}#',
+                    width: "230px",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                }
+            ],
+            dataSource: additionalGriddataSource
+        });
+
+        additionalGriddataSource.read();
+        $("#additionalGridPager").kendoPager({
+            autoBind: true,
+            dataSource: additionalGriddataSource
+        });
+
+        function ShowCopyProgramPopup() {
+            $('#copyAuditLog').modal('show');
+        }
+
+        function ShowDeleteConfirmationPopup() {
+            $('#confirmDeletion').modal('show');
+        }
+
+        function ShowAdditionalLog(rowclicked) {
+            
+            $("#auditLoggridcontainer").hide();
+            if (rowclicked == 4) {
+                $("#showAdditionalLog").show();
+                $("#showAdditionalLog1").hide();
+            }
+            else if (rowclicked == 6) {
+                $("#showAdditionalLog1").show();
+                $("#showAdditionalLog").hide();
+            }
+            
+        }
+
+        function ShowEditAuditLog() {
+            $("#auditLoggridcontainer").hide();
+
+
+            $("#AddAuditLog").hide();
+            //$("#taExerciseDesc2").kendoEditor({
+            //    resizable: {
+            //        content: true,
+            //        toolbar: true
+            //    }
+            //});
+            $("#EditAuditLog").show();
+            $("#showAdditionalLog").hide();
+            $("#showAdditionalLog1").hide();
+        }
+
+        function ShowAddAuditLog() {
+            $("#auditLoggridcontainer").hide();
+            $("#EditAuditLog").hide();
+            //$("#taExerciseDesc").kendoEditor({
+            //    resizable: {
+            //        content: true,
+            //        toolbar: true
+            //    }
+            //});
+            $("#AddAuditLog").show();
+            $("#showAdditionalLog").hide();
+            $("#showAdditionalLog1").hide();
+        }
+
+        function ShowAuditLogGrid() {
+            $("#auditLoggridcontainer").show();
+            $("#showAdditionalLog").hide();
+            $("#showAdditionalLog1").hide();
+            $("#EditAuditLog").hide();
+            $("#AddAuditLog").hide();
+        }
+
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+        $("#liAuditLog").addClass("active");
+        $("#AdditionalLogGrid1").kendoGrid({
+            selectable: "multiple cell",
+            allowCopy: true,
+            //height: 550,
+            scrollable: true,
+            sortable: true,
+            filterable: true,
+            //pageable: {
+            //    input: true,
+            //    numeric: false
+            //},
+            columns: [
+                {
+                    field: "UserName",
+                    width: "60px"
+                },
+
+                {
+                    field: "Module",
+                    width: "60px",
+                },
+
+                {
+                    field: "Description",
+                    title: "Activity Description",
+                    //template: '# if( Module == \'Program\' ) {#  <a href="javascript:void(0)" onclick="ShowAdditionalLog();" >#=ActivityDescription#</a> #}  else {# #=ActivityDescription#  #}#',
+                    width: "230px",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                }
+            ],
+            dataSource: additionalGrid1dataSource
+        });
+        additionalGrid1dataSource.read();
+        $("#additionalGrid1Pager").kendoPager({
+            autoBind: true,
+            dataSource: additionalGrid1dataSource
+        });
+    </script>
+    }

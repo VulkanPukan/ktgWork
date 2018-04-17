@@ -1,0 +1,482 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Assessment";
+    Layout = "~/Views/Admin/_LayoutNew.cshtml";
+}
+
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+@*<div class="wrapper">*@
+    <!-- End aside-->
+    @*<div class="dashboard-wrapper">*@
+        <div class="top-bar clearfix">
+            <!-- Container fluid starts -->
+			<div class="container-fluid">
+                <!-- Row starts -->
+                <div class="row gutter">
+                    <div class="col-md-12 col-sm-6 col-xs-12">
+					    <h3 class="page-title" style="float:left;">Assessment</h3>
+					</div>
+                </div>
+                <!-- Row ends -->
+            </div>
+            <!-- Container fluid ends -->
+        </div>
+        <!-- Top Bar ends -->
+        <!-- Main container starts -->
+        <div class="main-container">
+    <!-- Graph Row Starts -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel-default">
+                <div class="panel-body" style="background-color:#f5f8fb !important">
+                    <div id="coachgridcontainer">
+                        <div id="dvCoachFilter" class="panel panel-default" style="border: 1px solid #e3ebf4 !important;">
+                            <div class="panel-body" >
+                                <form role="form" class="form-inline">
+                                    <div class="input-group">
+                                        <label class="control-label">Coach Name</label>
+                                        <br>
+                                        <div class="input-group">
+                                            @if (Session["AuthenticatedUser"] != null)
+                                            {
+                                                int userID = ((StrengthTracker2.Core.Repository.Entities.Actors.User)(Session["AuthenticatedUser"])).UserId;
+                                                StrengthTracker2.Core.Repository.Entities.Actors.UserDetails userDetails = (StrengthTracker2.Core.Repository.Entities.Actors.UserDetails)(Session["AuthenticatedUserDetails"]);
+                                                StrengthTracker2.Core.Repository.Entities.Actors.UserImage image = userDetails.UserImages.Where(ui => ui.UserId == userID).FirstOrDefault();
+                                                var userFullName = userDetails.Users[0].FirstName + " " + userDetails.Users[0].LastName;
+                                                <input id="hdCoachName" type="hidden" value="@userFullName" />
+                                                <input id="hdCoachUserID" type="hidden" value="@userID" />
+                                            }
+                                            else
+                                            {
+                                                <input id="hdCoachName" type="hidden" value="" />
+                                                <input id="hdCoachUserID" type="hidden" value="" />
+                                            }
+                                            <select style="width: 200px;" id="lstCoach" name="account" class="form-control" onchange="ChangeFilterOptions();"></select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Sport</label>
+                                        <br>
+                                        <div class="input-group">
+                                            <select style="width: 200px;" id="lstSport" name="account" class="form-control" onchange="ChangeFilterOptions();">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Team</label>
+                                        <br>
+                                        <div class="input-group">
+                                            <select style="width: 200px;" id="lstTeam" name="team" class="form-control" onchange="ChangeFilterOptions();">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Program</label>
+                                        <br>
+                                        <div class="input-group">
+                                            <select style="width: 200px;" id="lstActiveProgram" name="account" class="form-control" onchange="ChangeFilterOptions();">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Assessment</label>
+                                        <br>
+                                        <div class="input-group">
+                                            <select style="width: 200px;" id="lstAssessmentNumber" name="account" class="form-control">
+                                                <option selected="selected" value="1">Assessment1</option>
+                                                <option value="2">Assessment 2</option>
+                                                <option value="3">Assessment 3</option>
+                                                <option value="4">Assessment 4</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div id="assessmentGrid" style="margin-top: 8px;" class="clearfix"></div>
+                        <div id="assessmentGridPager"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+        <!-- Main container ends -->
+        
+  @section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script src="../Scripts/kendo.all.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        if ($("#hdCoachName").val() !== "")
+        {
+            $("#lstCoach").append('<option value ="' + $("#hdCoachUserID").val() + '">' + $("#hdCoachName").val() + '</option>');
+        }
+        else
+        {
+            $("#lstCoach").append('<option value ="0">Coach</option>');
+        }
+        function gd(year, month, day) {
+            var timeTicks = ((new Date(year, month, day).getTime() * 10000) + 621355968000000000);
+            return timeTicks;
+        }
+        var data1 = [
+       [1, 153], [2, 553], [3, 658], [4, 498],
+       [5, 663], [6, 801]];
+
+        var data2 = [
+            [1, 153], [2, 253], [3, 600], [4, 438],
+            [5, 388], [6, 320]];
+        var data = [{
+            label: "Pounds Lifted",
+            data: data1,
+            bars: {
+                show: true,
+                barWidth: 0.5
+            },
+        }, {
+            label: "Intensity",
+            data: data2,
+            lines: {
+                show: true
+            },
+            points: {
+                show: true
+            }
+        }];
+
+        var options = {
+            xaxis: {
+                ticks: [[1, '1'], [2, '2'], [3, '3'], [4, '4'], [5, '5'], [6, '6']],
+            },
+            grid: {
+                backgroundColor: { colors: ["#ffffff", "#fcfcfc"] }
+            }
+        };
+        $(document).ready(function () {
+            // chart = $.plot($("#placeholder"), data, options);
+        });
+        function ChangeFilterOptions() {
+            assessmentGridDataSource.read();
+        }
+        var assessmentGridDataSource = new kendo.data.DataSource({
+            transport: {
+                read: function (options) {  
+                    var coachID = $("#hdCoachUserID").val() == null ? 0 : $("#hdCoachUserID").val();
+                    var teamID = $("#lstTeam").val() == null ? 0 : $("#lstTeam").val();
+                    var sportID = $("#lstSport").val() == null ? 0 : $("#lstSport").val();
+                    var programID = $("#lstActiveProgram").val() == null ? 0 : $("#lstActiveProgram").val();
+                    var assessmentNumber = $("#lstAssessmentNumber").val() == null ? 0 : $("#lstAssessmentNumber").val();
+                    
+                        $.ajax({
+                            type: "GET",
+                            data: { coachId: coachID, teamID: teamID, sportID: sportID, programID: programID, assessmentNumber: assessmentNumber },
+                            url: "../Assessment/GetAssessmentGridData",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (result) {
+                                options.success(result.Data);
+                                ColorRows();
+                            }
+                        });
+                }
+            },
+            pageSize: 20
+        });
+        $("#assessmentGrid").kendoGrid({
+            allowCopy: true,
+            scrollable: true,
+            sortable: true,
+            groupable: false,
+            filterable: false,
+            columns: [
+                {
+                    field: "TeamName",
+                    width: "290px",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    },
+                    title: "Team Name",
+                    locked: true
+                },
+                {
+                    field: "AthleteName",
+                    //template: '#=Name#',
+                    title: "Athlete Name",
+                    width: 180,
+                    //template: '<input type="hidden" id="CounterMovementJumpExerciseID" value="#=CounterMovementJumpExerciseID#" type="text" />',
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    },
+                    locked: true
+                },
+                {
+                    field: "AthleteAge",
+                    title: "Age",
+                    //template: '#=Name#',
+                    width: 80,
+                    //template: ' <img src="#=ImagePath#" alt="Image" width=45 height=45 class="img-thumbnail img-circle"> &nbsp;#=Name#',
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    },
+                    locked: true
+                },
+                {
+                    field: "PositionName",
+                    title: "Position",
+                    //template: '#=Performance#',
+                    width: 80,
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "ProgramName",
+                    title: "Program",
+                    //template: '#=Performance#',
+                    width: "180px",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "Height",
+                    title: "Height (inches)",
+                    template: '<input data-assessmentinputrow="#=RowID#" onchange="SaveAssessmentInfo(this);" value="#= (Height == null ) ? \'\' : Height #" type="text" style="width:50px;" /><input type="hidden" id="#=RowID#HeightExerciseID" value="#=HeightExerciseID#" type="text" /><input type="hidden" id="#=RowID#AssessmentSessionMasterID" value="#=AssessmentSessionMasterID#" type="text" /><input type="hidden" id="#=RowID#UserID" value="#=UserID#" type="text" />',
+                    width: 80,
+                    attributes: {
+                        style: 'white-space: wrap '
+                    }
+                },
+                {
+                    field: "Weight",
+                    title: "Weight (lbs)",
+                    template: '<input data-assessmentinputrow="#=RowID#" onchange="SaveAssessmentInfo(this);" value="#= (Weight == null ) ? \'\' : Weight #" type="text" style="width:50px;" /><input type="hidden" id="#=RowID#WeightExerciseID" value="#=WeightExerciseID#" type="text" /><input type="hidden" id="#=RowID#AssessmentSessionMasterID" value="#=AssessmentSessionMasterID#" type="text" /><input type="hidden" id="#=RowID#UserID" value="#=UserID#" type="text" />',
+                    width: 80,
+                    attributes: {
+                        style: 'white-space: wrap '
+                    }
+                },
+                {
+                    field: "StandingReach",
+                    title: "Standing Reach (inches)",
+                    template: '<input data-assessmentinputrow="#=RowID#" onchange="SaveAssessmentInfo(this);" value="#=(StandingReach == null ) ? \'\' : StandingReach #" type="text" style="width:50px;" /><input type="hidden" id="#=RowID#StandingReachExerciseID" value="#=StandingReachExerciseID#" type="text" /><input type="hidden" id="#=RowID#AssessmentSessionMasterID" value="#=AssessmentSessionMasterID#" type="text" /><input type="hidden" id="#=RowID#UserID" value="#=UserID#" type="text" />',
+                    width: 100,
+                    attributes: {
+                        style: 'white-space: wrap '
+                    }
+                },
+                {
+                    field: "SquatJump",
+                    title: "Squat Jump (inches)",
+                    template: '<input data-assessmentinputrow="#=RowID#" onchange="SaveAssessmentInfo(this);" value="#=(SquatJump == null ) ? \'\' : StandingReach #" type="text" style="width:50px;" /><input type="hidden" id="#=RowID#SquatJumpExerciseID" value="#=SquatJumpExerciseID#" type="text" /><input type="hidden" id="#=RowID#AssessmentSessionMasterID" value="#=AssessmentSessionMasterID#" type="text" /><input type="hidden" id="#=RowID#UserID" value="#=UserID#" type="text" />',
+                    width: 100,
+                    attributes: {
+                        style: 'white-space: wrap '
+                    }
+                },
+                {
+                    field: "CounterMovementJump",
+                    title: "Counter Movement Jump (inches)",
+                    template: '<input data-assessmentinputrow="#=RowID#" onchange="SaveAssessmentInfo(this);" value="#=(CounterMovementJump == null ) ? \'\' : CounterMovementJump #" type="text" style="width:50px;" /><input type="hidden" id="#=RowID#CounterMovementJumpExerciseID" value="#=CounterMovementJumpExerciseID#" type="text" /><input type="hidden" id="#=RowID#AssessmentSessionMasterID" value="#=AssessmentSessionMasterID#" type="text" /><input type="hidden" id="#=RowID#UserID" value="#=UserID#" type="text" />',
+                    width: 100,
+                    attributes: {
+                        style: 'white-space: wrap '
+                    }
+                },
+                {
+                    field: "StandingLongJump",
+                    title: "Standing Long Jump (inches)",
+                    template: '<input data-assessmentinputrow="#=RowID#" onchange="SaveAssessmentInfo(this);" value="#=(StandingLongJump == null ) ? \'\' : StandingLongJump #" type="text" style="width:50px;" /><input type="hidden" id="#=RowID#StandingLongJumpExerciseID" value="#=StandingLongJumpExerciseID#" type="text" /><input type="hidden" id="#=RowID#AssessmentSessionMasterID" value="#=AssessmentSessionMasterID#" type="text" /><input type="hidden" id="#=RowID#UserID" value="#=UserID#" type="text" />',
+                    width: 120,
+                    attributes: {
+                        style: 'white-space: wrap '
+                    }
+                },
+                {
+                    field: "PeakPower",
+                    title: "Peak Power Generated (watts)",
+                    format: "{0:n0}",
+                    width: 120,
+                    attributes: {
+                        style: 'white-space: wrap '
+                    }
+                },
+                {
+                    field: "BarbellBackSquat",
+                    title: "1RM Barbell Squat (lbs)",
+                    template: '<input data-assessmentinputrow="#=RowID#" onchange="SaveAssessmentInfo(this);" value="#=(BarbellBackSquat == null ) ? \'\' : BarbellBackSquat #" type="text" style="width:50px;" /><input type="hidden" id="#=RowID#BarbellBackSquatExerciseID" value="#=BarbellBackSquatExerciseID#" type="text" /><input type="hidden" id="#=RowID#AssessmentSessionMasterID" value="#=AssessmentSessionMasterID#" type="text" /><input type="hidden" id="#=RowID#UserID" value="#=UserID#" type="text" />',
+                    width: 120,
+                    attributes: {
+                        style: 'white-space: wrap '
+                    }
+                },
+                {
+                    field: "TrapbarDeadlift",
+                    title: "1RM Dead Lift (lbs)",
+                    template: '<input data-assessmentinputrow="#=RowID#" onchange="SaveAssessmentInfo(this);" value="#=(TrapbarDeadlift == null ) ? \'\' : TrapbarDeadlift #" type="text" style="width:50px;" /><input type="hidden" id="#=RowID#TrapbarDeadliftExerciseID" value="#=TrapbarDeadliftExerciseID#" type="text" /><input type="hidden" id="#=RowID#AssessmentSessionMasterID" value="#=AssessmentSessionMasterID#" type="text" /><input type="hidden" id="#=RowID#UserID" value="#=UserID#" type="text" />',
+                    width: 120,
+                    attributes: {
+                        style: 'white-space: wrap '
+                    }
+                },
+                {
+                    field: "BarbellHipThrust",
+                    title: "1RM Trapbar Deadlift (lbs)",
+                    template: '<input data-assessmentinputrow="#=RowID#" onchange="SaveAssessmentInfo(this);" value="#=(BarbellHipThrust == null ) ? \'\' : BarbellHipThrust #" type="text" style="width:50px;" /><input type="hidden" id="#=RowID#BarbellHipThrustExerciseID" value="#=BarbellHipThrustExerciseID#" type="text" /><input type="hidden" id="#=RowID#AssessmentSessionMasterID" value="#=AssessmentSessionMasterID#" type="text" /><input type="hidden" id="#=RowID#UserID" value="#=UserID#" type="text" />',
+                    width: 120,
+                    attributes: {
+                        style: 'white-space: wrap '
+                    }
+                },
+                {
+                    field: "StandingOverHeadShoulder",
+                    title: "1RM Barbell Standing Overhead Shoulder Press (lbs)",
+                    template: '<input data-assessmentinputrow="#=RowID#" onchange="SaveAssessmentInfo(this);" value="#=(StandingOverHeadShoulder == null ) ? \'\' : StandingOverHeadShoulder #" type="text" style="width:50px;" /><input type="hidden" id="#=RowID#StandingOverHeadShoulderExerciseID" value="#=StandingOverHeadShoulderExerciseID#" type="text" /><input type="hidden" id="#=RowID#AssessmentSessionMasterID" value="#=AssessmentSessionMasterID#" type="text" /><input type="hidden" id="#=RowID#UserID" value="#=UserID#" type="text" />',
+                    width: 120,
+                    attributes: {
+                        style: 'white-space: wrap '
+                    }
+                },
+                {
+                    field: "BarbellBenchPress",
+                    title: "1RM Barbell Bench Press (lbs)",
+                    template: '<input data-assessmentinputrow="#=RowID#" onchange="SaveAssessmentInfo(this);" value="#=(BarbellBenchPress == null ) ? \'\' : BarbellBenchPress #" type="text" style="width:50px;" /><input type="hidden" id="#=RowID#BarbellBenchPressExerciseID" value="#=BarbellBenchPressExerciseID#" type="text" /><input type="hidden" id="#=RowID#AssessmentSessionMasterID" value="#=AssessmentSessionMasterID#" type="text" /><input type="hidden" id="#=RowID#UserID" value="#=UserID#" type="text" />',
+                    width: 120,
+                    attributes: {
+                        style: 'white-space: wrap '
+                    }
+                },
+                {
+                    field: "ChinUps",
+                    title: "1RM Chin Ups / Cable Pulldown (lbs)",
+                    template: '<input data-assessmentinputrow="#=RowID#" onchange="SaveAssessmentInfo(this);" value="#=(ChinUps == null ) ? \'\' : ChinUps #" type="text" style="width:50px;" /><input type="hidden" id="#=RowID#ChinUpsExerciseID" value="#=ChinUpsExerciseID#" type="text" /><input type="hidden" id="#=RowID#AssessmentSessionMasterID" value="#=AssessmentSessionMasterID#" type="text" /><input type="hidden" id="#=RowID#UserID" value="#=UserID#" type="text" />',
+                    width: 120,
+                    attributes: {
+                        style: 'white-space: wrap '
+                    }
+                },
+                {
+                    field: "BentOverRows",
+                    title: "1RM Barbell Bent Over Row (lbs)",
+                    template: '<input data-assessmentinputrow="#=RowID#" onchange="SaveAssessmentInfo(this);" value="#=(BentOverRows == null ) ? \'\' : BentOverRows #" type="text" style="width:50px;" /><input type="hidden" id="#=RowID#BentOverRowsExerciseID" value="#=BentOverRowsExerciseID#" type="text" /><input type="hidden" id="#=RowID#AssessmentSessionMasterID" value="#=AssessmentSessionMasterID#" type="text" /><input type="hidden" id="#=RowID#UserID" value="#=UserID#" type="text" />',
+                    width: 120,
+                    attributes: {
+                        style: 'white-space: wrap '
+                    }
+                }
+            ],
+            dataSource: assessmentGridDataSource
+        });
+        
+        $("#assessmentGridPager").kendoPager({
+            autoBind: true,
+            dataSource: assessmentGridDataSource
+        });
+        function ColorRows() {
+            var grid = $("#assessmentGrid").data("kendoGrid");
+            var data = grid.dataSource.data();
+            $.each(data, function (i, row) {
+                var tbls = $('#assessmentGrid').find('table');
+                var cRow = tbls.find("tr[data-uid='" + row.uid + "']");
+                if (row.ColorRow == true) {
+                    $(cRow[0]).css("background-color", "orange");
+                    $(cRow[1]).css("background-color", "orange");
+                }
+            });
+        }
+        $.ajax({
+            url: '@Url.Action("GetActiveProgramList", "Coach")',
+            type: "POST",
+            contentType: 'application/json',
+            dataType: "json",
+            success: function (resp) {
+                $("#lstActiveProgram").empty();
+                $("#lstActiveProgram").append("<option value='0'>Select Program</option>");
+                for (var i = 0; i < resp.length; i++) {
+                    $("#lstActiveProgram").append("<option value='" + resp[i].Id + "'>" + resp[i].Title + "</option>");
+                }
+            }
+        });
+        $.ajax({
+            url: '@Url.Action("GetTeamsByCoach", "Assessment")',
+            type: "POST",
+            data: JSON.stringify({ coachId: $("#hdCoachUserID").val() }),
+            contentType: 'application/json',
+            dataType: "json",
+            success: function (resp) {
+                $("#lstTeam").empty();
+                $("#lstTeam").append("<option value='0'>Select Team</option>");
+                for (var i = 0; i < resp.length; i++) {
+                    $("#lstTeam").append("<option value='" + resp[i].Id + "'>" + resp[i].Name + "</option>");
+                }
+            }
+        });
+        $.ajax({
+            url: '@Url.Action("GetSportsByCoach", "Assessment")',
+            type: "POST",
+            data: JSON.stringify({ coachId: $("#hdCoachUserID").val() }),
+            contentType: 'application/json',
+            dataType: "json",
+            success: function (resp) {
+                $("#lstSport").empty();
+                $("#lstSport").append("<option value='0'>Select Sport</option>");
+                for (var i = 0; i < resp.length; i++) {
+                    $("#lstSport").append("<option value='" + resp[i].Id + "'>" + resp[i].Name + "</option>");
+                }
+            }
+        });
+        function SaveAssessmentInfo(ctrl) {
+            var rowID = $(ctrl).attr("data-assessmentinputrow");
+            var assessmentExerciseID = $(ctrl).next().val();
+            var assessmentMasterID = $(ctrl).next().next().val();
+            var assessmentValue = $(ctrl).val();
+            var userID = $(ctrl).next().next().next().val();
+
+            if ($("#lstActiveProgram").val() === "0") {
+                alert("Please select a program");
+                return false;
+            }
+            if ($("#lstTeam").val() === "0") {
+                alert("Please select a Team");
+                return false;
+            }
+            if ($("#lstSport").val() === "0") {
+                alert("Please select a Sport");
+                return false;
+            }
+            var assessmentMasterInfo = {
+                'ID': assessmentMasterID,
+                'UserID': userID,
+                'TeamID': $("#lstTeam").val(),
+                'CoachID': $("#lstCoach").val(),
+                'SportID': $("#lstSport").val(),
+                'PositionID': 0,
+                'ProgramID': $("#lstActiveProgram").val(),
+                'AssessmentNumber': $("#lstAssessmentNumber").val()
+            };
+            var athleteAssessmentInfo = {
+                'ID': 0,
+                'AssessmentMasterID': assessmentMasterID,
+                'AssessmentExericseID': assessmentExerciseID,
+                'AssessmentValue': assessmentValue
+            };
+
+            $.ajax({
+                url: '@Url.Action("SaveAssessmentInfo", "Assessment")',
+                type: "POST",
+                data: JSON.stringify({ assessmentMasterInfo: assessmentMasterInfo, athleteAssessmentInfo: athleteAssessmentInfo }),
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (resp) {
+                    assessmentGridDataSource.read();
+                    $(ctrl).focus();
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript" charset="utf-8">
+        $("#liAssessment").addClass("active");
+        //ChangeFilterOptions();
+    </script>
+}

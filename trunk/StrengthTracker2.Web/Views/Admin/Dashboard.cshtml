@@ -1,0 +1,280 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Dashboard";
+    Layout = "~/Views/Admin/_LayoutNew.cshtml";
+}
+<style>
+.k-grid .k-alt {
+   background-color: #fafbfc; /* specify the alternate background-color */
+}
+.k-grid  .k-grid-header  .k-header  .k-link {
+    height: auto;
+}
+.k-grid  .k-grid-header  .k-header {
+    white-space: normal;
+}
+    #dvSiteFooter {
+        top: 70px !important;
+    }
+</style>
+@*<div class="wrapper">*@
+    <!-- End aside-->
+    <div class="dashboard-wrapper">
+        <h3>Dashboard</h3>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-4">
+                  <div class="panel panel-default">
+                     <div class="panel-heading">
+                        <a href="#" data-perform="panel-dismiss" data-toggle="tooltip" title="Close Panel" class="pull-right">
+                           <em class="fa fa-times"></em>
+                        </a>
+                        <a href="#" data-perform="panel-collapse" data-toggle="tooltip" title="Collapse Panel" class="pull-right">
+                           <em class="fa fa-minus"></em>
+                        </a>
+                        <div class="panel-title" style="font-size:16px;">Sales - 2016</div>
+                     </div>
+                     <div class="panel-collapse">
+                        <div class="panel-body">
+                           <div data-source="@Url.Action("ChartData", "Admin")?chartType=bar" class="chart-bar flot-chart"></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+                <div class="col-lg-4">
+                  <div class="panel panel-default">
+                     <div class="panel-heading">
+                        <a href="#" data-perform="panel-dismiss" data-toggle="tooltip" title="Close Panel" class="pull-right">
+                           <em class="fa fa-times"></em>
+                        </a>
+                        <a href="#" data-perform="panel-collapse" data-toggle="tooltip" title="Collapse Panel" class="pull-right">
+                           <em class="fa fa-minus"></em>
+                        </a>
+                        <div class="panel-title" style="font-size:16px;">Sessions - 2016</div>
+                     </div>
+                     <div class="panel-collapse">
+                        <div class="panel-body">
+                           <div data-source="@Url.Action("ChartData", "Admin")?chartType=line" class="chart-line flot-chart"></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+                <div class="col-lg-4">
+                  <div class="panel panel-default">
+                     <div class="panel-heading">
+                        <a href="#" data-perform="panel-dismiss" data-toggle="tooltip" title="Close Panel" class="pull-right">
+                           <em class="fa fa-times"></em>
+                        </a>
+                        <a href="#" data-perform="panel-collapse" data-toggle="tooltip" title="Collapse Panel" class="pull-right">
+                           <em class="fa fa-minus"></em>
+                        </a>
+                        <div class="panel-title" style="font-size:16px;">Registered vs Signedup-2016</div>
+                     </div>
+                     <div class="panel-collapse">
+                        <div class="panel-body">
+                           <div class="indicator show">
+                              <span class="spinner"></span>
+                           </div>
+                           <div data-source="@Url.Action("ChartData", "Admin")?chartType=stacked" class="chart-bar-stacked flot-chart"></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+                <div class="col-lg-6">
+                  <div class="panel panel-default">
+                     <div class="panel-heading">
+                        <a href="#" data-perform="panel-dismiss" data-toggle="tooltip" title="Close Panel" class="pull-right">
+                           <em class="fa fa-times"></em>
+                        </a>
+                        <a href="#" data-perform="panel-collapse" data-toggle="tooltip" title="Collapse Panel" class="pull-right">
+                           <em class="fa fa-minus"></em>
+                        </a>
+                        <div class="panel-title" style="font-size:16px;"># of Customers - 2016</div>
+                     </div>
+                     <div class="panel-collapse">
+                        <div class="panel-body">
+                           <div class="indicator show">
+                              <span class="spinner"></span>
+                           </div>
+                           <div data-source="@Url.Action("ChartData", "Admin")?chartType=profitvsnonstacked" class="chart-bar-stacked flot-chart"></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+                <div class="col-lg-6">
+                  <div class="panel panel-default">
+                     <div class="panel-heading">
+                        <a href="#" data-perform="panel-dismiss" data-toggle="tooltip" title="Close Panel" class="pull-right">
+                           <em class="fa fa-times"></em>
+                        </a>
+                        <a href="#" data-perform="panel-collapse" data-toggle="tooltip" title="Collapse Panel" class="pull-right">
+                           <em class="fa fa-minus"></em>
+                        </a>
+                        <div class="panel-title" style="font-size:16px;"># of Athletes - 2016
+                            <div class="pull-right">
+                            <select style="width: 150px; height:31px;padding:0px 18px;" class="form-control">
+                                <option value="1">24 hour fitness</option>
+                                <option value="2">Time fitness</option>
+                                <option value="3">Lat fitness</option>
+                            </select>
+                        </div>
+                        </div>
+                     </div>
+                     <div class="panel-collapse">
+                        <div class="panel-body">
+                           <div class="indicator show">
+                              <span class="spinner"></span>
+                           </div>
+                           <div data-source="@Url.Action("ChartData", "Admin")?chartType=locationbar" class="chart-bar-stacked flot-chart"></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+                <!-- START chart-->
+                  <div class="row">
+                     <div class="col-lg-12">
+                        <!-- START widget-->
+                        <div class="panel widget">
+                           <div class="panel-body bg-primary">
+                              <div class="h5 mt0">Revenue all time</div>
+                              <!-- Line chart-->
+                              <div data-type="line" data-height="80" data-width="100%" data-line-width="2" data-line-color="#dddddd" data-spot-color="#bbbbbb" data-fill-color="" data-highlight-line-color="#fff" data-spot-radius="3" data-resize="true"
+                              class="inlinesparkline sparkline">
+                                 <!-- 1,3,4,7,5,9,4,4,7,5,9,6,4-->
+                              </div>
+                              <!-- Bar chart-->
+                              <div class="text-center">
+                                 <div data-bar-color="#fff" data-height="50" data-bar-width="6" data-bar-spacing="6" class="inlinesparkline inline">1,3,4,7,5,9,4,4,7,5,9,6,4</div>
+                              </div>
+                           </div>
+                           <div class="panel-body bg-inverse">
+                              <div class="row row-table text-center">
+                                 <div class="col-xs-4">
+                                    <p class="m0 h3">15080</p>
+                                    <p class="m0 text-muted">YTD</p>
+                                 </div>
+                                 <div class="col-xs-4">
+                                    <p class="m0 h3">7000</p>
+                                    <p class="m0 text-muted">This month</p>
+                                 </div>
+                                 <div class="col-xs-4">
+                                    <p class="m0 h3">5100</p>
+                                    <p class="m0 text-muted">Last month</p>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- END widget-->
+                     </div>
+                  </div>
+                  <!-- END chart-->
+                <!-- START messages and activity-->
+                  <div class="row">
+                     <div class="col-md-6">
+                        <div class="panel panel-default">
+                           <div class="panel-heading">
+                              <div class="panel-title">Activity feed</div>
+                           </div>
+                           <!-- START list group-->
+                           <div class="list-group">
+                              <!-- START list group item-->
+                              <div class="list-group-item">
+                                 <div class="media">
+                                    <div class="pull-left">
+                                       <span class="fa-stack fa-lg">
+                                          <em class="fa fa-circle fa-stack-2x text-green"></em>
+                                          <em class="fa fa-cloud-upload fa-stack-1x fa-inverse text-white"></em>
+                                       </span>
+                                    </div>
+                                    <div class="media-body clearfix">
+                                       <div class="media-heading text-green m0">New Program</div>
+                                       <p class="m0">
+                                          <small>New program added to system</small>
+                                       </p>
+                                    </div>
+                                 </div>
+                              </div>
+                              <!-- END list group item-->
+                              <!-- START list group item-->
+                              <div class="list-group-item">
+                                 <div class="media">
+                                    <div class="pull-left">
+                                       <span class="fa-stack fa-lg">
+                                          <em class="fa fa-circle fa-stack-2x text-info"></em>
+                                          <em class="fa fa-file-text-o fa-stack-1x fa-inverse text-white"></em>
+                                       </span>
+                                    </div>
+                                    <div class="media-body clearfix">
+                                       <div class="media-heading text-info m0">New Athlete registered</div>
+                                       <p class="m0">
+                                          <small>New Athelete John Doe registered</small>
+                                       </p>
+                                    </div>
+                                 </div>
+                              </div>
+                              <!-- END list group item-->
+                              <!-- START list group item-->
+                              <div class="list-group-item">
+                                 <div class="media">
+                                    <div class="pull-left">
+                                       <span class="fa-stack fa-lg">
+                                          <em class="fa fa-circle fa-stack-2x text-danger"></em>
+                                          <em class="fa fa-exclamation fa-stack-1x fa-inverse text-white"></em>
+                                       </span>
+                                    </div>
+                                    <div class="media-body clearfix">
+                                       <div class="media-heading text-danger m0">IMPORTANT MESSAGE</div>
+                                       <p class="m0">
+                                          <small>Sammy Sam sent you an important messsage. <a href="#">Read now</a>
+                                          </small>
+                                       </p>
+                                       <small>3 hours ago</small>
+                                    </div>
+                                 </div>
+                              </div>
+                              <!-- END list group item-->
+                              <!-- START list group item-->
+                              <div class="list-group-item">
+                                 <div class="media">
+                                    <div class="pull-left">
+                                       <span class="fa-stack fa-lg">
+                                          <em class="fa fa-circle fa-stack-2x text-warning"></em>
+                                          <em class="fa fa-clock-o fa-stack-1x fa-inverse text-white"></em>
+                                       </span>
+                                    </div>
+                                    <div class="media-body clearfix">
+                                       <div class="media-heading text-warning m0">MEETING</div>
+                                       <p class="m0">
+                                          <small>Rich Reynods added a new meeting. <a href="#" class="label label-info">JOIN</a>
+                                          </small>
+                                       </p>
+                                       <small>yesterday</small>
+                                    </div>
+                                 </div>
+                              </div>
+                              <!-- END list group item-->
+                           </div>
+                           <!-- END list group-->
+                           <!-- START panel footer-->
+                           <div class="panel-footer clearfix">
+                              <a href="#" class="pull-left">
+                                 <small>Load more</small>
+                              </a>
+                           </div>
+                           <!-- END panel-footer-->
+                        </div>
+                     </div>
+                  </div>
+                  <!-- END messages and activity-->
+            </div>
+        </div>
+    </div>
+@*</div>*@
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script src="../Scripts/slider/js/bootstrap-slider.js"></script>
+    <script src="../Scripts/sparklines/jquery.sparkline.min.js"></script>
+    <script src="../Scripts/slimscroll/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $("#liDashboard").addClass("active");
+    </script>
+}

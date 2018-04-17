@@ -1,0 +1,334 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Locations";
+    Layout = "~/Views/Admin/_LayoutNew.cshtml";
+}
+
+<link rel="stylesheet" href="~/Content/StrengthTracker2/CustomerLocation.css" />
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+
+<div class="top-bar clearfix">
+    <div class="container-fluid">
+        <div class="row gutter">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                <h3 class="page-title">Locations</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel-default">
+                <div class="panel-body">
+                    <div id="Locationgridcontainer">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <form role="form" class="form-inline">
+                                    <div class="form-group">
+                                        <label class="control-label">Filter by Customer</label>
+                                        <br>
+                                        <div class="input-group">
+                                            @Html.DropDownList("lstCustomerFilter", new System.Web.Mvc.SelectList(ViewBag.CustomerList, "CustomerId", "OrganizationName"), new { @class = "form-control m-b", @onchange = "FilterLocationByCustomer();" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group pull-right">
+                                        <label class="control-label"></label>
+                                        <br>
+                                        <button type="button" onclick="AddLocationInfo();" class="btn btn-primary pull-right  mb-sm">
+                                            <em class="fa fa-plus-circle fa-fw mr-sm"></em>Add Location
+                                        </button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                        <div id="LocationsGrid" style="margin-top: 8px !important;"></div>
+                        <div id="LocationPager"></div>
+                    </div>
+                    <div id="AddLocation" style="display: none;">
+                        <div class="">
+                            <div class="panel-heading" style="display: none;">Add Location</div>
+                            <div class="panel-body">
+                                <div id="accordionAdd" class="panel-group">
+                                    <div class="">
+                                        <div class="panel-heading bb">
+                                            <label style="font-weight:normal;display: inline-block;max-width: 100%;margin-bottom: 5px;color:white;">Location Details</label>
+                                            <div class="required pull-right" style="color:white">* Required fields</div>
+                                            <h4 class="panel-title" style="display: none;">
+                                                <a data-toggle="collapse" data-parent="#accordionAdd" href="#collapseLocationDetailsAdd"></a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseLocationDetailsAdd" class="panel-collapse">
+                                            <div class="panel-body">
+                                                <form class="form-horizontal">
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Customer*</label>
+                                                        <div class="col-lg-7">
+                                                            @Html.DropDownList("lstAddContactCustomer", new System.Web.Mvc.SelectList(ViewBag.CustomerList, "CustomerId", "OrganizationName"), new { @class = "form-control m-b" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Location Name *</label>
+                                                        <div class="col-lg-7">
+                                                            <input placeholder="Location Name" id="txtLocationName" class="form-control" required="required">
+                                                            <input type="hidden" id="hdCustomerLocationID" />
+                                                            <input type="hidden" id="hdCustomerID" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Location Phone # *</label>
+                                                        <div class="col-lg-7">
+                                                            <input placeholder="Location Phone Number" id="txtLocationPh" class="form-control" required="required">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Address *</label>
+                                                        <div class="col-lg-7">
+                                                            <input placeholder="Address" id="txtLocationAdd" class="form-control" onblur="CopyBillingAddress();" required="required">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">State</label>
+                                                        <div class="col-lg-7">
+                                                            <select name="state" id="lstLocationState" class="form-control m-b state-select" onchange="CopyBillingAddress();">
+                                                                <option value="0">Select State</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">City</label>
+                                                        <div class="col-lg-7">
+                                                            <input type="text" id="txtLocationCity" placeholder="City" class="form-control" onblur="CopyBillingAddress();">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">ZIP Code</label>
+                                                        <div class="col-lg-7">
+                                                            <input type="text" id="txtLocationZip" placeholder="ZIP Code" class="form-control" onblur="CopyBillingAddress();">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Contact First Name</label>
+                                                        <div class="col-lg-7">
+                                                            <input placeholder="Contact First Name" id="txtLocationFirstName" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Contact Last Name</label>
+                                                        <div class="col-lg-7">
+                                                            <input placeholder="Contact Last Name" id="txtLocationLastName" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Contact Email</label>
+                                                        <div class="col-lg-7">
+                                                            <input placeholder="Contact Email" id="txtLocationCtcEmail" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Contact Phone #</label>
+                                                        <div class="col-lg-7">
+                                                            <input placeholder="Contact Phone Number" id="txtLocationCtcPh" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Billing Address</label>
+                                                        <div class="col-lg-7">
+                                                            <div class="checkbox c-checkbox pull-left mt0">
+                                                                <label>
+                                                                    <input type="checkbox" id="locbillingchk" checked value="">
+                                                                    <span class="fa fa-check"></span>Same as above
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="locbillingDIV" style="display:none">
+                                                        <div class="form-group col-lg-12">
+                                                            <div class="col-lg-7">
+                                                                &nbsp;
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">Billing Address *</label>
+                                                            <div class="col-lg-7">
+                                                                <input type="email" id="txtLocationBillingAdd" placeholder="Billing  Address" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">Billing  State</label>
+                                                            <div class="col-lg-7">
+                                                                <select name="state" id="lstLocBillingState" class="form-control m-b state-select">
+                                                                    <option value="0">Select State</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">Billing  City</label>
+                                                            <div class="col-lg-7">
+                                                                <input type="text" id="txtLocBillingCity" placeholder="City" class="form-control" onblur="CopyBillingAddress();">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">Billing  ZIP Code</label>
+                                                            <div class="col-lg-7">
+                                                                <input type="text" id="txtLocationBillingZip" placeholder="Billing  ZIP Code" class="form-control">
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="form-group col-lg-12">
+                                                        &nbsp;
+                                                        <div class="col-lg-12" style="width:104.5% !important;">
+                                                            <input type="button" id="btnSaveLocationInfo" onclick="ValidateAndSaveLocationInfo();" class="mb-sm btn btn-success pull-right" value="Save" />
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <div class="panel-heading bb">
+                                                <label style="font-weight:normal;display: inline-block;max-width: 100%;margin-bottom: 5px;color:white;">Location Contacts</label>
+                                                <div class="required pull-right"><br /></div>
+                                                <h4 class="panel-title" style="display: none;">
+                                                    <a data-toggle="collapse" data-parent="#accordionAdd" href="#collapseLocationDetailsAdd"></a>
+                                                </h4>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div id="contactgridcontainer">
+                                                    <div class="clearfix">
+                                                        <button type="button" onclick="ShowContactDetails();" class="btn btn-primary pull-right  mb-sm">
+                                                            <em class="fa fa-plus-circle fa-fw mr-sm"></em>Add Contact
+                                                        </button>
+                                                    </div>
+                                                    <div id="locationContactGrid" style="margin-top:8px; overflow:visible !important;" class="clearfix"></div>
+                                                    <div id="locationContactPager"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="ContactDetails" style="display:none;">
+                <div id="userPicture">
+                    <div class="user-block-picture">
+                        <div class="user-block-status">
+                            <img src="../images/noimage.jpg" id="profilePicture" alt="Avatar" width="120" height="120" class="img-big img-square" style="cursor:pointer">
+                            <input type="file" id="my_file" style="display: none;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="">
+                    <div class="panel-heading bb">
+                        <label style="font-weight:normal;display: inline-block;max-width: 100%;margin-bottom: 5px;color:white;">Contact Details</label>
+                        <div class="required pull-right">* Required fields</div>
+                    </div>
+                    <div class="panel-body">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">First Name*</label>
+                                <div class="col-lg-9">
+                                    <input type="text" id="txtLocationCtcFirstName" placeholder="First Name" class="form-control">
+                                    <input type="hidden" id="hdLocationContactID" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Last Name*</label>
+                                <div class="col-lg-9">
+                                    <input type="text" id="txtLocationCtcLastName" placeholder="Last Name" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Phone*</label>
+                                <div class="col-lg-9">
+                                    <input type="text" id="txtLocationCtcPh1" placeholder="Phone" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Email*</label>
+                                <div class="col-lg-9">
+                                    <input type="text" id="txtLocationCTCEmail" placeholder="Email" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Contact Type*</label>
+                                <div class="col-lg-9">
+                                    <input type="text" placeholder="Contact Type" id="txtLocationCtcType" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">&nbsp;</div>
+                            <div class="form-group col-lg-12" style="width:103% !important;">
+                                <div class="col-lg-5">&nbsp;</div>
+                                <div class="pull-right">
+                                    <button type="button" onclick="ShowAddLocation();" class="btn btn-sm btn-danger">Cancel</button>
+                                    <input type="button" id="btnSaveLocationContact" onclick="SaveLocationContactInfo();" class="btn btn-success btn-sm" value="Save" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmDeletion" tabindex="-1" role="dialog" aria-labelledby="confirmDeletionLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmDeletionLabel" class="modal-title">Confirm Deletion</h4>
+            </div>
+            <div class="modal-body">
+                Delete Location?
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" id="btnDeleteLocation" class="btn btn-primary">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmActivation" tabindex="-1" role="dialog" aria-labelledby="confirmActivationLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmActivationLabel" class="modal-title">Confirm activation</h4>
+            </div>
+            <div class="modal-body">
+                <div id="nftrialDiv" style="display:none">
+                    Are you sure you want activate this location?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-primary">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript" charset="utf-8">
+        window.DeleteCustomerLocationUrl = '@Url.Action("DeleteCustomerLocation", "CustomerLocation")';
+        window.GetLocationInfoUrl = '@Url.Action("GetLocationInfo", "CustomerLocation")';
+        window.GetContactsforLocationUrl = '@Url.Action("GetContactsforLocation", "CustomerLocation")';
+        window.LocationNameExistsUrl = '@Url.Action("LocationNameExists", "CustomerLocation")';
+        window.SaveLocationInfoUrl = '@Url.Action("SaveLocationInfo", "CustomerLocation")';
+        window.GetPricingHistoryForCustomerUrl = '@Url.Action("GetPricingHistoryForCustomer", "CustomerLocation")';
+        window.GetLocationContactInfoUrl = '@Url.Action("GetLocationContactInfo", "CustomerLocation")';
+        window.SaveLocationContactUrl = '@Url.Action("SaveLocationContact", "CustomerLocation")';
+        window.GetLocationListForCustomerUrl = '@Url.Action("GetLocationListForCustomer", "CustomerLocation")';
+    </script>
+    @Scripts.Render("~/bundles/jquery")
+    <script src="../Scripts/kendo.all.min.js"></script>
+    <script src="~/Scripts/moment/min/moment.min.js"></script>
+    <script src="~/Scripts/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/jquery.maskedinput.js"></script>
+    <script src="~/Scripts/StrengthTracker2/CustomerLocation.js"></script>
+}

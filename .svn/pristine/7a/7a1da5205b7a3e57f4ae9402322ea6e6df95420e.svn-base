@@ -1,0 +1,77 @@
+﻿    .k-grid .k-alt {
+        background-color: #f1f5fa; /* specify the alternate background-color */
+    }
+
+
+    #LocationsGrid .k-grid-header {
+        padding: 0 !important;
+    }
+
+    #LocationsGrid .k-grid-content {
+        overflow-y: visible;
+    }
+
+    #LocationsGrid tr td:last-child {
+        overflow: visible;
+    }
+
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+    }
+
+    #LocationsGrid .k-grid-header {
+        padding-right: 0 !important;
+    }
+
+    #dvSiteFooter {
+        top: 70px !important;
+    }
+
+    #LocationsGrid .k-grid-content-locked {
+        height: 100% !important;
+    }
+
+    #LocationsGrid .k-grid-header-locked {
+        vertical-align: bottom !important;
+        height: auto !important;
+    }
+
+    #customersGrid .k-grid-content
+    {
+        overflow: visible!important;
+
+    }
+
+    .custom-dropdown {
+        display: none;
+        position: fixed;
+        top: auto;
+        z-index: 99;
+        border: 1px solid #e1e1e1;
+        margin-left: 0;
+        padding-left: 0;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+        background: #fff;
+        border-radius: 3px;
+        margin-top: 36px;
+    }
+    .custom-dropdown li a {
+        color: #5f5f5f;
+        font-size: 13px;
+    }
+    .custom-dropdown li {
+            list-style-type: none;
+            padding: 3px 20px;
+            display: block;
+            text-decoration: none;
+        }
+
+        .custom-dropdown.show-div {
+            display: block;
+        }
+    td > a {
+        color:#337ab7;
+    }
+    td > a:hover {
+        color:#337ab7;
+    }

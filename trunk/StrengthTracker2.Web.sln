@@ -1,0 +1,88 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrengthTracker2.Web", "StrengthTracker2.Web\StrengthTracker2.Web.csproj", "{37349C5E-6F6E-498B-91B0-723BFDF1C0CB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{7CEAE3BB-E7A2-412F-A834-203774D95B70}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Models", "Models", "{6C187E3B-4173-43A6-9981-163BA9860B79}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrengthTracker2.Core", "StrengthTracker2.Core\StrengthTracker2.Core.csproj", "{48F1BA03-E18B-4FB4-AC8D-A6AC554E4F8E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Implementation", "Implementation", "{609D06EE-8BCF-4BBC-A9CE-CD91AA5B7097}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrengthTracker2.Persistence", "StrengthTracker2.Persistence\StrengthTracker2.Persistence.csproj", "{572941C3-164A-4288-AFDE-DFC703ABF030}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrengthTracker2.DependencyResolution", "StrengthTracker2.DependencyResolution\StrengthTracker2.DependencyResolution.csproj", "{3FCA9F61-98FB-4FA8-90FA-DFD5D0446EF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrengthTracker2.Common", "StrengthTracker2.Common\StrengthTracker2.Common.csproj", "{26272678-1E3A-4310-8097-4EB739DBC3D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyProgrammer.Core", "MyProgrammer.Core\MyProgrammer.Core.csproj", "{212CDF48-EB3F-4442-BCB7-5997D9FB09EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyProgrammer.Mail", "MyProgrammer.Mail\MyProgrammer.Mail.csproj", "{4F2AC6F0-58C6-46F9-B9C5-A571B50CE838}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{12022C79-39DE-470C-B9D5-A76D201CBFCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrengthTracker2.Test", "StrengthTracker2.Test\StrengthTracker2.Test.csproj", "{4B51D9DC-1691-4320-8EEC-56A5E0117686}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E3F1498C-E5D8-434B-B02A-463671FBA10F}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{37349C5E-6F6E-498B-91B0-723BFDF1C0CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37349C5E-6F6E-498B-91B0-723BFDF1C0CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37349C5E-6F6E-498B-91B0-723BFDF1C0CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37349C5E-6F6E-498B-91B0-723BFDF1C0CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48F1BA03-E18B-4FB4-AC8D-A6AC554E4F8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48F1BA03-E18B-4FB4-AC8D-A6AC554E4F8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48F1BA03-E18B-4FB4-AC8D-A6AC554E4F8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48F1BA03-E18B-4FB4-AC8D-A6AC554E4F8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{572941C3-164A-4288-AFDE-DFC703ABF030}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{572941C3-164A-4288-AFDE-DFC703ABF030}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{572941C3-164A-4288-AFDE-DFC703ABF030}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{572941C3-164A-4288-AFDE-DFC703ABF030}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FCA9F61-98FB-4FA8-90FA-DFD5D0446EF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FCA9F61-98FB-4FA8-90FA-DFD5D0446EF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FCA9F61-98FB-4FA8-90FA-DFD5D0446EF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FCA9F61-98FB-4FA8-90FA-DFD5D0446EF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26272678-1E3A-4310-8097-4EB739DBC3D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26272678-1E3A-4310-8097-4EB739DBC3D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26272678-1E3A-4310-8097-4EB739DBC3D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26272678-1E3A-4310-8097-4EB739DBC3D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{212CDF48-EB3F-4442-BCB7-5997D9FB09EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{212CDF48-EB3F-4442-BCB7-5997D9FB09EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{212CDF48-EB3F-4442-BCB7-5997D9FB09EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{212CDF48-EB3F-4442-BCB7-5997D9FB09EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F2AC6F0-58C6-46F9-B9C5-A571B50CE838}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F2AC6F0-58C6-46F9-B9C5-A571B50CE838}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F2AC6F0-58C6-46F9-B9C5-A571B50CE838}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F2AC6F0-58C6-46F9-B9C5-A571B50CE838}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B51D9DC-1691-4320-8EEC-56A5E0117686}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B51D9DC-1691-4320-8EEC-56A5E0117686}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B51D9DC-1691-4320-8EEC-56A5E0117686}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B51D9DC-1691-4320-8EEC-56A5E0117686}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{48F1BA03-E18B-4FB4-AC8D-A6AC554E4F8E} = {6C187E3B-4173-43A6-9981-163BA9860B79}
+		{572941C3-164A-4288-AFDE-DFC703ABF030} = {609D06EE-8BCF-4BBC-A9CE-CD91AA5B7097}
+		{3FCA9F61-98FB-4FA8-90FA-DFD5D0446EF8} = {7CEAE3BB-E7A2-412F-A834-203774D95B70}
+		{26272678-1E3A-4310-8097-4EB739DBC3D8} = {609D06EE-8BCF-4BBC-A9CE-CD91AA5B7097}
+		{212CDF48-EB3F-4442-BCB7-5997D9FB09EE} = {7CEAE3BB-E7A2-412F-A834-203774D95B70}
+		{4F2AC6F0-58C6-46F9-B9C5-A571B50CE838} = {609D06EE-8BCF-4BBC-A9CE-CD91AA5B7097}
+		{4B51D9DC-1691-4320-8EEC-56A5E0117686} = {12022C79-39DE-470C-B9D5-A76D201CBFCD}
+	EndGlobalSection
+EndGlobal

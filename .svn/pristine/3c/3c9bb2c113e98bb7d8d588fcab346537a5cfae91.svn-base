@@ -1,0 +1,259 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Holidays";
+    Layout = "~/Views/Coach/_Layout.cshtml";
+}
+<style>
+        .k-grid .k-alt {
+        background-color: #fafbfc; /* specify the alternate background-color */
+    }
+
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+    }
+    .k-grid  .k-grid-header  .k-header  .k-link {
+    height: auto;
+}
+ #holidaysGrid .k-grid-content, #holidaysGrid tr td:last-child {
+    overflow:visible;
+    }   
+#holidaysGrid .k-grid-header {
+        padding-right: 0 !important;
+    }
+
+     .navbar-top .navbar-header {
+            width: 250px !important;
+            text-align: center;
+        }
+     #dvSiteFooter {
+        top: 4% !important;
+    }
+
+</style>
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+<link href="~/Scripts/datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+@*<link rel="stylesheet" href="styles/kendo.default.min.css" />
+    <link rel="stylesheet" href="styles/kendo.default.mobile.min.css" />*@
+
+        <div class="main-content">
+            <h3>Schedule Holidays</h3>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="">
+                        <div class="panel-body">
+                            <div id="holidaysgridcontainer">
+                                <div class="clearfix">
+                                    <div class="pull-right">
+                                        <button type="button" onclick="ShowAddHolidays();" class="btn btn-primary pull-right mb-sm"><em class="fa fa-plus-circle fa-fw mr-sm"></em>Add Holiday</button>
+                                    </div>
+                                </div>
+                                <div id="holidaysGrid" style="margin-top: 8px;" class="clearfix"></div>
+                                <div id="holidayPager"></div>
+                            </div>
+                            <div id="EditHolidays" style="display: none;">
+                                <div class="">
+                                    <div class="panel-heading">Edit Holiday</div>
+                                    <div class="panel-body">
+                                        <form class="form-horizontal">
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">Select Date *</label>
+                                                <div class="col-lg-4">
+                                                    <div class="datetimepicker input-group date mb-lg">
+                                                        <input type="text" id="selectDate" class="form-control" placeholder="Select Date">
+                                                        <span class="input-group-addon">
+                                                            <span class="fa fa-calendar fa-clock-o"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">Comment *</label>
+                                                <div class="col-lg-4">
+                                                    <input type="text" placeholder="Comment" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label"></label>
+                                                <div class="col-lg-4">
+                                                    <div class="pull-right">
+                                                        <button type="submit" class="btn btn-sm btn-default">Cancel</button>
+                                                        <button type="submit" onclick="ShowHolidaysGrid();" class="btn btn-primary btn-sm">Save</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="AddHolidays" style="display: none;">
+
+                                <div class="">
+                                    <div class="panel-heading">Add Holiday</div>
+                                    <div class="panel-body">
+                                        <form class="form-horizontal">
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">Select Date *</label>
+                                                <div class="col-lg-4">
+                                                    <div class="datetimepicker input-group date mb-lg">
+                                                        <input type="text" id="selectDate" class="form-control" placeholder="Select Date">
+                                                        <span class="input-group-addon">
+                                                            <span class="fa fa-calendar fa-clock-o"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">Comment *</label>
+                                                <div class="col-lg-4">
+                                                    <input type="text" placeholder="Comment" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label"></label>
+                                                <div class="col-lg-4">
+                                                    <div class="pull-right">
+                                                        <button type="submit" class="btn btn-sm btn-default">Cancel</button>
+                                                        <button type="submit" onclick="ShowHolidaysGrid();" class="btn btn-primary btn-sm">Save</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!-- START confirm deletion modal-->
+<div id="confirmDeletion" tabindex="-1" role="dialog" aria-labelledby="confirmDeletionLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmDeletionLabel" class="modal-title">Confirm Deletion</h4>
+            </div>
+            <div class="modal-body">
+                Delete Holiday?
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-primary">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END confirm deletion modal-->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+
+    @*<link href="http://cdn.kendostatic.com/2013.1.319/styles/kendo.common.min.css" rel="stylesheet" type="text/css"/>
+    <link href="http://cdn.kendostatic.com/2013.1.319/styles/kendo.default.min.css" rel="stylesheet" type="text/css"/>*@
+    <script src="../Scripts/kendo.all.min.js"></script>
+    <script src="~/Scripts/moment/min/moment.min.js"></script>
+    <script src="~/Scripts/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+
+        var holidaydataSource = new kendo.data.DataSource({
+            data: [
+                { Days: "Friday", Date: '1, May 2015', Comment: 'Labour day' },
+                { Days: "Saturday", Date: "4, Jul 2015", Comment: 'Independence Day' },
+                { Days: "Tuesday", Date: "26, Jan 2016", Comment: 'Republic day' }
+            ],
+            pageSize: 10
+
+        });
+
+        
+
+
+
+        $("#liHoliday").addClass("active");
+        $("#holidaysGrid").kendoGrid({
+            selectable: "multiple cell",
+            allowCopy: true,
+            //height: 550,
+            scrollable: true,
+            sortable: true,
+            filterable: false,
+
+            //pageable: {
+            //    input: true,
+            //    numeric: false
+            //},
+            columns: [
+                {
+                    field: "Date",
+                    template: '<a href="javascript:void(0)" onclick="ShowEditHolidays();">#=Date#</a>',
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "Days",
+                    template: '#=Days#'
+                },
+                {
+                    field: "Comment",
+                    template: '#=Comment#'
+                },
+                //{
+                //    field: "Delete",
+                //    width: "90px",
+                //    template: '<a href="javascript:void(0)" onclick="ShowDeleteConfirmationPopup();">Delete</a>',
+                //    attributes: {
+                //        style: 'white-space: nowrap '
+                //    }
+                //},
+                {
+                    field: "Actions",
+                    //title: "Actions",
+                    width: "200px",
+                    template: '<div class="btn-group mb-sm">' +
+                        '<button type="button" data-toggle="dropdown" class="btn btn-default">Select…</button>' +
+                        '<button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">' +
+                        '<span class="caret"></span>' +
+                        '</button>' +
+                        '<ul role="menu" class="dropdown-menu" style="min-width:102px !important;">' +
+                        '<li><a href="javascript:void(0);" onclick="ShowDeleteConfirmationPopup();">Delete</a></li>' +
+                        '</ul>' +
+                        '</div>',
+                }
+            ],
+            dataSource: holidaydataSource
+        });
+
+        holidaydataSource.read();
+        $("#holidayPager").kendoPager({
+            autoBind: true,
+            dataSource: holidaydataSource
+        });
+
+        function ShowDeleteConfirmationPopup() {
+            $('#confirmDeletion').modal('show');
+        }
+
+        function ShowEditHolidays() {
+            $("#holidaysgridcontainer").hide();
+            $("#AddHolidays").hide();
+            $("#EditHolidays").show();
+        }
+
+        function ShowAddHolidays() {
+            $("#holidaysgridcontainer").hide();
+            $("#EditHolidays").hide();
+            $("#AddHolidays").show();
+        }
+
+        function ShowHolidaysGrid() {
+            $("#holidaysgridcontainer").show();
+            $("#EditHolidays").hide();
+            $("#AddHolidays").hide();
+        }
+
+    </script>
+}

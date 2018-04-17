@@ -1,0 +1,490 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Pricing";
+    Layout = "~/Views/Admin/_Layout.cshtml";
+}
+<style>
+    .k-grid .k-alt {
+        background-color: #fafbfc; /* specify the alternate background-color */
+    }
+
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+    }
+
+    #pricingGrid .k-grid-content, #pricingGrid tr td:last-child {
+        overflow: visible;
+    }
+
+    #pricingGrid .k-grid-header {
+        padding-right: 0 !important;
+    }
+
+    #dvSiteFooter {
+        top: 50px !important;
+    }
+</style>
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+
+<div class="main-content">
+    <h3>Pricing</h3>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel-default">
+                <div class="panel-body">
+                    <div id="pricingGridcontainer">
+
+                        <div class="clearfix">
+                            <button type="button" onclick="ShowAddPackage();" class="btn btn-primary pull-right  mb-sm">
+                                <em class="fa fa-plus-circle fa-fw mr-sm"></em>Add Package
+                            </button>
+                        </div>
+                        <div id="pricingGrid" style="margin-top: 8px;" class="clearfix"></div>
+                        <div id="pricingPager"></div>
+                    </div>
+
+                    <div id="AddPackage" style="display:none;">
+                        <div class="">
+                            <div class="panel-heading bb">
+                                Add Package
+                                <div class="required pull-right">* Required fields</div>
+                            </div>
+                            <div class="panel-body">
+                                <form class="form-horizontal">
+
+                                    <div class="form-group col-lg-12">
+                                        <label class="col-lg-3 control-label">Package Name *</label>
+                                        <div class="col-lg-9">
+                                            <input placeholder="Package Name" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <label class="col-lg-3 control-label">Max # of Users *</label>
+                                        <div class="col-lg-9">
+                                            <input id="maxusers" type="number" placeholder="Max number of Users" class="form-control pricecontrols">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <label class="col-lg-3 control-label">Price per Package *</label>
+                                        <div class="col-lg-9">
+                                            <input id="priceperpackage" type="number" placeholder="Price per Package" class="form-control pricecontrols">
+                                        </div>
+                                    </div>                                    
+                                    <div class="form-group col-lg-12">
+                                        <label class="col-lg-3 control-label">Additional User Price *</label>
+                                        <div class="col-lg-9">
+                                            <input id="priceperextrauser" readonly class="form-control pricecontrols">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <label class="col-lg-3 control-label">Package Price per User </label>
+                                        <div class="col-lg-9">
+                                            <input id="packagepriceperuser" readonly class="form-control pricecontrols" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <label class="col-lg-3 control-label">B/E # of Users </label>
+                                        <div class="col-lg-9">
+                                            <input id="beusers" type="number" class="form-control pricecontrols" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <label class="col-lg-3 control-label">Total Price up to B/E Volume </label>
+                                        <div class="col-lg-9">
+                                            <input id="totalprice" readonly class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <label class="col-lg-3 control-label">Avg Price per User </label>
+                                        <div class="col-lg-9">
+                                            <input id="avgprice" readonly class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <label class="col-lg-3 control-label">Volume as % of Next Level </label>
+                                        <div class="col-lg-9">
+                                            <input id="percentage" type="number" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">&nbsp;</div>
+                                    <div class="form-group col-lg-12" >
+                                        <div class="col-lg-7 pull-right">
+                                            <div class="pull-right">
+                                                <button type="button" onclick="ShowPricingGrid();" class="btn btn-sm btn-default">Cancel</button>
+                                                <button type="button" onclick="ShowPricingGrid();" class="btn btn-primary btn-sm">Save</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="EditPackage" style="display:none;">
+                        <div class="">
+                            <div class="panel-heading bb">
+                                Edit Package
+                                <div class="required pull-right">* Required fields</div>
+                            </div>
+                            <div class="panel-body">
+                                <form class="form-horizontal">
+
+                                    <div class="form-group col-lg-12">
+                                        <label class="col-lg-3 control-label">Package Name *</label>
+                                        <div class="col-lg-9">
+                                            <input placeholder="Package Name" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <label class="col-lg-3 control-label">Max # of Users *</label>
+                                        <div class="col-lg-9">
+                                            <input id="maxusersedit" type="number" placeholder="Max number of Users" class="form-control pricecontrolsEdit">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <label class="col-lg-3 control-label">Price per Package *</label>
+                                        <div class="col-lg-9">
+                                            <input id="priceperpackageedit" type="number" placeholder="Price per Package" class="form-control pricecontrolsEdit">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <label class="col-lg-3 control-label">Additional User Price *</label>
+                                        <div class="col-lg-9">
+                                            <input id="priceperextrauseredit" readonly class="form-control pricecontrolsEdit">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <label class="col-lg-3 control-label">Package Price per User </label>
+                                        <div class="col-lg-9">
+                                            <input id="packagepriceperuseredit" readonly class="form-control pricecontrolsEdit" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <label class="col-lg-3 control-label">B/E # of Users </label>
+                                        <div class="col-lg-9">
+                                            <input id="beusersedit" type="number" class="form-control pricecontrolsEdit" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <label class="col-lg-3 control-label">Total Price up to B/E Volume </label>
+                                        <div class="col-lg-9">
+                                            <input id="totalpriceedit" readonly class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <label class="col-lg-3 control-label">Avg Price per User </label>
+                                        <div class="col-lg-9">
+                                            <input id="avgpriceedit" readonly class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <label class="col-lg-3 control-label">Volume as % of Next Level </label>
+                                        <div class="col-lg-9">
+                                            <input id="percentageedit" type="number" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">&nbsp;</div>
+                                    <div class="form-group col-lg-12">
+                                        <div class="col-lg-7 pull-right">
+                                            <div class="pull-right">
+                                                <button type="button" onclick="ShowPricingGrid();" class="btn btn-sm btn-default">Cancel</button>
+                                                <button type="button" onclick="ShowPricingGrid();" class="btn btn-primary btn-sm">Save</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+           
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- START confirm deletion modal-->
+<div id="confirmDeletion" tabindex="-1" role="dialog" aria-labelledby="confirmDeletionLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmDeletionLabel" class="modal-title">Confirm Deletion</h4>
+            </div>
+            <div class="modal-body">
+                Delete Package?
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-primary">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END confirm deletion modal-->
+<!-- START confirm activation modal-->
+<div id="confirmActivation" tabindex="-1" role="dialog" aria-labelledby="confirmActivationLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmActivationLabel" class="modal-title">Confirm Updation</h4>
+            </div>
+            <div class="modal-body">
+                Update Package status?
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-primary">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END confirm deletion modal-->
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script src="../Scripts/kendo.all.min.js"></script>
+    <script src="~/Scripts/moment/min/moment.min.js"></script>
+    @*<script src="~/Scripts/moment/min/moment-with-langs.min.js"></script>*@
+    <script src="~/Scripts/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+        $(function () {
+            $('.datetimepicker1').datetimepicker({
+                disabledHours: true,
+                format: 'MM/DD/YYYY'
+            });
+        });
+
+
+
+        //var pricingdataSource = new kendo.data.DataSource({
+        //    data: [
+        //        { From: '0', To: '5', Amount: '$5.00',IsActive:true },
+        //        { From: '6', To: '9', Amount: '$10.00', IsActive: true },
+        //        { From: '10', To: 'Above', Amount: '$15.00', IsActive: true },
+        //        { From: 25, To: '', Amount: '$20:00', IsActive: false}
+        //    ],
+        //    pageSize: 10
+
+        //});
+
+        var pricingdataSource = new kendo.data.DataSource({
+            data: [
+                { Package: "Individual", MaxUsers: 2, MonthlyPrcPrPkg: '$25', MonthlyPkgPrcPrUser: '$12.50', MonthlyPkgPrcPrExtraUser: '$12.50', BENumUsers: 7, TotlPrcUptoBEVlm: '$90', AvgPrcPrUsrAtBEVlm: '$12.50', BEVlmPercOfNxtLvlMaxNumOfUsr: '72.0%', IsActive: true },
+                { Package: "Personal Trainer", MaxUsers: 10, MonthlyPrcPrPkg: '$90', MonthlyPkgPrcPrUser: '$9.00', MonthlyPkgPrcPrExtraUser: '$12.50', BENumUsers: 33, TotlPrcUptoBEVlm: '$300', AvgPrcPrUsrAtBEVlm: '$9.00', BEVlmPercOfNxtLvlMaxNumOfUsr: '66.7%', IsActive: true },
+                { Package: "Small Business", MaxUsers: 50, MonthlyPrcPrPkg: '$300', MonthlyPkgPrcPrUser: '$6.00', MonthlyPkgPrcPrExtraUser: '$12.50', BENumUsers: 313, TotlPrcUptoBEVlm: '$1,875', AvgPrcPrUsrAtBEVlm: '$6.00', BEVlmPercOfNxtLvlMaxNumOfUsr: '62.5%', IsActive: true },
+                { Package: "Large Business", MaxUsers: 500, MonthlyPrcPrPkg: '$1,875', MonthlyPkgPrcPrUser: '$3.75', MonthlyPkgPrcPrExtraUser: '$12.50', BENumUsers: 2667, TotlPrcUptoBEVlm: '$10,000', AvgPrcPrUsrAtBEVlm: '$3.75', BEVlmPercOfNxtLvlMaxNumOfUsr: '53.3%', IsActive: true },
+                { Package: "Enterprise", MaxUsers: 5000, MonthlyPrcPrPkg: '$10,000', MonthlyPkgPrcPrUser: '$2.00', MonthlyPkgPrcPrExtraUser: '$12.50', BENumUsers: null, TotlPrcUptoBEVlm: '$0', AvgPrcPrUsrAtBEVlm: '$2.00', BEVlmPercOfNxtLvlMaxNumOfUsr: null, IsActive: true },
+            ],
+            pageSize: 10
+
+        });
+
+
+        $("#pricingGrid").kendoGrid({
+            selectable: "multiple cell",
+            allowCopy: true,
+            //height: 550,
+            scrollable: true,
+            sortable: true,
+            filterable: true,
+            //pageable: {
+            //    input: true,
+            //    numeric: false
+            //},
+            columns: [
+                {
+                    field: "Package",
+                    width : 120,
+                    template: '<a href="javascript:void(0)" onclick="ShowEditPackage();">#=Package#</a>',
+                    attributes: {
+                        style: 'white-space: nowrap; '
+                    }
+                },
+                {
+                    field: "MaxUsers",
+                    title: "Max Users",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                    
+                },
+                {
+                    field: "MonthlyPrcPrPkg",
+                    title: "Price / Package",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "MonthlyPkgPrcPrUser",
+                    title: "Price / User",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "MonthlyPkgPrcPrExtraUser",
+                    title: "Additional User Price",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "BENumUsers",
+                    title: "B/E Users",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "TotlPrcUptoBEVlm",
+                    title: "Total Price",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "AvgPrcPrUsrAtBEVlm",
+                    title: "Avg Price/User",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "BEVlmPercOfNxtLvlMaxNumOfUsr",
+                    title: "% of Next Level",                    
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                //{
+                //    field: "IsActive",
+                //    title:"Is Active",
+                //    attributes: {
+                //        style: 'white-space: nowrap '
+                //    }
+                //},
+                {
+                    field: "Actions",
+                    title: "Action",
+                    width: "130px",
+                    template: '<div class="btn-group mb-sm">' +
+                           '<button type="button" data-toggle="dropdown" class="btn btn-default">Select…</button>' +
+                           '<button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">' +
+                              '<span class="caret"></span>' +
+                           '</button>' +
+                           '<ul role="menu" class="dropdown-menu" style="max-width:102px !important;">' +
+                              '<li><a href="javascript:void(0);" onclick="ShowActivationConfirmationPopup();">' +
+                              '#if(IsActive==true){# ' + 'Deactivate' + ' #}else{# ' + 'Activate' + '#}#' +'</a>' +
+                              '</li>' +
+                               '<li><a href="javascript:void(0);" onclick="ShowDeleteConfirmationPopup();">Delete</a>' +
+                              '</li>' +
+                              
+                           '</ul>' +
+                        '</div>'
+                }
+            ],
+            dataSource: pricingdataSource
+        });
+
+        pricingdataSource.read();
+        $("#pricingPager").kendoPager({
+            autoBind: true,
+            dataSource: pricingdataSource
+        });
+
+        function ShowPricingGrid() {
+            $("#pricingGridcontainer").show();
+            $("#EditPackage").hide();
+            $("#AddPackage").hide();
+        }
+
+        function ShowDeleteConfirmationPopup() {
+            $('#confirmDeletion').modal('show');
+        }
+        function ShowActivationConfirmationPopup() {
+            $('#confirmActivation').modal('show');
+        }
+        
+        function ShowEditPackage() {
+            $("#pricingGridcontainer").hide();
+            $("#EditPackage").show();
+            $("#AddPackage").hide();
+        }
+
+        function ShowAddPackage() {
+            $("#pricingGridcontainer").hide();
+            $("#EditPackage").hide();
+            $("#AddPackage").show();
+        }
+
+        $(".pricecontrols").on("change keyup paste", function () {
+            CalculatePricingsAdd();
+        })
+
+        $(".pricecontrolsEdit").on("change keyup paste", function () {
+            CalculatePricingsEdit();
+        })
+
+        function CalculatePricingsAdd()
+        {
+            //parseFloat
+            
+            var priceperpackage = parseFloat($("#priceperpackage").val());
+            var maxusers = parseFloat($("#maxusers").val());
+            var beusers = parseFloat($("#beusers").val());
+
+            var packagepriceperuser = priceperpackage / maxusers;
+
+            if (!isNaN(packagepriceperuser))
+            {
+                $("#packagepriceperuser").val("$" + packagepriceperuser.toFixed(2));
+                $("#priceperextrauser").val("$" + packagepriceperuser.toFixed(2));
+            }
+
+            var totalprice = parseFloat(priceperpackage + parseFloat((packagepriceperuser * (beusers - maxusers))));
+
+            if (!isNaN(totalprice)) {
+                $("#totalprice").val("$" + totalprice.toFixed(2));
+            }
+
+            var avgprice = parseFloat(totalprice / beusers);
+            if (!isNaN(avgprice)) {
+                $("#avgprice").val("$" + avgprice.toFixed(2));
+            }
+
+        }
+
+        function CalculatePricingsEdit() {
+            //parseFloat
+
+            var priceperpackage = parseFloat($("#priceperpackageedit").val());
+            var maxusers = parseFloat($("#maxusersedit").val());
+            var beusers = parseFloat($("#beusersedit").val());
+
+            var packagepriceperuser = priceperpackage / maxusers;
+
+            if (!isNaN(packagepriceperuser)) {
+                $("#packagepriceperuseredit").val("$" + packagepriceperuser.toFixed(2));
+                $("#priceperextrauseredit").val("$" + packagepriceperuser.toFixed(2));
+            }
+
+            var totalprice = parseFloat(priceperpackage + parseFloat((packagepriceperuser * (beusers - maxusers))));
+
+
+            if (!isNaN(totalprice)) {
+                $("#totalpriceedit").val("$" + totalprice.toFixed(2));
+            }
+
+            var avgprice = parseFloat(totalprice / beusers);
+            if (!isNaN(avgprice)) {
+                $("#avgpriceedit").val("$" + avgprice.toFixed(2));
+            }
+
+        }
+
+    </script>
+}

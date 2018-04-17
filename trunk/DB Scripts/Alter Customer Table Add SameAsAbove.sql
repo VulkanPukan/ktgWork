@@ -1,0 +1,1 @@
+Alter Table [dbo].[Customer] Add [SameAddAsAbove] [bit] NOT NULL DEFAULT 0 WITH VALUES

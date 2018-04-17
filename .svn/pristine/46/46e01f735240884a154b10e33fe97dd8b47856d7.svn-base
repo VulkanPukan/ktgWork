@@ -1,0 +1,136 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Dashboard";
+    Layout = "~/Views/Athlete/_Layout.cshtml";
+}
+<style>
+    .k-grid .k-alt {
+        background-color: #fafbfc; /* specify the alternate background-color */
+    }
+
+    .k-grid .k-grid-header .k-header .k-link {
+        height: auto;
+    }
+
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+    }
+
+    #dvSiteFooter {
+        top: 550px !important;
+    }
+
+    .center-label {
+        text-align: center;
+    }
+</style>
+@*<div class="wrapper">*@
+<!-- End aside-->
+<div class="main-content">
+    <h3>Dashboard</h3>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a href="#" data-perform="panel-dismiss" data-toggle="tooltip" title="Close Panel" class="pull-right">
+                        <em class="fa fa-times"></em>
+                    </a>
+                    <a href="#" data-perform="panel-collapse" data-toggle="tooltip" title="Collapse Panel" class="pull-right">
+                        <em class="fa fa-minus"></em>
+                    </a>
+
+                    <div class="panel-title">Volume Of Weight</div>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+
+                        <div class="indicator show">
+                            <span class="spinner"></span>
+                        </div>
+                        <div data-source="@Url.Action("ChartData", "Athlete")?chartType=bar" class="chart-bar flot-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a href="#" data-perform="panel-dismiss" data-toggle="tooltip" title="Close Panel" class="pull-right">
+                        <em class="fa fa-times"></em>
+                    </a>
+                    <a href="#" data-perform="panel-collapse" data-toggle="tooltip" title="Collapse Panel" class="pull-right">
+                        <em class="fa fa-minus"></em>
+                    </a>
+
+                    <div class="panel-title">Muscular Balance Ratio</div>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+
+                        <div class="indicator show">
+                            <span class="spinner"></span>
+                        </div>
+                        <div data-source="@Url.Action("ChartData", "Coach")?chartType=barMultiple" class="chart-bar flot-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a href="#" data-perform="panel-dismiss" data-toggle="tooltip" title="Close Panel" class="pull-right">
+                        <em class="fa fa-times"></em>
+                    </a>
+                    <a href="#" data-perform="panel-collapse" data-toggle="tooltip" title="Collapse Panel" class="pull-right">
+                        <em class="fa fa-minus"></em>
+                    </a>
+
+                    <div class="panel-title">Relative Strength (% of BW)</div>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+
+                        <div class="indicator show">
+                            <span class="spinner"></span>
+                        </div>
+                        <div data-source="@Url.Action("ChartData", "Athlete")?chartType=barMultiple3" class="chart-bar flot-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a href="#" data-perform="panel-dismiss" data-toggle="tooltip" title="Close Panel" class="pull-right">
+                        <em class="fa fa-times"></em>
+                    </a>
+                    <a href="#" data-perform="panel-collapse" data-toggle="tooltip" title="Collapse Panel" class="pull-right">
+                        <em class="fa fa-minus"></em>
+                    </a>
+
+                    <div class="panel-title">Your Improvement</div>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+
+                        <div class="indicator show">
+                            <span class="spinner"></span>
+                        </div>
+                        <div data-source="@Url.Action("ChartData", "Coach")?chartType=line" class="chart-bar flot-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*</div>*@
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script src="../Scripts/slider/js/bootstrap-slider.js"></script>
+    <script src="../Scripts/sparklines/jquery.sparkline.min.js"></script>
+    <script src="../Scripts/slimscroll/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $("#liDashboard").addClass("active");
+    </script>
+}

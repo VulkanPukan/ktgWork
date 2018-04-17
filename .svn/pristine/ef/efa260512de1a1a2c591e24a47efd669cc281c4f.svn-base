@@ -1,0 +1,403 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="no-ie">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>@ViewBag.Title</title>
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="@Url.Content("~/Scripts/mustang/css/bootstrap.min.css")" />
+    <link rel="stylesheet" href="~/Scripts/mustang/css/common.css" />
+    <link rel="stylesheet" href="~/Scripts/mustang/css/datepicker.css" />
+    <link rel="stylesheet" href="~/Scripts/mustang/css/main.css" id="themeSwitcher" />
+    <link rel="stylesheet" href="~/Scripts/mustang/css/c3/c3.css" />
+    <link rel="stylesheet" href="~/Scripts/mustang/fonts/icomoon/icomoon.css" />
+    <link rel="stylesheet" href="~/content/fontawesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/content/animo/animateanimo.css">
+    <link rel="stylesheet" href="~/Content/StrengthTracker2/strengthtracker.common.css" />
+    <link rel="icon" type="image/png" href="~/Images/favicon.png">
+    <script src="~/Scripts/fastclick/fastclick.js" type="application/javascript"></script>
+
+    <style>
+        .info-stats.tw .icon-type {
+            background: green;
+            box-shadow: -3px 3px 0 darkgreen;
+        }
+
+        .info-stats.fb .icon-type {
+            background: red;
+            box-shadow: -3px 3px 0 darkred;
+        }
+
+        #dvSiteHeader {
+            width: 98.9% !important;
+        }
+
+        #dvSiteFooter {
+            border-top-color: #ddd !important;
+            border-bottom-color: #fff !important;
+            color: #333 !important;
+            background-color: white !important;
+            border-width: 1px 0 !important;
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+            width: 99.8% !important;
+            height: 60px !important;
+            bottom: 0;
+            position: relative;
+            top: 550px;
+        }
+
+            #dvSiteFooter a {
+                color: black !important;
+            }
+
+        #dvUserPic {
+            padding: 25px 20px 0 !important;
+        }
+
+        .disabledLink {
+            color: lightgrey !important;
+            pointer-events: none;
+            cursor: default;
+        }
+    </style>
+
+</head>
+<body style="background:#404040 !important;" class="loaded">
+    <a id="aTop"></a>
+<div id="loading-wrapper">
+    <div id="loader">
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+        <div class="line4"></div>
+        <div class="line5"></div>
+        <div class="line6"></div>
+    </div>
+</div>
+    <div id="spinner" class="spinner" style="display: none;"></div>
+    <header class="clearfix">
+        <div class="logo">
+            <a href="@Url.Action("DashboardNew", "Admin")" style="color:white;font-weight:bold;font-size:20px;">StrengthTracker</a>
+        </div> <!-- Logo div -->
+        <div class="pull-right">
+            <ul id="header-actions" class="clearfix">
+                <li class="list-box user-admin dropdown">
+                    <div class="admin-details">
+                        @if (Session["AuthenticatedUser"] != null)
+                        {
+                            int userID = ((StrengthTracker2.Core.Repository.Entities.Actors.User)(Session["AuthenticatedUser"])).UserId;
+                            var userDetails = (StrengthTracker2.Core.Repository.Entities.Actors.UserDetails)(Session["AuthenticatedUserDetails"]);
+                            var image = userDetails.UserImages.FirstOrDefault(ui => ui.UserId == userID);
+                            var userFirstName = userDetails.Users[0].FirstName;
+                            <div class="name">@userFirstName</div>
+                        }
+                        else
+                        {
+                            <div class="name">Session Expired</div>
+                            <script type="text/javascript" charset="utf-8">
+                                alert("Session Expired. Redirecting to Login Page");
+                                setTimeout(function () {
+                                    CallLogout();
+                                }, 3000);
+                            </script>
+                        }
+                        @if (Session["CustomerObj"] != null)
+                        {
+                            var customerObj = ((StrengthTracker2.Core.Repository.Entities.TKGMaster.CustomerMaster)(Session["CustomerObj"]));
+                            if (customerObj != null)
+                            {
+                                if (customerObj.IsSuperAdmin == true)
+                                {
+                                    if (Session["AuthenticatedUser"] != null)
+                                    {
+                                        if (((StrengthTracker2.Core.Repository.Entities.Actors.User)(Session["AuthenticatedUser"])).IsIndividualAthlete)
+                                        {
+                                            <div class="designation">Individual Athlete</div>
+                                        }
+                                        else
+                                        {
+                                            <div class="designation">TKG Admin</div>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (customerObj.Category == 2)
+                                    {
+                                        <div class="designation">Personal Trainer</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="designation">Admin</div>
+                                    }
+                                }
+                            }
+                        }
+                    </div>
+                    <a id="drop4" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown" style="background:none;">
+                        @*<i class="icon-account_circle"></i>*@
+                        @if (Session["AuthenticatedUser"] != null)
+                        {
+                            int userID = ((StrengthTracker2.Core.Repository.Entities.Actors.User)(Session["AuthenticatedUser"])).UserId;
+                            StrengthTracker2.Core.Repository.Entities.Actors.UserDetails userDetails = (StrengthTracker2.Core.Repository.Entities.Actors.UserDetails)(Session["AuthenticatedUserDetails"]);
+                            StrengthTracker2.Core.Repository.Entities.Actors.UserImage image = userDetails.UserImages.Where(ui => ui.UserId == userID).FirstOrDefault();
+                            var userFirstName = ((StrengthTracker2.Core.Repository.Entities.Actors.User)(Session["AuthenticatedUser"])).FirstName;
+                            var userImgPath = image == null ? "" : image.ImagePath;
+                        <img src="@userImgPath" alt="User Image" style="max-width: 48px;max-height: 48px;border: 2px solid #3b76a0;">
+                        }
+                        else
+                        {
+                        <img src="../Images/user/01.jpg" alt="Session Expired" style="max-width: 48px;max-height: 48px;border: 2px solid #3b76a0;">
+                        }
+                    </a>
+                    <ul class="dropdown-menu" style="min-height:30px !important;">
+                        <li class="dropdown-content">
+                            @*<a href="#"><i class="icon-warning2"></i>Update Password<br><span>Your password will expire in 7 days.</span></a>*@
+                            @*<a href="forgot-pwd.html">Change Password</a>
+                                <a href="profile.html">Settings</a>*@
+                            @if (Session["AuthenticatedUser"] != null)
+                            {
+                                bool isIndividualAthlete = ((StrengthTracker2.Core.Repository.Entities.Actors.User)(Session["AuthenticatedUser"])).IsIndividualAthlete;
+
+                                if (Session["CustomerObj"] != null)
+                                {
+                                    var customerObj = ((StrengthTracker2.Core.Repository.Entities.TKGMaster.CustomerMaster)(Session["CustomerObj"]));
+                                    if (customerObj != null)
+                                    {
+                                        int userQryID = ((StrengthTracker2.Core.Repository.Entities.Actors.User)(Session["AuthenticatedUser"])).UserId;
+                                        string usrURL = "../Admin/Users?id=" + userQryID + "&pv=true";
+                                        if (customerObj.IsSuperAdmin & !isIndividualAthlete)
+                                        {
+                                            <a href="@usrURL" onclick="@usrURL">My Profile</a>
+                                        }
+                                        else if (customerObj.Category == 3 || customerObj.Category == 4)
+                                        {
+                                            <a href="@usrURL" onclick="@usrURL">My Profile</a>
+                                        }
+                                    }
+                                }
+                            }
+                            <a href="Javascript:void(0);" onclick='Logout("@Url.Action("Logout", "Account")");'>Logout</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <div class="container-fluid">
+        <div class="left-sidebar" style="display:none;">
+            <!-- User wrapper starts -->
+            <a href="@Url.Action("Profile", "Admin")" onclick='window.location="@Url.Action("Profile", "Admin")";' class="user-wrapper clearfix">
+                <div class="user-avatar">
+                    @if (Session["AuthenticatedUser"] != null)
+                    {
+                        int userID = ((StrengthTracker2.Core.Repository.Entities.Actors.User)(Session["AuthenticatedUser"])).UserId;
+                        StrengthTracker2.Core.Repository.Entities.Actors.UserDetails userDetails = (StrengthTracker2.Core.Repository.Entities.Actors.UserDetails)(Session["AuthenticatedUserDetails"]);
+                        StrengthTracker2.Core.Repository.Entities.Actors.UserImage image = userDetails.UserImages.Where(ui => ui.UserId == userID).FirstOrDefault();
+                        var userFirstName = ((StrengthTracker2.Core.Repository.Entities.Actors.User)(Session["AuthenticatedUser"])).FirstName;
+                        var imgPath = image == null ? "" : image.ImagePath;
+                        <img src="@imgPath" alt="User Image">
+                    }
+                    else
+                    {
+                        <img src="../Images/user/01.jpg" alt="Session Expired">
+                    }
+                </div>
+                <div class="profile-status">
+                    <p class="welcome">Welcome</p>
+                    @if (Session["AuthenticatedUser"] != null)
+                    {
+                        int userID = ((StrengthTracker2.Core.Repository.Entities.Actors.User)(Session["AuthenticatedUser"])).UserId;
+                        StrengthTracker2.Core.Repository.Entities.Actors.UserDetails userDetails = (StrengthTracker2.Core.Repository.Entities.Actors.UserDetails)(Session["AuthenticatedUserDetails"]);
+                        StrengthTracker2.Core.Repository.Entities.Actors.UserImage image = userDetails.UserImages.Where(ui => ui.UserId == userID).FirstOrDefault();
+                        var userFullName = ((StrengthTracker2.Core.Repository.Entities.Actors.User)(Session["AuthenticatedUser"])).FirstName + " " + ((StrengthTracker2.Core.Repository.Entities.Actors.User)(Session["AuthenticatedUser"])).LastName;
+                        <p class="name">@userFullName</p>
+                    }
+                    else
+                    {
+                        <p class="name">Session Expired</p>
+                    }
+                </div>
+            </a>
+            <!-- User wrapper ends -->
+            <div class="panel-group" id="leftSidebar" role="tablist" aria-multiselectable="true">
+                <div class="panel">
+                    <div class="panel-heading" role="tab" id="headingOne">
+                        <h4 class="panel-title">
+                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#leftSidebar" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Income <span class="label label-success">48k</span>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                        <div class="panel-body">
+                            <ul class="contributions">
+                                <li>
+                                    <p class="clearfix">For Profit<span>$5681</span></p>
+                                    <div class="progress progress-md">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100" style="width: 89%">
+                                            <span class="sr-only">89% Complete (success)</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <p class="clearfix">Non-profit<span>$2143</span></p>
+                                    <div class="progress progress-md">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100" style="width: 55%">
+                                            <span class="sr-only">55% Complete (success)</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div><!-- Dashboard End -->
+                <div class="panel">
+                    <div class="panel-heading" role="tab" id="headingTwo">
+                        <h4 class="panel-title">
+                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#leftSidebar" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Programs <span class="label label-violet">67</span>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                        <div class="panel-body">
+                            <div class="info-stats tw">
+                                <div class="icon-type pull-left">
+                                    <i class="icon-check_circle"></i>
+                                </div>
+                                <div class="sale-num">
+                                    <h4>10</h4>
+                                    <p>Completed</p>
+                                </div>
+                            </div>
+                            <div class="info-stats fb">
+                                <div class="icon-type pull-left">
+                                    <i class="icon-minus2"></i>
+                                </div>
+                                <div class="sale-num">
+                                    <h4>57</h4>
+                                    <p>Under Development</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- Program End -->
+                <div class="panel">
+                    <div class="panel-heading" role="tab" id="headingThree">
+                        <h4 class="panel-title">
+                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#leftSidebar" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                Locations <span class="label label-teal">21</span>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                        <div class="panel-body">
+                            <ul class="views">
+                                <li>
+                                    <p class="detail-info"><i class="icon-vinyl blue"></i> Germany</p>
+                                </li>
+                                <li>
+                                    <p class="detail-info"><i class="icon-vinyl green"></i> Japan</p>
+                                </li>
+                                <li>
+                                    <p class="detail-info"> <i class="icon-vinyl red"></i>United States</p>
+                                </li>
+                                <li>
+                                    <p class="detail-info"> <i class="icon-vinyl yellow"></i>India</p>
+                                </li>
+                                <li>
+                                    <p class="detail-info"> <i class="icon-vinyl violet"></i>France</p>
+                                </li>
+                                <li>
+                                    <p class="detail-info"> <i class="icon-vinyl violet"></i>Canada</p>
+                                </li>
+                                <li>
+                                    <p class="detail-info"> <i class="icon-vinyl teal"></i>United Kingdom</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div><!-- Locations End -->
+            </div>
+        </div>
+        <div class="dashboard-wrapper">
+            @Html.Partial("NavigationBar")
+            @RenderBody()
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @RenderSection("scripts", required: false)
+    <script src="~/Scripts/verimail/verimail.jquery.js"></script>
+    <script src="~/Scripts/mustang/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/filestyle/bootstrap-filestyle.min.js"></script>
+    <script src="~/Scripts/storejson2.min.js"></script>
+    <script src="~/Scripts/slider/js/bootstrap-slider.js"></script>
+    <script src="~/Scripts/mustang/js/scrollup.min.js"></script>
+    <script src="~/Scripts/mustang/js/themeSwitcher.js"></script>
+    <script src="~/Scripts/mustang/js/common.js"></script>
+    <script src="~/Scripts/StrengthTracker2/Common.js"></script>
+    <script src="~/Scripts/StrengthTracker2/countryScript.js"></script>
+    <script src="~/Scripts/StrengthTracker2/State.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        var checkeventcount = 1, prevTarget;
+        $('.modal').on('show.bs.modal', function (e) {
+            if (typeof prevTarget == 'undefined' || (checkeventcount == 1 && e.target != prevTarget)) {
+                prevTarget = e.target;
+                checkeventcount++;
+                e.preventDefault();
+                $(e.target).appendTo('body').modal('show');
+            }
+            else if (e.target == prevTarget && checkeventcount == 2) {
+                checkeventcount--;
+            }
+        });
+        var box = '<div tabindex="-1" id="alertModal" class="modal fade" id="confirmDeletion" role="dialog" aria-hidden="true" aria-labelledby="confirmDeletionLabel" style="display: none;"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button class="close" aria-hidden="true" type="button" data-dismiss="modal">×</button><h4 class="modal-title" id="confirmDeletionLabel">Message from webpage</h4></div><div id="alertModalBody" class="modal-body">Are you sure you want to Delete Customer?</div><div class="modal-footer"><button class="btn btn-default" type="button" data-dismiss="modal">OK</button></div></div></div></div>';
+        if ($('#alertModal').length == 0) {
+            $("body").append(box);
+        }
+        window.alert = function (dialog, button) {
+            $("#alertModalBody").html(dialog.replace(/\n/, "<br />"));
+            $('#alertModal').modal('show');
+
+            $(".btn-default").click(function () {
+                $(this).unbind('click');               //very important, DO NOT REMOVE!
+                $(".btn-primary").unbind('click');	   //very important, DO NOT REMOVE!
+            });
+
+            return false;
+        };
+        function ChangeTabs(changeTo) {
+            var pID = getUrlVars()["programID"];
+            var isTKGProgram = getUrlVars()["p"];
+            if (pID != undefined) {
+                window.location = changeTo + "?programID=" + pID + "&p=" + isTKGProgram;
+            }
+            else {
+                alert("Please save the program first");
+            }
+        }
+        function GoBack(changeTo) {
+            var pID = getUrlVars()["programID"];
+            var isTKGProgram = getUrlVars()["p"];
+            var exerciseID = getUrlVars()["exerciseID"];
+            if (pID != undefined) {
+                if (exerciseID != undefined) {
+                    window.location = changeTo + "?programID=" + pID + "&exerciseID=" + exerciseID + "&p=" + isTKGProgram;
+                }
+                else {
+                    window.location = changeTo + "?programID=" + pID + "&p=" + isTKGProgram;
+                }
+            }
+            else {
+                alert("Please save the program first");
+            }
+        }
+        function CallLogout() {
+            Logout("@Url.Action("Logout", "Account")");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Daily Workout Session";
+    Layout = "~/Views/Admin/_LayoutNew.cshtml";
+}
+
+<style>
+    .navbar-top .navbar-header {
+        width: 250px !important;
+        text-align: center;
+    }
+
+    .row {
+        margin-left: -30px;
+        margin-right: -30px;
+    }
+
+    .k-grid .k-grid-header .k-header .k-link {
+        height: auto;
+    }
+    .k-grouping-header {
+        display: none;
+    }
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+        text-align: center;
+    }
+    .k-grid tbody td:first-child,
+    .k-grid tfoot td:first-child,
+    .k-grid tbody td:nth-child(6),
+    .k-grid tbody td:nth-child(9),
+    .k-grid tbody td:nth-child(12),
+    .k-grid-header th.k-header[data-field="LoadOrRM"],
+    .k-grid-header th.k-header[data-field="Set1"],
+    .k-grid-header th.k-header[data-field="Set2"],
+    .k-grid-header th.k-header[data-field="Set3"],
+    .k-grid-header th.k-header[data-title="Tempo"],
+    .k-grid-header th.k-header[data-index="14"]
+    {
+        border-left-width: 3px !important;
+    }
+    .k-grid-header th.k-header,
+    .k-grid tbody tr:first-child td
+    {
+        border-top-width: 3px !important;
+        border-collapse:collapse !important;
+    }
+    .k-grid-cancel {
+        color: red;
+    }
+    td > a {
+        color:#337ab7;
+    }
+    td > a:hover {
+        color:#337ab7;
+    }
+    .breadcrumbs2 .active a {
+        color: #ffffff;
+        background-color:#3a86c8;
+    }
+    .breadcrumbs2 .active a:after {
+        border-left-color: #3a86c8;
+    }
+    .breadcrumbs2 .active a:before {
+        border-color: #3a86c8 #3a86c8 #3a86c8 transparent;
+    }
+    .breadcrumbs2 > li:last-child a {
+        color: #2a303e;
+    }
+</style>
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+<!-- Top Bar starts -->
+<div class="top-bar clearfix">
+    <!-- Container fluid starts -->
+    <div class="container-fluid">
+        <!-- Row starts -->
+        <div class="row gutter">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+			    <h3 class="page-title">Create Program - Daily Workout Session - @ViewBag.ProgramName</h3>
+			</div>
+        </div>
+        <!-- Row ends -->
+    </div>
+    <!-- Container fluid ends -->
+</div>
+<!-- Top Bar ends -->
+<!-- Main container starts -->
+<div class="main-container">
+    <ul class="breadcrumbs2" style="margin-bottom:20px;">
+        <li><a href="@Url.Action("Program", "Admin")"><span class="icon-home2"></span></a></li>
+        <li class="">
+            <a href="JavaScript:void(0);" onclick="ChangeTabs('ManageProgram');" data-toggle="tab">Create Program - Add Structure</a>
+        </li>
+        <li class="">
+            <a href="JavaScript:void(0);" onclick="ChangeTabs('AddExerciseToProgram');" data-toggle="tab">Create Program - Add Exercise</a>
+        </li>
+        <li class="">
+            <a href="JavaScript:void(0);" onclick="ChangeTabs('ProgramExercises');" data-toggle="tab">Create Program - View Program</a>
+        </li>
+        <li class="active">
+            <a href="JavaScript:void(0);" data-toggle="tab">Create Program - DW Session</a>
+        </li>
+    </ul>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel-default">
+                <div class="panel-body">
+                    <div class="panel panel-body panel-default">
+                        <form role="form" class="form-inline">
+                            <div class="col-lg-12 bg-primary pt pb mt">
+                                <h4 class="bb mb mb">Program Details</h4>
+                                <div class="form-group col-lg-6 mb mt">
+                                    <label class="col-lg-4 control-label">Session Date:</label>
+                                    <div class="col-lg-8">
+                                        @Html.Raw(DateTime.Now.ToString("MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture))
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6 mb mt">
+                                    <label class="col-lg-4 control-label">Program:</label>
+                                    <div class="col-lg-8">
+                                        @Html.Raw(Model.Program)
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6 mb mt" style="margin-bottom: 1px !important;">
+                                    <label class="col-lg-4 control-label">Session #:</label>
+                                    <div class="col-lg-8">
+                                        <div class="controls">
+                                            @Html.DropDownList("sessionList", new SelectList(Model.SessionList), "Session #", new { @class = "form-control m-b", @onchange = "OnSessionChange();", @style="height:30px !important;padding:3px 12px !important;" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6 mb mt">
+                                    <label class="col-lg-4 control-label">Sport:</label>
+                                    <div class="col-lg-8">
+                                        @Html.Raw(Model.Sport)
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6 mb mt">
+                                    <label class="col-lg-4 control-label">Step:</label>
+                                    <div class="col-lg-8">
+                                        <div class="controls">
+                                            <span id="lblStep"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6 mb mt">
+                                    <label class="col-lg-4 control-label">Position:</label>
+                                    <div class="col-lg-8">
+                                        @Html.Raw(Model.Position)
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6 mb mt">
+                                    <label class="col-lg-4 control-label">Exercise Group:</label>
+                                    <div class="col-lg-8">
+                                        <span id="lblGroup"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6 mb mt">
+                                    <label class="col-lg-4 control-label">Phase:</label>
+                                    <div class="col-lg-8">
+                                        @Html.Raw(Model.Phase)
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div id="exercisesGrid" style="margin-top:8px; overflow:visible !important;" class="clearfix"></div>
+                    <div id="exercisesPager"></div>
+                    <div id="dvIsAssessmentStep" style="display:none;margin-left:500px;"><label style="color:red;font-weight:bold;font-size:large;">This is an Assessment Step</label></div>
+                    <div class="row">&nbsp;</div>
+                    <div class="row" style="margin-right: -15px;">
+                        <div class="col-md-12">
+                            <div class="pull-right">
+                                <button type="button" id="btnBack" onclick="GoBack('ProgramExercises');" class="mb-sm btn btn-info">Back</button>
+                                <button type="button" class="mb-sm btn" disabled="disabled" >Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+<script src="../Scripts/kendo.all.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    $("#liProgram").addClass("active");
+    var gridColumns = [];
+    var exerciseDataSource = null;
+    var isActiveProgram = "@ViewBag.IsActiveProgram";
+        if (isActiveProgram == "True") {
+            alert("Active Programs are ‘view only’.  Please Deactivate this Program to edit it.  If an Athlete is using the Program, copy and rename the Program then edit the renamed Program");
+        }
+    $("#exercisesGrid").kendoGrid({
+        allowCopy: true,
+        scrollable: true,
+        sortable: true,
+        filterable: true,
+        groupable: true,
+        columns: gridColumns,
+    });
+    $("#exercisesPager").kendoPager({
+        autoBind: true,
+        dataSource: exerciseDataSource
+    });
+    $(document).ready(function () {
+        $('#sessionList option:eq(1)').attr('selected', 'selected');
+        OnSessionChange();
+    });
+    function OnSessionChange() {
+        var programID = getUrlVars()["programID"];
+        var selectedItem = $("#sessionList option:selected").text();
+        $.ajax({
+            url: '@Url.Action("SessionChanged", "Admin")',
+            type: 'POST',
+            dataType: "json",
+            contentType: 'application/json',
+            data: JSON.stringify({ 'exerciseSession': selectedItem, 'programID': programID }),
+            success: function (result) {
+                var dataResult = $.parseJSON(result[0]);
+                var columnsResult = $.parseJSON(result[1]);
+                $('#exercisesGrid').empty();
+                $("#lblStep").text("");
+                $("#lblGroup").text("");
+                if (result[3] !== "isAssessmentStep=true") {
+                    $("#dvIsAssessmentStep").hide();
+                    $('#exercisesGrid').show();
+                    $("#exercisesPager").show();
+                    var grd = $("#exercisesGrid").data("kendoGrid");
+                    grd.destroy();
+                    grd = $("#exercisesGrid").kendoGrid({ columns: columnsResult.Columns[0] });
+
+                    exerciseDataSource = new kendo.data.DataSource({
+                        data: dataResult.ProgramsList,
+                        total: dataResult.ProgramsList.length,
+                        schema: {
+                            data: function (response) {
+                                return response;
+                            },
+                            total: function (response) {
+                                return response.length;
+                            },
+                        },
+                        pageSize: 10
+                    });
+
+                    $("#exercisesGrid").data("kendoGrid").setDataSource(exerciseDataSource);
+                    $('#exercisesGrid').data('kendoGrid').refresh();
+
+                    $("#exercisesPager").data('kendoPager').setDataSource(exerciseDataSource);
+                    $("#exercisesPager").data('kendoPager').refresh();
+                    $("#lblStep").text(result[3]);
+                    $("#lblGroup").text(result[4]);
+                }
+                else {
+                    $('#exercisesGrid').hide();
+                    $("#exercisesPager").hide();
+                    $("#dvIsAssessmentStep").show();
+                }
+            },
+            error: function (req, status, errorObj) {
+                alert('Error: Please try again');
+            }
+        });
+    };
+    function NavigatetoAdd(ExerciseID) {
+        var pID = getUrlVars()["programID"];
+        var p = getUrlVars()["p"];
+        window.location.href = "../Admin/AddExerciseToProgram?programID=" + pID + "&exerciseID=" + ExerciseID + "&p=" + p;
+    }
+</script>
+}

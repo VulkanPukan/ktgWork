@@ -1,0 +1,1 @@
+ALTER TABLE [dbo].[Customer] ADD [CreateDate] [date] NOT NULL DEFAULT (getdate())

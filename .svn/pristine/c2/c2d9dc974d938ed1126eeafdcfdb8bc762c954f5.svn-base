@@ -1,0 +1,288 @@
+﻿@{
+	ViewBag.Title = "Strength Tracker | Teams";
+	Layout = "~/Views/Admin/_LayoutNew.cshtml";
+}
+<style>
+    .k-grid .k-alt {
+        background-color: #fafbfc; /* specify the alternate background-color */
+    }
+
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+    }
+
+    #teamsGrid .k-grid-content, #teamsGrid tr td:last-child {
+        overflow: visible;
+    }
+
+    #teamsGrid .k-grid-header {
+        padding-right: 0 !important;
+    }
+    #dvSiteFooter {
+        top: 70px !important;
+    }
+	   td > a {
+        color:#337ab7;
+    }
+    td > a:hover {
+        color:#337ab7;
+    }
+</style>
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+
+<div class="top-bar clearfix">
+	<!-- Container fluid starts -->
+	<div class="container-fluid">
+		<!-- Row starts -->
+		<div class="row gutter">
+			<div class="col-md-12 col-sm-6 col-xs-12">
+			    <h3 class="page-title" style="float:left;">Teams</h3>
+			    <div style="float: right; font-size: small; line-height: 20px; margin-top: 5px; margin-right: 18px;">
+			        <div style="display: inline-flex">
+			            <ul>
+			                <li><i class="fa fa-circle" aria-hidden="true" style="color: green;"></i> Active</li>
+			                <li><i class="fa fa-circle" aria-hidden="true" style="color: red;"></i> Inactive</li>
+			            </ul>
+			        </div>
+			    </div>              
+			</div>
+		</div>
+		<!-- Row ends -->
+	</div>
+	<!-- Container fluid ends -->
+</div>
+ <!-- Main container starts -->
+<div class="main-container">
+	<!-- Row starts -->
+	<div class="row gutter">
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div id="usergridcontainer">
+				<div class="clearfix">
+					<label style="text-decoration:underline;"></label>
+					<button type="button" onclick="AddTeams();" class="btn btn-primary pull-right  mb-sm">
+						<em class="fa fa-plus-circle fa-fw mr-sm"></em>Add Team
+					</button>
+				</div>
+				<div id="someplaceholderGrid" class="clearfix"></div>
+			</div>
+			<div id="teamsGrid" style="margin-top:8px; overflow:visible !important;" class="clearfix"></div>
+			<div id="teamsPager"></div>
+		</div>
+	</div>
+</div>
+<!-- Main container end --> 
+<div id="confirmActivation" tabindex="-1" role="dialog" aria-labelledby="confirmActivationLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmActivationLabel" class="modal-title">Confirm Updation</h4>
+            </div>
+            <div class="modal-body">
+                Update Team Status?
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="UpdateTeamStatus();">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- START confirm deletion modal-->
+@*<div id="confirmDeletion" tabindex="-1" role="dialog" aria-labelledby="confirmDeletionLabel" aria-hidden="true" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+				<h4 id="confirmDeletionLabel" class="modal-title">Confirm Deletion</h4>
+			</div>
+			<div class="modal-body" style="margin-left:16px;">
+				<form>
+					<div class="form-group">
+						<span>Delete Team?</span>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" data-dismiss="modal" class="btn btn-success">Cancel</button>
+				<button type="button" class="btn btn-danger" onclick="Delete();">Delete</button>
+			</div>
+		</div>
+	</div>
+</div>*@
+<!-- END confirm deletion modal-->       
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script src="../Scripts/kendo.all.min.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
+        $("#liTeam").addClass("active");
+		function AddRoles() {
+			window.location = "@Url.Action("ManageTeams", "Admin")";
+		}
+        var teamdataSource = new kendo.data.DataSource({
+            transport: {
+                read: function (options) {
+                    $.ajax({
+                        type: "GET",
+                        url: "../Admin/GetTeams",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        success: function (result) {
+                            options.success(result.Data);
+                        }
+                    });
+                }
+            },
+            pageSize: 10
+        });
+        $("#teamsGrid").kendoGrid({
+            //selectable: "multiple cell",
+            allowCopy: true,
+            //height: 550,
+            scrollable: true,
+            sortable: true,
+            filterable: true,
+            //pageable: {
+            //    input: true,
+            //    numeric: false
+            //},
+            columns: [
+                {
+                    field: "ID",
+                    hidden: true,
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "IsActive",
+                    title: "Status",
+					filterable: false,
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    },
+                    width: "8%",
+                    template: '#if (IsActive==true) {# <i class="fa fa-circle" aria-hidden="true" style="color:green;vertical-align: text-top;"></i> #} else {# <i class="fa fa-circle" aria-hidden="true" style="color:red;vertical-align: text-top;"></i> #}#',
+                    attributes: {
+                        style: 'white-space: nowrap;text-align:center;'
+                    }
+                },
+                {
+                    field: "Name",
+                    width:"40%",
+                    template: '<a href="javascript:void(0)" onclick="ShowEditTeams(#=ID#);">#=Name#</a>'
+                },
+                {
+                    field: "Coach",
+                    width: "20%",
+                    //title: "User Name",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "Sport",
+                    width: "20%",
+                    //title: "User Name",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "Actions",
+                    title: "Actions",
+                    width: "150px",
+                    filterable: false,
+                    template:
+                        '<div class="btn-group mb-sm">' +
+						    '<button id="btnSelectAction" type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle">Select…</button>' +
+						    '<button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle">' +
+						        '<span class="caret"></span>' +
+                            '</button>' +
+						    '<ul role="menu" class="dropdown-menu" style="min-width:102px !important;">' +
+                                '<li><a href="javascript:void(0);" onclick="ShowActivationConfirmationPopup(\'#=ID#\');">#if(IsActive==true){# ' + 'Deactivate' + ' #}else{# ' + 'Activate' + '#}#</a></li>' +
+							    '<li>' +
+                                    '# if (data.IsSystemCreated) { # <a href="javascript:void(0);">No actions</a> # } #' +
+                                    '# if (!data.IsSystemCreated) { # <a href="javascript:void(0);" onclick="ShowDeleteConfirmationPopup(#=ID#);">Delete</a> # } #' +
+                                '</li>' +
+						    '</ul>' +
+					    '</div> # if (data.IsSystemCreated) { DisableActionBtn("btnSelectAction"); } #'
+                }
+            ],
+            dataSource: teamdataSource
+        });
+
+        teamdataSource.read();
+        $("#teamsPager").kendoPager({
+            autoBind: true,
+            dataSource: teamdataSource
+        });
+
+        function ShowDeleteConfirmationPopup(id) {
+            ConfirmationMessageBox({
+                confirmationMessage: 'Are you sure you want to delete Team?',
+                popupTitle: 'Delete Team',
+                callback: function () {
+                    DeleteTeam(id);
+                }
+            });
+        }
+        function ShowActivationConfirmationPopup(teamID) {
+            $("#confirmActivation").data("id", teamID);
+            $('#confirmActivation').modal('show');
+        }
+        function DeleteTeam(id) {
+            $.ajax({
+                url: "../Admin/DeleteTeam",
+                type: "POST",
+                async: false,
+                data: { id: id },
+                success: function (resp) {
+                    if (resp.Status === 1) {
+                        $('#teamsGrid').data('kendoGrid').dataSource.read();
+                        $('#teamsGrid').data('kendoGrid').refresh();
+                    }
+                    else {
+                        console.log(resp.Message);
+                    }
+
+                }, error: function () {
+                    console.log(resp.Message);
+                }
+            });
+        }
+
+        function ShowEditTeams(teamID) {
+            window.location.href = "../Admin/ManageTeams?id=" + teamID;
+        }
+        function AddTeams() {
+            window.location.href = "../Admin/ManageTeams?id=0";
+        }
+        function DisableActionBtn(ctrl) {
+            $("#" + ctrl).attr("disable", "disable");
+        }
+        function UpdateTeamStatus() {
+            var teamId = $("#confirmActivation").data("id");
+            $('#confirmActivation').modal('hide');
+            $.ajax({
+                url: "../Admin/UpdateTeamStatus",
+                type: "POST",
+                //async: false,
+                data: { id: teamId },
+                success: function (result) {
+                    if (result.Status === 1) {
+                        teamdataSource.read();
+                        alert("Status updated successfully.");
+                    }
+                    else {
+                        alert("Error when updating team status.");
+                    }
+                }, error: function () {
+                    alert('There was some issue');
+                }
+            });
+        }
+    </script>
+}

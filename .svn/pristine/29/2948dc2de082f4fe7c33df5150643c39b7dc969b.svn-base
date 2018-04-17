@@ -1,0 +1,283 @@
+﻿
+@{
+    ViewBag.Title = "Modify Exercise";
+    Layout = "~/Views/Athlete/_MobileLayout.cshtml";
+}
+
+<script>
+	var currentExerciseSetIndex = 0;
+	var currentExerciseClone = null;
+	var exerciseList = null;
+	$(document).ready(function () {
+        $.ajax({
+            url: '../Athlete/GetExerciseSetsList',
+            success: function (data, textStatus, jqXHR) {
+				exerciseSetsDS = JSON.parse(data.Data);
+				exerciseList = data.Exercises;
+				$('#lblUserName').html(data.UserName);
+				BindModifyExerciseList(exerciseSetsDS, data.Exercises);
+            }
+        });
+    });
+
+	function BindModifyExerciseList(exerciseSetsDS, exerciseList) {
+		$.each(exerciseList, function (key, value) {
+			$("#ddlModifySetsMain").append($("<option></option>").val(value.Id).html(value.Name));
+		});
+	
+		var exerciseId = Number(getUrlVars()["exerciseId"]);
+		var setId = Number(getUrlVars()["setId"]);
+	
+		if (exerciseId > 0 && setId>0) {
+			currentExerciseSet = _.find(exerciseSetsDS.exerciseSets, function (obj) { return obj.ExerciseId === exerciseId; });
+			if (currentExerciseSet != null) {
+				currentExerciseClone = jQuery.extend(true, {}, currentExerciseSet);
+				$('#ddlModifySets').val(currentExerciseSet.SetId);
+				$('#ddlModifySetsMain').val(currentExerciseSet.ExerciseId);
+				$('#txtCurrentExercise').val(currentExerciseSet.ExerciseName);
+				$('#txtNewTargetLoad').val(currentExerciseSet.TargetLoad);
+				$('#txtCurrentTargetLoad').val(currentExerciseSet.TargetLoad);
+				$('#txtNewTargetReps').val(currentExerciseSet.TargetReps);
+				$('#txtCurrentTargetReps').val(currentExerciseSet.TargetReps);
+				$('#txtNewTemp').val(currentExerciseSet.Tempo);
+				$('#txtCurrentTemp').val(currentExerciseSet.Tempo);
+				currentExerciseSetIndex =$("#ddlModifySetsMain").prop('selectedIndex');
+			}
+		}
+	}
+
+    function BindModifyExercise(exerciseSetsDS) {
+        $.each(exerciseSetsDS.exerciseSets, function (key, value) {
+            $("#ddlModifySets").append($("<option></option>").val(key).html(value.SetName));
+		});
+		var groupedData = _.groupBy(exerciseSetsDS.exerciseSets, function (d) { return d.ExerciseId });
+		var ds = [];
+		$.each(groupedData, function (key, value) {
+			var obj = { 'key': key, 'value': value[0].ExerciseSetName };
+			ds.push(obj)
+		});
+		var sortedData = _.sortBy(ds, function (d) { return d.value });
+		$.each(sortedData, function (key, value) {
+			$("#ddlModifySetsMain").append($("<option></option>").val(value.key).html(value.value));
+		});
+
+		currentExerciseSetIndex = Number(getUrlVars()["exerciseId"]);
+		if (currentExerciseSetIndex != null) {
+			currentExerciseSet = exerciseSetsDS.exerciseSets[currentExerciseSetIndex];
+			if (currentExerciseSet != null) {
+				currentExerciseClone = jQuery.extend(true, {}, currentExerciseSet);
+				var cName = currentExerciseSet.ExerciseName;
+				$('#ddlModifySets').val(currentExerciseSetIndex);
+				$('#ddlModifySetsMain').val(currentExerciseSet.ExerciseId);
+				$('#txtCurrentExercise').val(cName);
+				$('#txtNewTargetLoad').val(currentExerciseSet.TargetLoad);
+				$('#txtCurrentTargetLoad').val(currentExerciseSet.TargetLoad);
+				$('#txtNewTargetReps').val(currentExerciseSet.TargetReps);
+				$('#txtCurrentTargetReps').val(currentExerciseSet.TargetReps);
+				$('#txtNewTemp').val(currentExerciseSet.Tempo);
+				$('#txtCurrentTemp').val(currentExerciseSet.Tempo);
+			}
+		}
+    }
+
+	function BindData() {
+		if (currentExerciseSetIndex != null && currentExerciseSetIndex != -1) {
+			var selExerciseId = $('#ddlModifySetsMain').val();
+			currentExerciseSet = _.find(exerciseSetsDS.exerciseSets, function (obj) { return obj.ExerciseId === selExerciseId; });
+			if (currentExerciseSet != null) {
+				$('#ddlModifySets').val(currentExerciseSet.SetId);
+				$('#ddlModifySetsMain').val(currentExerciseSet.ExerciseId);
+				$('#txtNewTargetLoad').val(currentExerciseSet.TargetLoad);
+				$('#txtNewTargetReps').val(currentExerciseSet.TargetReps);
+				$('#txtNewTemp').val(currentExerciseSet.Tempo);
+			}
+			else {
+				$('#txtNewTargetLoad').val("");
+				$('#txtNewTargetReps').val("");
+				$('#txtNewTemp').val("");
+			}
+		}
+	}
+    function SaveModifyExercise() {
+		var mSet = jQuery.extend(true, {}, currentExerciseClone);
+    	mSet.TargetLoad = $('#txtNewTargetLoad').val();
+    	mSet.TargetReps = $('#txtNewTargetReps').val();
+		mSet.Tempo = $('#txtNewTemp').val();
+		mSet.ExerciseId = $('#ddlModifySetsMain').val();
+		//mSet.ExerciseName = $('#ddlModifySetsMain').text();
+
+    	var strFinal = JSON.stringify({
+    		currentSet: currentExerciseClone,
+    		modifiedSet: mSet
+    	});
+    	$.ajax({
+    		url: '../Athlete/SaveModifyExercise',
+    		type: 'POST',
+    		dataType: "json",
+    		contentType: 'application/json',
+    		data: strFinal,
+    		
+    		success: function (data, textStatus, jqXHR) {
+    			exerciseSetsDS = null;
+    			window.location.href = '@Url.Action("WorkoutSummary", null, new { controller = "Athlete" }, Request.Url.Scheme)';
+    		},
+    		error: function (xhr, ajaxOptions, thrownError) {
+    			alert(xhr.responseText);
+    		}
+    	});
+    }
+
+	function NextModifySet() {
+		if ($("#lnkNext")[0].disabled) return;
+		$("#lnkPrev")[0].disabled = false;
+		$('#lnkPrev').attr('disabled', false);
+		currentExerciseSetIndex = currentExerciseSetIndex + 1;
+
+		if (currentExerciseSetIndex == (exerciseList.length - 1)) {
+			$("#lnkNext")[0].disabled = true;
+			$('#lnkNext').attr('disabled', true);
+		}
+		else {
+			$("#lnkNext")[0].disabled = false;
+			$('#lnkNext').attr('disabled', false);
+		}
+		document.getElementById("ddlModifySetsMain").selectedIndex = currentExerciseSetIndex;
+		//BindData();
+	}
+
+	function PrevModifySet() {
+		if ($("#lnkPrev")[0].disabled) return;
+		$("#lnkNext")[0].disabled = false;
+		$('#lnkNext').attr('disabled', false);
+		currentExerciseSetIndex = currentExerciseSetIndex - 1;
+		if (currentExerciseSetIndex <= 0) {
+			$("#lnkPrev")[0].disabled = true;
+			$('#lnkPrev').attr('disabled', true);
+		}
+		else {
+			$("#lnkPrev")[0].disabled = false;
+			$('#lnkPrev').attr('disabled', false);
+
+		}
+		document.getElementById("ddlModifySetsMain").selectedIndex = currentExerciseSetIndex;
+		//BindData();
+	}
+
+	function ChangeModifyExercise() {
+		currentExerciseSetIndex = Number(document.getElementById("ddlModifySets").value);
+		if (currentExerciseSetIndex == (exerciseSetsDS.exerciseSets.length - 1)) {
+			$("#lnkNext")[0].disabled = true;
+			$('#lnkNext').attr('disabled', true);
+		}
+		else {
+			$("#lnkNext")[0].disabled = false;
+			$('#lnkNext').attr('disabled', false);
+		}
+
+		if (currentExerciseSetIndex == 0) {
+			$("#lnkPrev")[0].disabled = true;
+			$('#lnkPrev').attr('disabled', true);
+		}
+		else {
+			$("#lnkPrev")[0].disabled = false;
+			$('#lnkPrev').attr('disabled', false);
+		}
+		
+		BindData();
+	}
+
+	function ChangeModifyExerciseNew() {
+		
+		//var cIndex = Number(document.getElementById("ddlModifySetsMain").value);
+		//$.each(exerciseSetsDS.exerciseSets, function (key, value) {
+		//	if (cIndex == value.ExerciseId) {
+		//		$("#ddlModifySetsMain").val(key);
+		//		currentExerciseSetIndex = key;
+		//		return false;
+		//	}
+		//});
+	
+		currentExerciseSetIndex = $("#ddlModifySetsMain").prop('selectedIndex');
+		if (currentExerciseSetIndex == (exerciseList.length - 1)) {
+			$("#lnkNext")[0].disabled = true;
+			$('#lnkNext').attr('disabled', true);
+		}
+		else {
+			$("#lnkNext")[0].disabled = false;
+			$('#lnkNext').attr('disabled', false);
+		}
+
+		if (currentExerciseSetIndex == 0) {
+			$("#lnkPrev")[0].disabled = true;
+			$('#lnkPrev').attr('disabled', true);
+		}
+		else {
+			$("#lnkPrev")[0].disabled = false;
+			$('#lnkPrev').attr('disabled', false);
+		}
+		document.getElementById("ddlModifySetsMain").selectedIndex = currentExerciseSetIndex;
+		//BindData();
+	}
+</script>
+
+<div class="top-bar clearfix">
+	<!-- Container fluid starts -->
+	<div class="container-fluid">
+		<!-- Row starts -->
+
+		<div class="row gutter">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<div class="workout-btn-group" style="text-align:center;margin-top:20px">
+					<a href="javascript:GoToViewExercise()" class="btn btn-danger" style="padding:7px;width:100px">Cancel</a>
+					<a href="javascript:void(0)" class="btn btn-success" style="padding:7px;width:100px" onclick="javascript:SaveModifyExercise()">Save</a>
+				</div>
+				<h3 class="page-title" style="text-align:center;white-space:nowrap">Modify Exercise</h3>
+			</div>
+		</div>
+		<!-- Row ends -->
+	</div>
+	</div>
+<div>
+	<!-- Container fluid ends -->
+	<div class="container-fluid" style="padding:0px 0px 0px 0px">
+		<div class="main-container" style="padding:10px 10px 10px 10px">
+			<!-- Row starts -->
+			<div class="row gutter">
+				<div class="col-md-12 col-sm-12 col-xs-12">
+					<div class="table-responsive">
+						<table class="table table-bordered no-margin" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<p><b>New Exercise:</b></p>
+									<select class="form-control" id="ddlModifySets" style="display:none" ></select>
+									<select class="form-control" id="ddlModifySetsMain" onchange="ChangeModifyExerciseNew();"></select>
+								</td>
+								<td><p><b>Current Exercise:</b></p><input id="txtCurrentExercise" class="form-control input-sm" type="text" value="Bench Press" readonly></td>
+							</tr>
+							<tr>
+								<td><p><b>New Target Load:</b></p><input id="txtNewTargetLoad" class="form-control input-sm" type="text" value="150"></td>
+								<td><p><b>Current Target Load:</b></p><input id="txtCurrentTargetLoad" class="form-control input-sm" type="text" value="150" readonly></td>
+							</tr>
+							<tr>
+								<td><p><b>New Target Reps:</b></p><input id="txtNewTargetReps" class="form-control input-sm" type="text" value="150"></td>
+								<td><p><b>Current Target Reps:</b></p><input id="txtCurrentTargetReps" class="form-control input-sm" type="text" value="150" readonly></td>
+							</tr>
+							<tr>
+								<td><p><b>New Tempo:</b></p><input id="txtNewTemp" class="form-control input-sm" type="text" value="150"></td>
+								<td><p><b>Current Tempo:</b></p><input id="txtCurrentTemp" class="form-control input-sm" type="text" value="150" readonly></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<!-- Row ends -->
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="workout-btn-group" style="text-align:center;">
+					<a id="lnkPrev" href="javascript:PrevModifySet()" class="btn btn-primary" style="padding:7px;margin-right:50px">Previous</a>
+					<a id="lnkNext" href="javascript:NextModifySet()" class="btn  btn-primary" style="padding-top:7px;width:70px">Next</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+

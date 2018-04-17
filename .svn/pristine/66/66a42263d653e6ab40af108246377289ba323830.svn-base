@@ -1,0 +1,85 @@
+﻿
+using System.Collections.Generic;
+using Microsoft.Ajax.Utilities;
+using StrengthTracker2.Core.Repository.Entities.ProgramManagement;
+
+namespace StrengthTracker2.Web.Models.Admin
+{
+    public class AddExerciseToProgramViewModel
+    {
+        public Program CurrentProgram { get; set; }
+        public List<string> ListGroups { get; set; }
+        public List<Exercise> ListExercises{ get; set; }
+        public List<MovementType> ListMovementTypes { get; set; }
+        public List<KeyValuePair<string, string>> ListTempo
+        {
+            get { return TempoModel.Tempos; }
+        }
+    }
+
+    public enum Formula
+    {
+        Average3Times = 1,
+        SumOfTotalRepsXBWXPercentBWX2 = 2,
+        SumofTotalRepsXBWXPercentageBW = 3,
+        SumOfRepBy15forBWXPercentageBW = 8,
+        SumOfRepBy30forBWXPercentageBW = 9,
+        SumofRepBWPercentageBWX2 = 6,
+        SumofTotalRepsXResistanceX2 = 4,
+        //TotalNumofRepsXSumXRBWBWPercentage = 2,//wrong
+        TotalNumofRepsXSumXRBWBWPercentageX4 = 10,
+        TotalNumofRepsXSumXRBWBWPercentageX6 = 11,
+        AvgOfNumofTouchesineachSet = 12,
+        SumofTotalRepsXResistance = 5,
+        TotalNumofRepsXSumofRBWPercentageBW = 7,
+        TotalNumofRepsXSumBWRXPercentageBW = 13
+    }
+
+    public class ExerciseModel
+    {
+        /// <summary>
+        /// Hold the exercise unique identifier
+        /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
+        /// Hold the name of exercise
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Holds the addition description related to this exercise.
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Exercise associated with this Movement type
+        /// </summary>
+        public int MovementTypeID { get; set; }
+
+        /// <summary>
+        /// MovementType name associated with MovementTypeID
+        /// </summary>
+        public string MovementTypeName { get; set; }
+
+        /// <summary>
+        /// Associated Unit of measurement
+        /// </summary>
+        public int UOMID { get; set; }
+
+        /// <summary>
+        /// UOM name associated with the UOMID
+        /// </summary>
+        public string UOMName { get; set; }
+
+        /// <summary>
+        /// Assocaited Percentage for Bodyweight exercise
+        /// </summary>
+        public int BWPercentageforVolume { get; set; }
+
+        /// <summary>
+        /// Associated formula for calculating Volume
+        /// </summary>
+        public int Formula { get; set; }
+    }
+}

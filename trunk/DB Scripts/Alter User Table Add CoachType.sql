@@ -1,0 +1,1 @@
+ALTER TABLE [dbo].[User] ADD [CoachType] [int] NOT NULL DEFAULT (0)

@@ -1,0 +1,499 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Program Exercise List";
+    Layout = "~/Views/Admin/_LayoutNew.cshtml";
+}
+<style>
+    .k-grid .k-alt {
+        background-color: #f3f3f4; /* specify the alternate background-color */
+    }
+    .k-grid .k-grid-header .k-header .k-link {
+        height: auto;
+    }
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+        text-align:center;
+    }
+    .k-grouping-header {
+        display: none;
+    }
+    #dvSiteFooter {
+        top: 30px !important;
+    }
+    /*.row {
+        margin-left: -50px;
+        margin-right: -35px;
+    }*/
+    .breadcrumbs2 .active a {
+        color: #ffffff;
+        background-color:#3a86c8;
+    }
+    .breadcrumbs2 .active a:after {
+        border-left-color: #3a86c8;
+    }
+    .breadcrumbs2 .active a:before {
+        border-color: #3a86c8 #3a86c8 #3a86c8 transparent;
+    }
+    .breadcrumbs2 > li:last-child a {
+        color: #2a303e;
+    }
+</style>
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+    @*<div class="dashboard-wrapper">*@
+        <div class="top-bar clearfix">
+            <!-- Container fluid starts -->
+			<div class="container-fluid">
+                <!-- Row starts -->
+                <div class="row gutter">
+                    <div class="col-md-8 col-sm-6 col-xs-12">
+					    <h3 class="page-title">Create Program - View Program - @ViewBag.ProgramName</h3>
+					</div>
+                </div>
+                <!-- Row ends -->
+            </div>
+            <!-- Container fluid ends -->
+        </div>
+        <!-- Top Bar ends -->
+        <!-- Main container starts -->
+        <div class="main-container">
+            <ul class="breadcrumbs2" style="margin-bottom:20px;">
+                <li><a href="@Url.Action("Program", "Admin")"><span class="icon-home2"></span></a></li>
+                <li class="">
+                    <a href="JavaScript:void(0);" onclick="ChangeTabs('ManageProgram');" data-toggle="tab">Create Program - Add Structure</a>
+                </li>
+                <li>
+                    <a href="JavaScript:void(0);" onclick="ChangeTabs('AddExerciseToProgram');" data-toggle="tab">Create Program - Add Exercise</a>
+                </li>
+                <li class="active">
+                    <a href="JavaScript:void(0);" data-toggle="tab">Create Program - View Program</a>
+                </li>
+                <li class="">
+                    <a href="JavaScript:void(0);" onclick="ChangeTabs('ProgramDWSession');" data-toggle="tab">Create Program - DW Session</a>
+                </li>
+            </ul>
+            <div class="row">
+            <div class="col-lg-12">
+                <div class="panel-default">
+                    <div class="panel-body">
+                        <div class="row" style="margin-right:0px !important;display:none;">
+                            <div class="pull-right">
+                                        <button type="button" id="btnManageProgramInfo" onclick="AddProgram();" class="mb-sm btn btn-primary">Manage Program Info</button> &nbsp;
+                                        <button type="button" id="btnAddExercise" onclick="AddExercise();" class="btn btn-primary pull-right  mb-sm">
+                                            <em class="fa fa-plus-circle fa-fw mr-sm"></em>Add Exercise
+                                        </button>
+                                    </div>
+                        </div>
+                        <div class="row">&nbsp;</div>
+                        <div id="usergridcontainer">
+                                <div class="clearfix">
+                                    <div class="col-md-5" style="padding-left:0px !important;">
+                                <div class="form-group">
+                                        <label>Sport: </label>
+                                    <label id="lblSport"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Position: </label>
+                                    <label id="lblPosition"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-3" style="padding-right:0px!important;display:none;">
+                                <div class="form-group">
+                                    <div class="pull-right"><label>Program Name: </label>
+                                    <label id="lblProgramName"></label></div>
+                                </div>
+                            </div>
+                                </div>
+                                <div id="usersGrid" class="clearfix"></div>
+                                
+                            </div>
+                        <div class="row" style="margin-left: -15px;">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Step - Group:</label>
+                                    <div class="controls">
+                                        <select id="lstSessionNum" class="form-control m-b" onchange="GetProgramExerciseList();" ></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="programGrid" style="margin-top:8px;" class="clearfix"></div>
+                        <div id="programGridPager"></div>
+                        <div class="row">&nbsp;</div>
+                        <div class="row" style="margin-left: -15px;">
+                            <div class="col-md-12">
+                                <label>Estimated Time to Complete this Daily: </label>
+                                <label id="lblProgTimeToComplete"></label>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-right: -15px;">
+                            <div class="col-md-12">
+                                <div class="pull-right">
+                                    <button type="button" id="btnBack" onclick="GoBack('AddExerciseToProgram');" class="mb-sm btn btn-info">Back</button>
+                                    <button type="button" class="mb-sm btn btn-info" onclick="GoBack('ProgramDWSession');" >Next</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="reorderButtonContainer" style="display:none;">
+                            <div id="reorderbuttonaction" class="clearfix">
+                                <div class="clearfix"></div>
+                                <div class="pull-left">
+                                    <button type="button" class="mb-sm mt-sm btn btn-primary">Reorder</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <!-- Main Container Ends -->
+    @*</div>*@
+    <!-- Dashboard Wrapper Ends -->
+<!-- START Copy program modal-->
+   <div id="copyProgram" tabindex="-1" role="dialog" aria-labelledby="copyProgramLabel" aria-hidden="true" class="modal fade">
+      <div class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+               <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+               <h4 id="copyProgramLabel" class="modal-title">Copy Program</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-default">
+                     <div class="panel-heading">Details</div>
+                     <div class="panel-body">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                              <label class="col-lg-2 control-label">From</label>
+                              <label class="col-lg-2 control-label">5 X 5 MXS</label>
+                           </div>
+                           <div class="form-group">
+                              <label class="col-lg-2 control-label">Name</label>
+                              <div class="col-lg-10">
+                                 <input type="text" placeholder="New Program Name" class="form-control">
+                              </div>
+                           </div>
+                           <div class="form-group">
+                              <label class="col-lg-2 control-label">Description</label>
+                              <div class="col-lg-10">
+                                 <input type="text" placeholder="New Program Description" class="form-control">
+                              </div>
+                           </div>
+                        </form>
+                     </div>
+                  </div>
+            </div>
+            <div class="modal-footer">
+               <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+               <button type="button" class="btn btn-primary">Save</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- END copy program modal-->
+<!-- START confirm deletion modal-->
+   <div id="confirmDeletion" tabindex="-1" role="dialog" aria-labelledby="confirmDeletionLabel" aria-hidden="true" class="modal fade">
+      <div class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+               <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+               <h4 id="confirmDeletionLabel" class="modal-title">Confirm Deletion</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel-default">
+                    <div class="">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <div id="exerciseDescription" class="col-lg-9"></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+             <div class="modal-footer">
+                 <input type="hidden" id="programExerciseID" value="">
+                 <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                 <button type="button" id="btnDelExercise" onclick="DelExercise();" class="btn btn-primary">Delete</button>
+             </div>
+         </div>
+      </div>
+   </div>
+   <!-- END confirm deletion modal-->
+<!-- START confirm activation modal-->
+   <div id="confirmActivation" tabindex="-1" role="dialog" aria-labelledby="confirmActivationLabel" aria-hidden="true" class="modal fade">
+      <div class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+               <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+               <h4 id="confirmActivationLabel" class="modal-title">Confirm Activation</h4>
+            </div>
+            <div class="modal-body">
+                Activate program?
+            </div>
+            <div class="modal-footer">
+               <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+               <button type="button" class="btn btn-primary">Activate</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- END confirm deletion modal-->
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script src="../Scripts/kendo.all.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $("#liProgram").addClass("active");
+        var programDataSource = null;
+
+        $("#programGrid").kendoGrid({
+            selectable: true,
+            allowCopy: true,
+            //pageable: {
+            //    pageSizes: false
+            //},
+            scrollable: true,
+            sortable: true,
+            filterable: true,
+            groupable: true
+        });
+
+        $(function () {
+            $("#lstSessionNum").empty();
+            var arrSessionStr = '@Html.Raw(Json.Encode(ViewBag.SessionModelList))';
+            arrSessionStr = arrSessionStr.replace("\"]", "");
+            arrSessionStr = arrSessionStr.replace("[\"", "");
+            var arrSessions = arrSessionStr.replace("\"]", "").replace("[\"", "").split("},");
+            for (var i = 0; i <= arrSessions.length - 1; i++) {
+                var txt = arrSessions[i];
+                txt = txt.replace('[', '');
+                txt = txt.replace('{', '');
+                txt = txt.replace('}', '');
+                txt = txt.replace(']', '');
+                txt = txt.replace('\"', '');
+                txt = txt.replace('\"', '');
+
+                var val = txt.split(":")[2];
+                val = val.replace("\"", "");
+                val = val.replace("\"", "");
+
+                var disp = txt.split(":")[1];
+                disp = disp.split(",")[0];
+                disp = disp.replace("\"", "");
+                disp = disp.replace("\"", "");
+                $("#lstSessionNum").append('<option value=' + val + '>' + disp + '</option>');
+            }
+            var programID = "@Request.QueryString["programID"]";
+            var isTKGProgram = getUrlVars()["p"];
+
+            if (isTKGProgram === "true") {
+                $("#btnAddExercise").hide();
+                //$("#btnManageProgramInfo").hide();
+            }
+            else {
+                $("#btnAddExercise").show();
+                //$("#btnManageProgramInfo").show();
+            }
+            if (programID) {
+
+                $.ajax({
+                    url: '@Url.Action("GetProgramByIDForAddExercise", "Admin")',
+                    type: "POST",
+                    data: JSON.stringify({ 'programID': programID, 'isTKGProgram': isTKGProgram }),
+                    contentType: 'application/json',
+                    dataType: "json",
+                    success: function (result) {
+                        $("#lblSport").text(result.Name);
+                        $("#lblPosition").text(result.position);
+                        //$("#lblProgramName").text(result[4]);
+                    },
+                    error: function (req, status, errorObj) {
+                        alert('Error: Please try again');
+                    }
+                });
+                GetProgramExerciseList();
+            }
+        });
+        //$("#programGrid").kendoTooltip({
+        //    filter: "td:nth-child(3)", //this filter selects the second column's cells
+        //    position: "right",
+        //    content: function (e) {
+        //        var dataItem = $("#programGrid").data("kendoGrid").dataItem(e.target.closest("tr"));
+        //        var content = dataItem.Description;
+        //        return content;
+        //    }
+        //}).data("kendoTooltip");
+        $(".k-grid-header tr th").eq(0).css("text-align", "center");
+        $(".k-grid-header tr th a").eq(1).css("padding-left", "20px");
+        function GetProgramExerciseList() {
+            var programID = getUrlVars()["programID"];
+            $.ajax({
+                url: '@Url.Action("GetExerciseListForProgram", "Admin")',
+                type: "POST",
+                data: JSON.stringify({ 'sessionNum': $("#lstSessionNum").val(), 'programID': programID }),
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (result) {
+                    var dataResult = $.parseJSON(result[0]);
+                    var columnsResult = $.parseJSON(result[1]);
+                    $("#lblProgTimeToComplete").text($.parseJSON(result[2]) + " Minutes");
+
+                    var grd = $("#programGrid").data("kendoGrid");
+                    grd.destroy();
+                    $("#programGrid").empty();
+
+                    var gridColumns = columnsResult.Columns[0];
+                    gridColumns.push({
+                        "command": {
+                            name: "destroy",
+                            template: "<div style='text-align: center;'><a style='text-decoration: none;' command='ShowDeleteConfirmationPopup'><i class='fa fa-times' style='display:inline;color:darkgrey;'></i></a></div>"
+                        },
+                        title: "Action",
+                        width: "60px"
+                    });
+
+                    grd = $("#programGrid").kendoGrid({ columns: gridColumns });
+
+                    programDataSource = new kendo.data.DataSource({
+                        data: dataResult.ProgramsList,
+                        total: dataResult.ProgramsList.length,
+                        schema: {
+                            data: function (response) {
+                                console.log(response);
+                                return response;
+                            },
+                            total: function (response) {
+                                console.log(response.length);
+                                return response.length;
+                            },
+                        },
+                        pageSize: 10
+                    });
+
+                    $("#programGrid").data("kendoGrid").setDataSource(programDataSource);
+                    $('#programGrid').data('kendoGrid').refresh();
+
+                    $("#programGridPager").data('kendoPager').setDataSource(programDataSource);
+                    $("#programGridPager").data('kendoPager').refresh();
+
+                    $('#programGrid').on('click', '[command="ShowDeleteConfirmationPopup"]', ShowDeleteConfirmationPopup);
+                    $("#programGrid").find("tbody tr:first>td:first>div>a:first>i").css("color", "lightgrey");
+                    $("#programGrid").find("tbody tr:last>td:first>div>a:last>i").css("color", "lightgrey");
+                },
+                error: function (req, status, errorObj) {
+                    alert('Error: Please try again');
+                }
+            });
+        }
+
+        $("#programGridPager").kendoPager({
+            autoBind: true,
+            dataSource: programDataSource
+        });
+
+        function AddProgram() {
+            var programID = getUrlVars()["programID"];
+            var isTKGProgram = getUrlVars()["p"];
+            window.location = "@Url.Action("ManageProgram", "Admin")?programID=" + programID + "&p=" + isTKGProgram;
+        }
+
+        function AddExercise() {
+            var isTKGProgram = getUrlVars()["p"];
+            var programID = getUrlVars()["programID"];
+            window.location = "@Url.Action("AddExerciseToProgram", "Admin")?programID=" + programID + "&p=" + isTKGProgram;
+        }
+
+        function DelExercise() {
+            var programExerciseID = $("#programExerciseID").val();
+            var programID = "@Request.QueryString["programID"]";
+            var isTKGProgram = "@Request.QueryString["p"]";
+
+            $.ajax({
+                url: '@Url.Action("DeleteExercise", "Admin")',
+                type: "POST",
+                data: JSON.stringify({ 'programID': programID, 'programExerciseId': programExerciseID, 'isTKGProgram': isTKGProgram }),
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (data) {
+                    $("#programGrid").data("kendoGrid").dataSource.read();
+                    $('#confirmDeletion').modal('hide');
+                }
+            });
+        }
+
+        function ShowDeleteConfirmationPopup(e) {
+            var item = $("#programGrid").data("kendoGrid").dataItem($(this).closest("tr"));
+
+            $("#programExerciseID").val(item.ProgramExerciseID);
+            $('#exerciseDescription').empty();
+            $('#exerciseDescription').append("Delete exercise: " + item.Name + "?");
+            $('#confirmDeletion').modal('show');
+        }
+        function ShowActivationConfirmationPopup() {
+            $('#confirmActivation').modal('show');
+        }
+        function NavigatetoAdd(ExerciseID) {
+            var pID = getUrlVars()["programID"];
+            var p = getUrlVars()["p"];
+            window.location.href = "../Admin/AddExerciseToProgram?programID=" + pID + "&exerciseID=" + ExerciseID + "&p=" + p;
+        }
+        function ChangeOrderUp(ProgramExerciseID) {
+            var pID = '@Request.QueryString["programID"]';
+            var firstItem = $("#programGrid").data("kendoGrid").dataItem("tbody tr:first");
+
+            if (firstItem.ProgramExerciseID == ProgramExerciseID) {
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("ChangeProgramExerciseOrder", "Admin")',
+                type: "POST",
+                data: JSON.stringify({ 'ProgramID' : pID, 'ProgramExerciseID': ProgramExerciseID, 'OrderSeq': 'up' }),
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (result) {
+                    if (result.Status == 2) {
+                        alert(result.Message);
+                    }
+                    GetProgramExerciseList();
+
+                    $("#programGrid").data("kendoGrid").dataSource.read();
+                },
+                error: function (req, status, errorObj) {
+                    alert('Error: Please try again');
+                }
+            });
+        }
+        function ChangeOrderDown(ProgramExerciseID) {
+            var pID = '@Request.QueryString["programID"]';
+            var isTKGProgram = getUrlVars()["p"];
+            if (isTKGProgram === "true") {
+                return false;
+            }
+
+            var lastItem = $("#programGrid").data("kendoGrid").dataItem("tbody tr:last");
+            if (lastItem.ProgramExerciseID == ProgramExerciseID) {
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("ChangeProgramExerciseOrder", "Admin")',
+                type: "POST",
+                data: JSON.stringify({ 'ProgramID': pID, 'ProgramExerciseID': ProgramExerciseID, 'OrderSeq': 'down' }),
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (result) {
+                    if (result.Status == 2) {
+                        alert(result.Message);
+                    }
+                    GetProgramExerciseList();
+
+                    $("#programGrid").data("kendoGrid").dataSource.read();
+                },
+                error: function (req, status, errorObj) {
+                    alert('Error: Please try again');
+                }
+            });
+        }
+    </script>
+}

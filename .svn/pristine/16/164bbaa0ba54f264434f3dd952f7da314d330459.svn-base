@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <appSettings>
+    <add key="ApplicationDSN" value="server=rohitlaptop\sqlexpress;database=ktg-dev;uid=sa;password=Password123;" />
+    <!--<add key="ApplicationDSN" value="server=dev1.myprogrammer.com,10591;database=ktg-dev2;uid=arun.prasath;password=APPasswd99#;" />-->
+  </appSettings>
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-6.0.0.0" newVersion="6.0.0.0" />
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+</configuration>

@@ -1,0 +1,615 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Profile";
+    Layout = "~/Views/Admin/_LayoutNew.cshtml";
+}
+<div class="top-bar clearfix">
+    <div class="container-fluid">
+        <div class="row gutter">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                <h3 class="page-title">Athlete Profile</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-container">
+    <div id="profileDiv">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                <input type="image" src="../images/noimage.jpg" width="80" height="80" id="profilePicture"/>
+                <input type="file" id="my_file" style="display: none;"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="panel panel-light">
+                    <div class="panel-heading">
+                        &nbsp;
+                        <div class="panel-title pull-right" style="color:#ffffff;">* Required fields</div>
+                        <h4 class="panel-title">Athlete Profile</h4>
+                    </div>
+                    <div class="form-group col-lg-6"></div>
+                    <div class="form-group col-lg-6"></div>
+                    <div class="form-group col-lg-6"></div>
+                    <div class="form-group col-lg-6">
+                        @*<div class="required pull-right" style="width:42%" ><a href="javascript:void(0)" onclick="ShowChangePasswordDiv()">Change Password</a></div>                                    *@
+                    </div>
+
+                    <div class="panel-body">
+                        <div id="accordionAdd" class="panel-group">
+                            <!-- START panel-->
+                            <div class="">
+                                <div class="panel-body">
+                                    <form class="form-horizontal">
+                                        <input type="hidden" id="hdnAthleteID" />
+                                        <input type="hidden" id="hdnUserType" />
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">First Name *</label>
+                                            <div class="col-lg-7">
+                                                <input placeholder="First Name" class="form-control" id="txtAthleteFirstName">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">Last Name *</label>
+                                            <div class="col-lg-7">
+                                                <input placeholder="Last Name" class="form-control" id="txtAthleteLastName">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">  Address1 </label>
+                                            <div class="col-lg-7">
+                                                <input type="text" placeholder="Address1" class="form-control" id="txtAthleteAddress1" />
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">Address 2 </label>
+                                            <div class="col-lg-7">
+                                                <input type="text" placeholder="Address2" class="form-control" id="txtAthleteAddress2" />
+                                            </div>
+                                        </div>
+                                        @*<div class="form-group col-lg-6">
+                                                <label class="col-lg-5 control-label">State</label>
+                                                <div class="col-lg-7">
+
+                                                    <select name="state" class="form-control m-b" id="ddlAthleteState">
+                                                        <option>Select State</option>
+                                                    </select>
+
+                                                </div>
+                                            </div>*@
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">City</label>
+                                            <div class="col-lg-7">
+                                                <input placeholder="City" class="form-control" id="txtAthleteCity">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">State/Zip</label>
+                                            <div class="col-lg-7">
+                                                <select style="width:45%; padding:0px;" name="state" class="form-control mr col-lg-6 state-select" id="ddlAthleteState">
+                                                    <option>Select State</option>
+                                                </select>
+                                                <div style="width:55%; padding:0px;" class="col-lg-6">
+                                                    <input placeholder="ZIP Code" class="form-control" id="txtAthleteZip">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">Country</label>
+                                            <div class="col-lg-7">
+                                                <select name="state" class="form-control mr col-lg-6 country-select" id="ddlAthleteCountry">
+                                                    <option>Select Country</option>
+                                                    @*<option value="3">Belgium</option>
+                                                    <option value="2">Canada</option>
+                                                    <option value="4">France</option>
+                                                    <option value="5">Germany</option>
+                                                    <option value="6">UK</option>
+                                                    <option value="1">US</option>*@
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">Phone No.</label>
+                                            <div class="col-lg-7">
+                                                <input placeholder="Phone No" class="form-control" id="txtAthletePhone">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">Alt Phone No.</label>
+                                            <div class="col-lg-7">
+                                                <input placeholder="Alternate Phone No" class="form-control" id="txtAthleteAlternatePhone">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">Email</label>
+                                            <div class="col-lg-7">
+                                                <input type="email" placeholder="Email" class="form-control" id="txtAthleteEmail">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">Alt Email</label>
+                                            <div class="col-lg-7">
+                                                <input type="email" placeholder="Comma Seperated Email" class="form-control" id="txtAthleteSecondaryEmail">
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">DOB</label>
+                                            <div class="col-lg-7">
+                                                @*<div data-pick-date="true" data-pick-time="false" class="datetimepicker input-group date mb-lg" style="margin-bottom:0px !important;">*@
+                                                <input type="text" class="form-control" placeholder="Date of Birth" id="txtAthleteDOB">
+                                                @*<span class="input-group-addon">
+                                                        <span class="fa fa-calendar fa-clock-o"></span>
+                                                    </span>*@
+                                                @*<label class="col-lg-5 control-label">Age</label>21*@
+                                                @*</div>*@
+                                            </div>
+
+
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">Gender</label>
+                                            <div class="col-lg-7">
+                                                <select name="profileGender" class="form-control m-b" id="ddlAthleteGender">
+                                                    <option value="0">--Select Gender--</option>
+                                                    <option value="1">Male</option>
+                                                    <option value="2">Female</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        @*<div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Sport *</label>
+                                                        <div class="col-lg-7">
+                                                            <select name="profilePosition" class="form-control m-b" id="ddlAthleteSport">
+                                                                <option>Archery</option>
+                                                                <option>Shooting</option>
+                                                                <option>Swimming</option>
+                                                                <option>Horse Riding</option>
+                                                            </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">Position*</label>
+                                                    <div class="col-lg-7">
+                                                        <select name="profileParticipants" class="form-control m-b" id="ddlAthletePosition">
+                                                            <option>Yes</option>
+                                                            <option>No</option>
+                                                        </select>
+                                                    </div>
+                                            </div>*@
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">School</label>
+                                            <div class="col-lg-7">
+                                                <input placeholder="School" class="form-control" id="txtAthleteSchool">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">Strength Training Experienced</label>
+                                            <div class="col-lg-7">
+                                                <select name="profileParticipants" class="form-control m-b" id="ddlAthleteExperienced">
+                                                    <option value="0">--Select Experienced--</option>
+                                                    <option value="1">Yes</option>
+                                                    <option value="2">No</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">Travel Club/Team</label>
+                                            <div class="col-lg-7">
+                                                <input placeholder="Travel Club/Team" class="form-control" id="txtAthleteTravelClub">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">Travel Club/Level</label>
+                                            <div class="col-lg-7">
+                                                <select name="profileTravel" class="form-control m-b" id="ddllAthleteTravelClubLevel">
+                                                    <option value="0">--Select Travel Team Level--</option>
+                                                    <option value="1">A</option>
+                                                    <option value="2">B</option>
+                                                    <option value="3">C</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    <div class="form-group col-lg-6">
+                                        <label class="col-lg-5 control-label">Sport *</label>
+                                        <div class="col-lg-7">
+                                            <select name="profilePosition" class="form-control m-b" id="ddlAthleteSport"></select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6">j
+                                        <label class="col-lg-5 control-label">Grade *</label>
+                                        <div class="col-lg-7">
+                                            <input type="text" name="Grade" placeholder="Grade" id="txtAthleteGrade" class="form-control m-b" onkeypress="return isNumber(event);" />
+                                        </div>
+                                    </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">Sport on registration</label>
+                                            <div class="col-lg-7">
+                                                <input type="text" name="RegSport" placeholder="" id="txtRegisteredSport" class="form-control m-b" disabled="disabled" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">Team</label>
+                                            <div class="col-lg-7">
+                                                <input type="text" id="txtTeamName" disabled="disabled" class="form-control m-b" />
+                                            </div>
+                                        </div>
+                                    <div class="form-group col-lg-6">
+                                        <label class="col-lg-5 control-label">Coach</label>
+                                        <div class="col-lg-7">
+                                            <input type="text" id="txtCoachName" disabled="disabled" class="form-control m-b" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label class="col-lg-5 control-label">Program</label>
+                                        <div class="col-lg-7">
+                                            <input type="text" id="txtProgramName" disabled="disabled" class="form-control m-b" />
+                                        </div>
+                                    </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">Location</label>
+                                            <div class="col-lg-7">
+                                                <input type="text" id="txtLocation" disabled="disabled" class="form-control m-b" />
+                                            </div>
+                                        </div>
+
+                                        @* Have Participated in more than 3 months of continuos intelligent resistance traiing*@
+                                        <div class="form-group col-lg-12">
+
+                                            <div class="pull-right" style="width:10%">
+
+                                                @*<button type="button"  class="btn btn-primary btn-sm">Save</button>*@
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- END panel-->
+                            <!-- START panel-->
+                            @*<div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordionAdd" href="#collapsePricingSetupAdd" class="collapsed">Pricing Setup</a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapsePricingSetupAdd" class="panel-collapse collapse" style="height: 0px;">
+                                        <div class="panel-body">
+                                            <form class="form-horizontal">
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">Customer Name *</label>
+                                                    <div class="col-lg-7">
+                                                        <input placeholder="Customer Name" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">Contact Name *</label>
+                                                    <div class="col-lg-7">
+                                                        <input placeholder="Last Name" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">Contact Phone *</label>
+                                                    <div class="col-lg-7">
+                                                        <input placeholder="Contact Phone" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">Contact Email *</label>
+                                                    <div class="col-lg-7">
+                                                        <input type="email" placeholder="Contact Email" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">Address *</label>
+                                                    <div class="col-lg-7">
+                                                        <textarea placeholder="Address" class="form-control"></textarea>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-lg-offset-2 col-lg-10">
+                                                        <div class="required">* Required fields</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="pull-right">
+                                                    <button type="button" onclick="ShowCustomerGrid();" class="btn btn-sm btn-default">Cancel</button>
+                                                    <button type="button" onclick="ShowCustomerGrid();" class="btn btn-primary btn-sm">Save</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>*@
+                            <!-- END panel-->
+                        </div>
+                        <div class="form-group col-lg-12" style="width:94.3% !important;">
+
+                            <div class="pull-right">
+
+                                <button type="button" class="btn btn-success mb-lg" onclick="SaveAthleteProfile();">Save</button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <!-- panel panel-light ends -->
+            </div>
+            <!-- col-lg-12 col-md-12 col-sm-12 col-xs-12 ends -->
+        </div>
+        <!-- Profile Row ends -->
+    </div>
+
+    <div id="ChangePasswordDiv" style="display:none;">
+
+        <div class="">
+            <div class="panel-heading bb">
+                Select New Password
+                <div class="required pull-right">* Required fields</div>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal">
+
+                    <div class="form-group col-lg-6">
+                        <label class="col-lg-5 control-label">New Password*</label>
+                        <div class="col-lg-7">
+                            <input type="password" placeholder="First Name" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label class="col-lg-5 control-label">Confirm Password *</label>
+                        <div class="col-lg-7">
+                            <input type="password" placeholder="Last Name" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-12">&nbsp;</div>
+
+                    <div class="pull-right" style="" width:25%">
+                        <button type="button" onclick="ShowProfileDiv();" class="btn btn-primary btn-sm">Reset Password</button>
+
+                    </div>
+
+
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script src="../Scripts/slider/js/bootstrap-slider.js"></script>
+    <script src="../Scripts/sparklines/jquery.sparkline.min.js"></script>
+    <script src="../Scripts/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="../Scripts/kendo.all.min.js"></script>
+    <script src="~/Scripts/moment/min/moment.min.js"></script>
+    <script src="~/Scripts/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/jquery.maskedinput.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $("#liAthlete").addClass("active");
+        var athleteModel = null;
+        $(function () {
+            $("#ddlAthleteSport").change(function () {
+                var selectedText = $(this).find("option:selected").text();
+                var selectedValue = $(this).val();
+                LoadSelectList($("#ddlAthletePosition"), athleteModel.Positions, selectedValue);
+            });
+
+            $('#txtAthleteDOB').mask("99/99/9999", { placeholder: "MM/DD/YYYY", clearIfNotMatch: true });
+            $("#txtAthletePhone").mask("(999) 999-9999");
+            $("#txtAthleteAlternatePhone").mask("(999) 999-9999");
+            var userId = getParameterByName('UserId');
+            LoadAthleteProfile(userId);
+        });
+
+        function ShowProfileDiv() {
+            $("#profileDiv").show();
+            $("#ChangePasswordDiv").hide();
+        }
+
+        function ShowChangePasswordDiv() {
+
+            $("#profileDiv").hide();
+            $("#ChangePasswordDiv").show();
+
+        }
+
+        function getParameterByName(name, url) {
+            if (!url) {
+                url = window.location.href;
+            }
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+
+        function LoadSelectList(ctrl, data, filterKey) {
+            var options = "";
+            ctrl.empty();
+            for (var i = 0; i < data.length; i++) {
+                if (filterKey != null) {
+                    if (filterKey == data[i].FilterKey || data[i].Value == "0") {
+                        if (data[i].Selected == true) {
+                            options += '<option value ="' + data[i].Value + '" selected>' + data[i].Text + '</option>'
+                        }
+                        else {
+                            options += '<option value ="' + data[i].Value + '">' + data[i].Text + '</option>'
+                        }
+                    }
+                }
+                else {
+                    if (data[i].Selected == true) {
+                        options += '<option value ="' + data[i].Value + '" selected>' + data[i].Text + '</option>'
+                    }
+                    else {
+                        options += '<option value ="' + data[i].Value + '">' + data[i].Text + '</option>'
+                    }
+                }
+
+            }
+            ctrl.append(options);
+        }
+
+        function SaveAthleteProfile() {
+            // Checking whether FormData is available in browser
+            if (window.FormData !== undefined) {
+
+                var fileUpload = $("input[id='my_file']").get(0);
+                var files = fileUpload.files;
+
+                // Create FormData object
+                var fileData = new FormData();
+
+                // Looping over all files and add it to FormData object
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                }
+                var trainingExp = false;
+
+                if ($("#ddlAthleteExperienced").val() === "1") {
+                    trainingExp = true;
+                }
+
+                athleteModel.FirstName = $("#txtAthleteFirstName").val();
+                athleteModel.LastName = $("#txtAthleteLastName").val();
+                athleteModel.DOB = $("#txtAthleteDOB").val();
+                athleteModel.UserType = $("#hdnUserType").val();
+                athleteModel.Gender = $("#ddlAthleteGender").val();
+                athleteModel.Grade = $("#txtAthleteGrade").val();
+                athleteModel.AddressOne = $("#txtAthleteAddress1").val();
+                athleteModel.AddressTwo = $("#txtAthleteAddress2").val();
+                athleteModel.City = $("#txtAthleteCity").val();
+                athleteModel.Country = $("#ddlAthleteCountry").val();
+                athleteModel.Email = $("#txtAthleteEmail").val();
+                athleteModel.SecondaryEmail = $("#txtAthleteSecondaryEmail").val();
+                athleteModel.ZipCode = $("#txtAthleteZip").val();
+                athleteModel.Phone = $("#txtAthletePhone").val();
+                athleteModel.AlternatePhone = $("#txtAthleteAlternatePhone").val();
+                athleteModel.StateID = $("#ddlAthleteState").val();
+                athleteModel.SportID = $("#ddlAthleteSport").val();
+                athleteModel.PositionID = $("#ddlAthletePosition").val();
+                athleteModel.School = $("#txtAthleteSchool").val();
+                athleteModel.TravelTeamName = $("#txtAthleteTravelClub").val();
+                athleteModel.Experienced = trainingExp;//$("#ddlAthleteExperienced").val() === "1" ? true : false;
+                athleteModel.TravelTeamLevel = $("#ddllAthleteTravelClubLevel").val();
+                if (files.length > 0) {
+                    athleteModel.UserImagePath = files[0].name;
+                }
+
+                // Adding one more key to FormData object
+                fileData.append('athleteViewModel', JSON.stringify(athleteModel));
+
+                $.ajax({
+                    url: '@Url.Action("SaveAthlete", "Admin")',
+                    type: "POST",
+                    data: fileData,
+                    contentType: false, // Not to set any content header
+                    processData: false, // Not to process data
+                    dataType: "json",
+                    success: function (result) {
+                        alert(result.Message);
+                    },
+                    error: function (req, status, errorObj) {
+                        alert('Error: Please try again');
+                    }
+                });
+            }
+            else {
+                alert("FormData is not supported.");
+            }
+        }
+
+        function LoadAthleteProfile(userId) {
+
+            $.ajax({
+                url: '../Admin/GetAthleteInfoByID',
+                type: "POST",
+                data: JSON.stringify({ 'athleteID': userId }),
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (result) {
+
+                    athleteModel = result;
+                    $("#txtAthleteFirstName").val(result.FirstName);
+                    $("#hdnAthleteID").val(userId);
+                    $("#hdnUserType").val(result.UserType);
+                    $("#txtAthleteLastName").val(result.LastName);
+                    $("#txtAthleteAddress1").val(result.AddressOne);
+                    $("#txtAthleteAddress2").val(result.AddressTwo);
+                    (result.StateID == null) ? $("#ddlAthleteState").val(0) : $("#ddlAthleteState").val(result.StateID);
+                    $("#txtAthleteCity").val(result.City);
+                    $("#txtAthleteZip").val(result.ZipCode);
+                    $("#ddlAthleteCountry").val(result.Country);
+                    $("#txtAthletePhone").val(result.Phone);
+                    $("#txtAthleteAlternatePhone").val(result.AlternatePhone);
+                    $("#txtAthleteEmail").val(result.Email);
+                    $("#txtAthleteSecondaryEmail").val(result.SecondaryEmail);
+                    $("#txtAthleteGrade").val(result.Grade);
+                    $("#txtRegisteredSport").val(result.RegisteredSport);
+                    var athleteDOB = (result.DOB != null && result.DOB != undefined) ? new Date(parseInt(result.DOB.substr(6))) : null;
+                    if (athleteDOB != null) {
+                        $("#txtAthleteDOB").val(('0' + (athleteDOB.getMonth() + 1)).slice(-2) + '/' + ('0' + athleteDOB.getDate()).slice(-2) + '/' + athleteDOB.getFullYear());
+                    }
+                    (result.Gender == null) ? $("#ddlAthleteGender").val(0) : $("#ddlAthleteGender").val(result.Gender);
+                    LoadSelectList($("#ddlAthleteSport"), result.Sports);
+                    (result.SportID == null) ? $("#ddlAthleteSport").val(0) : $("#ddlAthleteSport").val(result.SportID);
+
+                    LoadSelectList($("#ddlAthletePosition"), result.Positions, result.SportID);
+                    (result.PositionID == null) ? $("#ddlAthletePosition").val(0) : $("#ddlAthletePosition").val(result.PositionID);
+
+                    $("#txtAthleteSchool").val(result.School);
+                    $("#ddlAthleteExperienced").val(result.Experienced == true ? "1" : "2");
+                    (result.Experienced == null) ? $("#ddlAthleteExperienced").val(0) : $("#ddlAthleteExperienced").val(result.Experienced == true ? "1" : "2");
+
+                    $("#txtAthleteTravelClub").val(result.TravelTeamName);
+                    $("#ddllAthleteTravelClubLevel").val(result.PlayingLevel);
+                    (result.TravelTeamLevel == null) ? $("#ddllAthleteTravelClubLevel").val(0) : $("#ddllAthleteTravelClubLevel").val(result.TravelTeamLevel);
+
+                    $("#profilePicture").attr("src", (result.UserImagePath != null && result.UserImagePath.length > 1) ? result.UserImagePath : "../images/noimage.jpg");
+                    $("#txtTeamName").val(result.TeamName);
+                    $("#txtCoachName").val(result.CoachName);
+                    $("#txtProgramName").val(result.Program);
+                    $("#txtLocation").val(result.Location);
+                },
+                error: function (req, status, errorObj) {
+                    alert('Error: Please try again');
+                }
+            });
+        }
+
+        $("input[type='image']").click(function () {
+            $("input[id='my_file']").click();
+        });
+
+        $("#my_file").change(function () {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                // get loaded data and render thumbnail.
+                document.getElementById("profilePicture").src = e.target.result;
+            };
+
+            if (this.files[0]) {
+                // read the image file as a data URL.
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+    </script>
+}

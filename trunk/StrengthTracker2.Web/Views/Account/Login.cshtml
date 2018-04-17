@@ -1,0 +1,142 @@
+﻿@{
+    Layout = "";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="icon" type="image/png" href="~/Images/favicon.png">
+    <title>Login</title>
+    @*<link rel="stylesheet" href="~/Scripts/mustang/css/loading.css" />*@
+    <link rel="stylesheet" href="~/Scripts/mustang/css/main.css" id="themeSwitcher" />
+    <link href="~/Scripts/mustang/css/bootstrap.min.css" rel="stylesheet" />
+    @*<link rel="stylesheet" href="~/Scripts/mustang/css/common.css" />*@
+    @*<link rel="stylesheet" href="~/Scripts/mustang/fonts/icomoon/icomoon.css" />*@
+    @*<link rel="stylesheet" href="~/Content/StrengthTracker2/strengthtracker.common.css" />*@
+
+    <link href="~/Scripts/mustang/css/login.css" rel="stylesheet" />
+    <link href="~/Scripts/mustang/fonts/icomoon/icomoon.css" rel="stylesheet" />
+    <style>
+        button {
+            font-size: 18px;
+            background-color: #4568b2;
+            color: #ffffff;
+            border: 0;
+            -webkit-border-radius: 2px;
+            -moz-border-radius: 2px;
+            border-radius: 2px;
+            -webkit-transition: all 0.2s ease;
+            -moz-transition: all 0.2s ease;
+            -ms-transition: all 0.2s ease;
+            -o-transition: all 0.2s ease;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            width: 100%;
+            margin: 0 auto;
+            display: block;
+            margin-bottom: 10px;
+            padding: 15px;
+        }
+        #loading-wrapper #loader{
+            width: 80px !important;
+        }
+    </style>
+</head>
+<body class="login loaded">
+    <div id="loading-wrapper">
+        <div id="loader">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+            <div class="line4"></div>
+            <div class="line5"></div>
+            <div class="line6"></div>
+        </div>
+    </div>
+    <form>
+        <div id="login-wrapper">
+            <div id="login_header">
+                <img src="~/images/saqs-headerlogo.png" class="logo" alt="Strength Tracker" style="max-width:max-content;float:none;" />
+                @*<div style="font-size: 24px !important;margin-top: 15px !important;text-align: center;">Strength Tracker</div>*@
+            </div>
+            <div class="login-user">
+                @*<img src="img/user2.png" alt="User" />*@
+            </div>
+            <h5 style="margin-top:0px !important;padding-top:5px !important;">SIGN IN TO CONTINUE.</h5>
+            <div id="inputs">
+                <div class="form-block">
+                    <input id="userName" type="text" placeholder="User Name" onkeypress="enter_pressed(event)">
+                    <i class="icon-user2"></i>
+                </div>
+                <div class="form-block">
+                    <input id="userPassword" type="password" placeholder="Password" onkeypress="enter_pressed(event)" />
+                    <i class="icon-eye2"></i>
+                </div>
+                <br />
+                <div class="clearfix">
+                    <div class="checkbox c-checkbox pull-left mt0">
+                        <label>
+                            <input type="checkbox" value="">
+                            <span class="fa fa-check"></span>Remember Me
+                        </label>
+                    </div>
+                </div>
+                <br />
+                <div class="clearfix">
+                    <button id="userlogin" onclick="Login();" type="button">Login
+                        <img id="loading" src="@Url.Content("~/images/ajax_loader_large.gif")" style="display: none; height:auto "/></button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div id="loginOption" tabindex="-1" role="dialog" aria-labelledby="loginOptionLabel" aria-hidden="true" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" data-dismiss="modal" aria-hidden="true" class="close" style="width:10px;">×</button>
+                    <h4 id="copyProgramLabel" class="modal-title" style="float:left;">Do you want to perform your daily workouts?</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-default">
+                        <input type="hidden" id="hdNavigateUserTo" />
+                        @*<div class="panel-heading">Details</div>*@
+                        @*<div class="" style="float:left;">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-lg-12 control-label">Do you want to perform your daily workouts?</label>
+                                </div>
+                            </form>
+                        </div>*@
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-top:0;">
+                    <button type="button" class="btn btn-default" onclick="NavigateUserToRequiredPage('admin');" style="width:100px;">No</button>
+                    <button type="button" class="btn btn-primary" onclick="NavigateUserToRequiredPage('workout');" style="width:100px;">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-1.11.0.js"></script>
+    <script src="~/Scripts/mustang/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/StrengthTracker2/Common.js"></script>
+    <script src="~/Scripts/verimail/verimail.jquery.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        var coachDashboardURL = "@Url.Action("DashboardNew", "Coach")";
+        var athleteDashboardURL = "@Url.Action("Dashboard", "Athlete")";
+        $(document).ready(function () {
+            $("#userName").focus();
+        });
+        function Login() {
+            AuthenticateUser("@Url.Action("AuthenticateUser", "Account")");
+        }
+        function enter_pressed(data) {
+            var key = data.keyCode || data.which;
+            if (key == 13) {
+                Login();
+            }
+        }
+    </script>
+</body>
+</html>

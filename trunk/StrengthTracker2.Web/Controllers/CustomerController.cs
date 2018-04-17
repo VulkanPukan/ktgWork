@@ -1,0 +1,765 @@
+﻿
+using System;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Security;
+using System.Configuration;
+using System.Linq;
+using System.IO;
+using StructureMap;
+using StrengthTracker2.Web.Models;
+using StrengthTracker2.Core.Repository.Entities.Actors;
+using StrengthTracker2.Core.Repository.Entities.Customers;
+using StrengthTracker2.Core.Repository.Contracts.Customers;
+using StrengthTracker2.Web.Helpers;
+using Kendo.Mvc.UI;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Web.Helpers;
+using System.Web.Hosting;
+using Kendo.Mvc.Extensions;
+using StrengthTracker2.Persistence.Mapping;
+using StrengthTracker2.Core.DataTypes;
+using System.Web.Script.Serialization;
+using StrengthTracker2.Core.Repository.Contracts.TKGMaster;
+using MyProgrammer.Core.Services;
+using StrengthTracker2.Core.Repository.Entities.TKGMaster;
+using StrengthTracker2.Persistence.Repository.Account;
+
+
+namespace StrengthTracker2.Web.Controllers
+{
+    public class CustomerController : Controller
+    {
+        private readonly ICustomerManagementRepository _iCustomerManagementRepository = ObjectFactory.GetInstance<ICustomerManagementRepository>();
+        private ICustomerContactManagementRepository _iCustomerContactManagementRepository;
+        private readonly IApplicationServerManagementRepository _iApplicationServerManagementRepository = ObjectFactory.GetInstance<IApplicationServerManagementRepository>();
+        private readonly IDatabaseServerManagementRepository _iDatabaseServerManagementRepository = ObjectFactory.GetInstance<IDatabaseServerManagementRepository>();
+        private ICustomerPricingManagementRepository _iCustomerPricingMgmtRepository;
+        private ICustomerLocationMgmtRepository _iCustomerLocationMgmtRepository;
+        private ICustomerMasterMgmtRepository _iCustomerMgmt;
+        private readonly ICustomerMasterMgmtRepository _iCustMasterMgmtRep = ObjectFactory.GetInstance<ICustomerMasterMgmtRepository>();
+        private readonly IMailService _mailService = ObjectFactory.GetInstance<IMailService>();
+        
+        [Authorize]
+        public ActionResult Customers()
+        {
+            return View();
+        }
+
+        public JsonResult GetCustomerList([DataSourceRequest]DataSourceRequest request)
+        {
+            var list = _iCustomerManagementRepository.ListAllCustomers();
+            var lstResult = new List<CustomerViewModel>();
+
+            foreach (var source in list)
+            {
+                CustomerViewModel target = new CustomerViewModel()
+                {
+                    CustomerId = source.Customer.CustomerId,
+                    OrganizationName = source.Customer.OrganizationName,
+                    Category = source.Customer.Category != 0 ?  source.Customer.Category.ToString() : string.Empty,
+                    Website = source.Customer.Website,
+                    CustomerPhone = source.Customer.CustomerPhone,
+                    AlternatePhone = source.Customer.AlternatePhone,
+                    Address = source.Customer.Address,
+                    State = source.Customer.State,
+                    City = source.Customer.City,
+                    ZIPCode = source.Customer.ZIPCode,
+                    ContactFirstName = source.Customer.ContactFirstName,
+                    ContactLastName = source.Customer.ContactLastName,
+                    ContactEmail = source.Customer.ContactEmail,
+                    ContactPhone = source.Customer.ContactPhone,
+                    BillingAddress = source.Customer.BillingAddress,
+                    BillingState = source.Customer.BillingState,
+                    BillingCity = source.Customer.BillingCity,
+                    BillingZIPCode = source.Customer.BillingZIPCode,
+                    FreeTrialStartDate = source.Customer.FreeTrialStartDate,
+                    FreeTrialEndDate = source.Customer.FreeTrialEndDate,
+                    ApplicationServerId = source.Customer.ApplicationServerId,
+                    DatabaseServerId = source.Customer.DatabaseServerId,
+                    IsDeleted = source.Customer.IsDeleted,
+                    IsActive = source.Customer.IsActive
+                };
+
+
+                //first customer: todo: need to check which pricing details needs to be shown
+                var customerPricing = source.CustomerPricings.FirstOrDefault();
+                if (customerPricing != null)
+                {
+                    target.MaxNumberOfAthletes = customerPricing.MaxNumberOfAthletes ?? 0;
+                    target.NumberOfActiveAthletes = customerPricing.NumberOfActiveAthletes ?? 0;
+                    target.PricePerActiveAthelete = customerPricing.PricePerActiveAthelete ?? 0;
+                    target.BillingAmount = customerPricing.BillingAmount ?? 0;
+                    target.StartDate = customerPricing.StartDate;
+                    target.TypeOfCustomer = customerPricing.TypeOfCustomer;
+                   
+                }
+
+                ////todo: which customer contact details needs to be shown
+                //var customerContact = source.CustomerContact.FirstOrDefault();
+                //if (customerContact != null)
+                //{                    
+                //    target.TypeOfCustomer = customerPricing.TypeOfCustomer.ToString();
+                //}
+
+                target.NumberOfLocations = 0;//todo: get locations
+                target.FreeTrailNoOfDays = 0;
+                if (target.FreeTrialEndDate.HasValue && target.FreeTrialEndDate.Value > DateTime.Now)
+                    target.FreeTrailNoOfDays = (target.FreeTrialEndDate.Value - DateTime.Now).Days;
+
+                lstResult.Add(target);
+            }
+
+            return Json(lstResult.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteCustomer(int id)
+        {
+            try
+            {
+                if (_iCustomerManagementRepository.DeleteCustomer(id))
+                    return Json(new ReturnObjectModel() {  Status = ReturnStatus.OK, Message = "Customer deleted successfully." }, JsonRequestBehavior.AllowGet);
+                else
+                    return Json(new ReturnObjectModel() { Status = ReturnStatus.Err, Message = "Unable to delete customer" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new ReturnObjectModel() { Status = ReturnStatus.Err, Message = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        [HttpPost]
+        public ActionResult AddCustomer(CustomerViewModel CustomerModel)
+        {
+            ReturnObjectModel returnObjectModel = new ReturnObjectModel();
+
+            //in case invalid CustomerModel then show error 
+            if (!ModelState.IsValid)
+            {
+                returnObjectModel.Message = string.Join(";\r\n ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage));
+                returnObjectModel.Status = ReturnStatus.Err;
+                return Json(returnObjectModel , JsonRequestBehavior.AllowGet);
+            }
+
+            //todo: remove below code once server information is available in CustomerModel
+            var appServer = _iApplicationServerManagementRepository.ListAllApplicationServers().FirstOrDefault();
+            var dbServer = _iDatabaseServerManagementRepository.ListAllDatabaseServers().FirstOrDefault();
+
+            var customer = new Customer()
+            {
+                OrganizationName = CustomerModel.OrganizationName,
+                Category = (CustomerCategoryType)Convert.ToInt32(CustomerModel.Category),
+                Website = CustomerModel.Website,
+                CustomerPhone = CustomerModel.CustomerPhone,
+                AlternatePhone = CustomerModel.AlternatePhone,
+                Address = CustomerModel.Address,
+                Address2 = CustomerModel.Address2,
+                State = CustomerModel.State,
+                Country = CustomerModel.Country,
+                City = CustomerModel.City,
+                ZIPCode = CustomerModel.ZIPCode,
+                ContactFirstName = CustomerModel.ContactFirstName,
+                ContactLastName = CustomerModel.ContactLastName,
+                ContactEmail = CustomerModel.ContactEmail,
+                ContactPhone = CustomerModel.ContactPhone,
+                BillingAddress = CustomerModel.BillingAddress,
+                BillingAddress2 = CustomerModel.BillingAddress2,
+                BillingState = CustomerModel.BillingState,
+                BillingCountry = CustomerModel.BillingCountry,
+                BillingCity = CustomerModel.BillingCity,
+                BillingZIPCode = CustomerModel.BillingZIPCode,
+                //todo: below fields
+                FreeTrialStartDate = DateTime.UtcNow.AddDays(-10),
+                FreeTrialEndDate = DateTime.UtcNow.AddDays(10),
+                ApplicationServerId = appServer.ApplicationServerId,
+                DatabaseServerId = dbServer.DatabaseServerId,
+                IsDeleted = false,
+                IsActive = true
+            };
+
+            //customer = _iCustomerManagementRepository.AddCustomer(customer);
+
+            returnObjectModel.Message = "Customer added successfully.";
+            returnObjectModel.Status = ReturnStatus.OK;
+            return Json(returnObjectModel, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetCustomerInfoByID( int customerID)
+        {
+            var customer = _iCustomerManagementRepository.GetCustomerInfoByID(customerID);
+            if (customer.Category == CustomerCategoryType.PersonalTrainer)
+            {
+                var masterCustomer = _iCustMasterMgmtRep.GetCustomerMasterByTKGCustomerID(customer.CustomerId);
+                var currentConnStr = System.Web.HttpContext.Current.Session["CustomerConnStr"];
+                var userName = String.Empty;
+                try
+                {
+                    System.Web.HttpContext.Current.Session["CustomerConnStr"] = masterCustomer.CustomerConnStr;
+                    var accountRepository = ObjectFactory.GetInstance<Account>();
+                    var user = accountRepository.ListAllTKGAdminUsers().Users.FirstOrDefault();
+                    userName = user != null ? user.UserName : String.Empty;
+                }
+                finally
+                {
+                    System.Web.HttpContext.Current.Session["CustomerConnStr"] = currentConnStr;
+                }
+                customer.UserName = userName;
+            }
+            return Json(customer ?? new Customer(), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetActiveAthletesForCustomer(int customerID)
+        {
+            List<User> lstAthlete = _iCustomerManagementRepository.GetActiveAthleteForCustomer(customerID);
+
+            return Json(lstAthlete == null ? 0 : lstAthlete.Count, JsonRequestBehavior.AllowGet);
+        }
+
+		public JsonResult OrganizationExists(string organizationName, int customerID)
+		{
+			ReturnObjectModel returnObjectModel = new ReturnObjectModel();
+
+			bool isExists = _iCustomerManagementRepository.ListAllCustomers().Any(s => s.Customer.OrganizationName == organizationName && s.Customer.CustomerId != customerID);
+			if (isExists)
+			{
+				returnObjectModel.Status = ReturnStatus.Err;
+				returnObjectModel.Message = string.Format("Organization Name '{0}' already exist.", organizationName);
+			}
+			else
+			{
+				returnObjectModel.Status = ReturnStatus.OK;
+				returnObjectModel.Message = string.Format("Organization Name '{0}' does not exist.", organizationName);
+			}
+			return Json(returnObjectModel, JsonRequestBehavior.AllowGet);
+		}
+
+		public JsonResult UpdateCustomerID(CustomerViewModel CustomerModel)
+        {
+            ReturnObjectModel ro = new ReturnObjectModel();
+
+            bool addCustomerMaster = false;
+
+            addCustomerMaster = CustomerModel.CustomerId > 0 ? false : true;
+
+            ro.Message = "Customer Update failed";
+            ro.Status = ReturnStatus.Err;
+
+            var customer = new Customer()
+            {
+
+                CustomerId = CustomerModel.CustomerId,
+                OrganizationName = CustomerModel.OrganizationName,
+                Category = (CustomerCategoryType)Convert.ToInt32(CustomerModel.Category),
+                Website = CustomerModel.Website,
+                CustomerPhone = CustomerModel.CustomerPhone == null ? "" : CustomerModel.CustomerPhone,
+                AlternatePhone = CustomerModel.AlternatePhone == null ? "" : CustomerModel.AlternatePhone,
+                Address = CustomerModel.Address,
+                Address2 = CustomerModel.Address2,
+                State = CustomerModel.State,
+                City = CustomerModel.City,
+                Country = CustomerModel.Country,
+                ZIPCode = CustomerModel.ZIPCode,
+                ContactFirstName = CustomerModel.ContactFirstName,
+                ContactLastName = CustomerModel.ContactLastName,
+                ContactEmail = CustomerModel.ContactEmail,
+                ContactPhone = CustomerModel.ContactPhone,
+                SameAddAsAbove = CustomerModel.SameAsAbove,
+                BillingAddress = CustomerModel.SameAsAbove == true ? CustomerModel.Address : CustomerModel.BillingAddress,
+                BillingState = CustomerModel.SameAsAbove == true ? CustomerModel.State : CustomerModel.BillingState,
+                BillingCity = CustomerModel.SameAsAbove == true ? CustomerModel.City : CustomerModel.BillingCity,
+                BillingZIPCode = CustomerModel.SameAsAbove == true ? CustomerModel.ZIPCode : CustomerModel.BillingZIPCode,
+                BillingAddress2 = CustomerModel.SameAsAbove == true ? CustomerModel.Address2 : CustomerModel.BillingAddress2,
+                BillingCountry = CustomerModel.SameAsAbove == true ? CustomerModel.Country : CustomerModel.BillingCountry,
+                //todo: below fields
+                FreeTrialStartDate = CustomerModel.FreeTrialStartDate,
+                FreeTrialEndDate = CustomerModel.FreeTrialEndDate,
+                ApplicationServerId = CustomerModel.ApplicationServerId,
+                DatabaseServerId = CustomerModel.DatabaseServerId,
+                IsDeleted = false
+            };
+
+
+            int customerID = _iCustomerManagementRepository.SaveCustomerInfo(customer);
+
+            if (customerID > 0)
+            {
+                if (addCustomerMaster)
+                {
+                    var customerName = CustomerModel.OrganizationName.Replace(" ", "").ToLower();
+                    string newCustomerConnStr = Convert.ToString(ConfigurationManager.AppSettings["DBConnStr"]).Replace(":custname:", customerName);
+                    string newCustomerRegnURL = ConfigurationManager.AppSettings["PersonalTrainerRegnURL"] + customerName;
+
+                    CustomerMaster cm = _iCustMasterMgmtRep.AddCustomerMaster(new Core.Repository.Entities.TKGMaster.CustomerMaster()
+                    {
+                        Category = Convert.ToInt32(CustomerModel.Category),
+                        IsSuperAdmin = false,
+                        IsActive = true,
+                        CustomerAttachmentPath = "",
+                        CustomerIDinTKG = customerID,
+                        CustomerDisplayName = CustomerModel.OrganizationName,
+                        CustomerName = customerName,
+                        CustomerConnStr = newCustomerConnStr,
+                        RegistrationURL = newCustomerRegnURL
+                    });
+                }
+
+                ro.Status = ReturnStatus.OK;
+                ro.Message = "Customer saved successfully" + "|" + customerID;
+            }
+
+            return Json(ro, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult AddCustomerContact()
+        {
+            ReturnObjectModel ro = new ReturnObjectModel();
+
+            ro.Message = "Save failed";
+            ro.Status = ReturnStatus.Err;
+            string imgname = string.Empty;
+            string fileName = string.Empty;
+            string fileFullPathName = string.Empty;
+            string ext = string.Empty;
+            CustomerContact customerContact = new JavaScriptSerializer().Deserialize<CustomerContact>(System.Web.HttpContext.Current.Request.Form["customerContact"]);
+
+            if (System.Web.HttpContext.Current.Request.Files.AllKeys.Any())
+            {
+                var pic = System.Web.HttpContext.Current.Request.Files[0];
+                if (pic.ContentLength > 0)
+                {
+                    fileName = Path.GetFileName(pic.FileName);
+                    ext = Path.GetExtension(pic.FileName);
+                    imgname = Guid.NewGuid().ToString();
+                    fileFullPathName = Server.MapPath("~/Images/customercontact/") + imgname + ext;
+                    imgname = imgname + ext;
+                    pic.SaveAs(fileFullPathName);
+                }
+            }
+
+            if (customerContact != null)
+            {
+                if (fileName != null && fileName.Length > 0)
+                {
+                    customerContact.ContactImageOriginalFileName = fileName;
+                    customerContact.ContactImageFileName = customerContact.CustomerContactId == 0 ? ext : customerContact.CustomerContactId + ext;
+                }
+
+                _iCustomerContactManagementRepository = ObjectFactory.GetInstance<ICustomerContactManagementRepository>();
+
+                int customerContactID = _iCustomerContactManagementRepository.SaveCustomerContact(customerContact);
+
+                if (customerContactID > 0)
+                {
+                    if (fileName != null && fileName.Length > 0)
+                    {
+                        customerContact.ContactImageOriginalFileName = fileName;
+                        var newFileFullPathName = Server.MapPath("~/Images/customercontact/") + customerContactID + ext;
+                        if (System.IO.File.Exists(newFileFullPathName))
+                        {
+                            System.IO.File.Delete(newFileFullPathName);
+                        }
+                        if (System.IO.File.Exists(fileFullPathName))
+                        {
+                            System.IO.File.Move(fileFullPathName, newFileFullPathName);
+                        }
+                    }
+
+                    ro.Status = ReturnStatus.OK;
+                    ro.Message = "Save successful";
+                }
+            }
+            return Json(ro, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetContactsForCustomer(int customerID)
+        {
+            _iCustomerContactManagementRepository = ObjectFactory.GetInstance<ICustomerContactManagementRepository>();
+
+            List<CustomerContact> lstCustomerContact = _iCustomerContactManagementRepository.GetContactsForCustomer(customerID);
+
+            List<CustomerContactViewModel> lstCustomerVM = new List<CustomerContactViewModel>();
+
+            foreach (CustomerContact cc in lstCustomerContact)
+            {
+                CustomerContactViewModel cvm = new CustomerContactViewModel();
+
+                cvm.CustomerId = cc.CustomerId;
+                cvm.ContactType = cc.ContactType;
+                cvm.CustomerContactId = cc.CustomerContactId;
+                cvm.Email = cc.Email;
+                cvm.FirstName = cc.FirstName;
+                cvm.LastName = cc.LastName;
+                cvm.Phone = cc.Phone;
+                cvm.ImagePath = cc.ContactImageFileName == null ? "" : @"../Images/customercontact/" + cc.ContactImageFileName;
+
+                lstCustomerVM.Add(cvm);
+            }
+
+            return Json(lstCustomerVM, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetPricingHistoryForCustomer(int customerID)
+        {
+            List<PricingHistoryViewModel> lstph = new List<PricingHistoryViewModel>();
+            PricingHistoryViewModel ph = null;
+
+            _iCustomerPricingMgmtRepository = ObjectFactory.GetInstance<ICustomerPricingManagementRepository>();
+
+            List<CustomerPricing> lstCP = _iCustomerPricingMgmtRepository.GetPricingByCustomerID(customerID);
+
+            if (lstCP != null & lstCP.Count > 0)
+            {
+                foreach (CustomerPricing cp in lstCP)
+                {
+                    ph = new PricingHistoryViewModel();
+
+                    ph.ActiveAthletes = cp.NumberOfActiveAthletes;
+                    ph.ActivePriceAthletes = cp.PricePerActiveAthelete;
+                    ph.BillingAmt = cp.BillingAmount;
+                    ph.BillingFreq = cp.BillingFrequency;
+                    ph.CustomerType = cp.TypeOfCustomer == CustomerType.ForProfit ? "For Profit" : "Non Profit";
+                    ph.EndDate = (cp.EndDate.HasValue) ? Convert.ToDateTime(cp.EndDate.Value).ToString("MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture) : string.Empty;
+                    ph.StartDate = (cp.StartDate.HasValue) ? Convert.ToDateTime(cp.StartDate.Value).ToString("MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture) : string.Empty;
+                    ph.EnrollmentMax = cp.EnrollmentMax;
+                    ph.EnrollmentMin = cp.EnrollmentMin;
+                    ph.MaxNumofAthlete = cp.MaxNumberOfAthletes;
+                    ph.MaxPriceAthlete = cp.MaxPricePerAthelete;
+                    ph.PaymentOption = (Convert.ToString(cp.PaymentOption) == "CreditCard") ? "Credit Card" : Convert.ToString(cp.PaymentOption);
+                    ph.PriceAdditionalAthlete = cp.PricePerAdditionalAthlete == null ? 0 : cp.PricePerAdditionalAthlete;
+                    ph.CustomerPricingId = cp.CustomerPricingId;
+                    ph.customerID = cp.CustomerId;
+
+                    lstph.Add(ph);
+                }
+            }
+
+            return Json(lstph, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetContactInfo(int customerContactID)
+        {
+            _iCustomerContactManagementRepository = ObjectFactory.GetInstance<ICustomerContactManagementRepository>();
+
+            CustomerContact cc = _iCustomerContactManagementRepository.GetCustomerContactByID(customerContactID);
+
+            CustomerContactViewModel cvm = new CustomerContactViewModel();
+
+            cvm.CustomerId = cc.CustomerId;
+            cvm.ContactType = cc.ContactType;
+            cvm.CustomerContactId = cc.CustomerContactId;
+            cvm.Email = cc.Email;
+            cvm.FirstName = cc.FirstName;
+            cvm.LastName = cc.LastName;
+            cvm.Phone = cc.Phone;
+            cvm.ContactType = cc.ContactType;
+            cvm.ImagePath = cc.ContactImageFileName == null ? "" : @"../Images/customercontact/" + cc.ContactImageFileName;
+
+            return Json(cvm, JsonRequestBehavior.AllowGet);
+            
+        }
+
+        [HttpPost]
+        public JsonResult SaveCustomerPricing(PricingHistoryViewModel ph)
+        {
+            ReturnObjectModel ro = new ReturnObjectModel();
+
+            ro.Status = ReturnStatus.Err;
+            ro.Message = "Save failed";
+
+            try
+            {
+                CustomerPricing cp = new CustomerPricing();
+
+                cp.NumberOfActiveAthletes = ph.ActiveAthletes;
+                cp.PricePerActiveAthelete = ph.ActivePriceAthletes;
+                cp.BillingAmount = ph.BillingAmt;
+                cp.BillingFrequency = ph.BillingFreq;
+                cp.TypeOfCustomer = ph.CustomerType == "profit" ? CustomerType.ForProfit : CustomerType.ForNonProfit;
+
+                if (cp.TypeOfCustomer == CustomerType.ForNonProfit)
+                {
+                    cp.NumberOfActiveAthletes = 0;
+                }
+
+                if (ph.EndDate != null)
+                {
+                    DateTime temp;
+                    if (DateTime.TryParse(ph.EndDate, out temp))
+                    {
+                        cp.EndDate = DateTime.ParseExact(ph.EndDate, "MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                }
+                if (ph.StartDate != null)
+                {
+                    DateTime temp1;
+                    if (DateTime.TryParse(ph.StartDate, out temp1))
+                    {
+                        cp.StartDate = DateTime.ParseExact(ph.StartDate, "MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                }
+                cp.EnrollmentMin = ph.EnrollmentMin;
+                cp.EnrollmentMax = ph.EnrollmentMax;
+                cp.MaxNumberOfAthletes = ph.MaxNumofAthlete;
+                cp.MaxPricePerAthelete = ph.MaxPriceAthlete;
+                cp.CustomerPricingId =  ph.CustomerPricingId ;
+                switch (ph.PaymentOption)
+                {
+                    case "Credit Card":
+                        cp.PaymentOption = PaymentOption.CreditCard;
+                        break;
+                    case "Check":
+                        cp.PaymentOption = PaymentOption.Check;
+                        break;
+                    case "Cash":
+                        cp.PaymentOption = PaymentOption.Cash;
+                        break;
+                    case "Invoice":
+                        cp.PaymentOption = PaymentOption.Invoice;
+                        break;
+                    default:
+                        cp.PaymentOption = PaymentOption.CreditCard;
+                        break;
+                }
+                cp.PricePerAdditionalAthlete = ph.PriceAdditionalAthlete;
+                cp.CustomerId = ph.customerID;
+
+                _iCustomerPricingMgmtRepository = ObjectFactory.GetInstance<ICustomerPricingManagementRepository>();
+
+                int customerPricingID = _iCustomerPricingMgmtRepository.SaveCustomerPricingInfo(cp);
+
+                if (customerPricingID > 0)
+                {
+                    ro.Status = ReturnStatus.OK;
+                    ro.Message = "Save Successful";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ro.Message = ex.Message;
+               
+            }
+            return Json(ro, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteCustomerPricingHistory(PricingHistoryViewModel ph)
+        {
+            ReturnObjectModel ro = new ReturnObjectModel();
+
+            ro.Status = ReturnStatus.Err;
+            ro.Message = "Delete failed";
+
+            _iCustomerPricingMgmtRepository = ObjectFactory.GetInstance<ICustomerPricingManagementRepository>();
+
+            bool result = _iCustomerPricingMgmtRepository.DeletePricingHistoryByID(ph.CustomerPricingId);
+
+            ro.Status = result ? ReturnStatus.OK : ReturnStatus.Err;
+            ro.Message = result ? "Delete successful" : "Delete failed";
+
+            return Json(ro, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult ActivateCustomerAsync(int id)
+        {
+            var userDetails = (UserDetails)(Session["AuthenticatedUserDetails"]);
+            var adminEmail = userDetails.Contacts.FirstOrDefault() == null ? "" : userDetails.Contacts.FirstOrDefault().Email;
+
+            var ro = new ReturnObjectModel()
+            {
+                Status = ReturnStatus.OK,
+                Message = "Customer activation process started and you will be notified by email once the process is completed"
+            };
+
+            var t = Task.Run(() =>
+            {
+                ro = ProcessActivation(id, userDetails, adminEmail);
+            });
+
+            return Json(ro, JsonRequestBehavior.AllowGet);
+        }
+
+        private ReturnObjectModel ProcessActivation(int customerID,  UserDetails userDetails, string adminEmail)
+        {
+            var ro = new ReturnObjectModel()
+            {
+                Status = ReturnStatus.Err,
+                Message = "Customer Activated failed"
+            };
+
+            _iCustomerMgmt = ObjectFactory.GetInstance<ICustomerMasterMgmtRepository>();
+            CustomerMaster customerMaster = _iCustomerMgmt.GetCustomerMasterByTKGCustomerID(customerID);
+
+            bool result = _iCustomerManagementRepository.ActivateCustomer(customerID);
+            if (result)
+            {
+                var cust = _iCustomerManagementRepository.GetCustomerInfoByID(customerID);
+                
+                
+                if (cust != null && customerMaster != null)
+                {
+                    var cam = new CustomerActivationModel
+                    {
+                        CustomerID = cust.CustomerId,
+                        ContactFirstName = cust.ContactFirstName,
+                        ContactLastName = cust.ContactLastName,
+                        LoginURL = Convert.ToString(ConfigurationManager.AppSettings["PersonalTrainerLoginURL"]) +
+                                   customerMaster.CustomerName,
+                        RegistrationURL = customerMaster.RegistrationURL,
+                        UserName = "admin",
+                        Password = "Password123",
+                        CustomerName = cust.OrganizationName,
+                        Category = cust.Category == CustomerCategoryType.Enterprise ? "Enterprise"
+                            : cust.Category == CustomerCategoryType.Individual ? "Individual"
+                            : cust.Category == CustomerCategoryType.Organization ? "Organization"
+                            : cust.Category == CustomerCategoryType.PersonalTrainer ? "Personal Trainer"
+                            : cust.Category == CustomerCategoryType.TKG ? "TKG" : "Underfined"
+                    };
+
+                    var subject = cust.Category == CustomerCategoryType.Enterprise ? "Enterprise Activation"
+                        : cust.Category == CustomerCategoryType.Individual ? "Individual Athlete Activation"
+                        : cust.Category == CustomerCategoryType.Organization ? "Organization Activation"
+                        : cust.Category == CustomerCategoryType.PersonalTrainer ? "Personal Trainer Activation"
+                        : cust.Category == CustomerCategoryType.TKG ? "TKG Activation" : "Underfined";
+
+                    var emailCC = Convert.ToString(ConfigurationManager.AppSettings["AdminEmailCC"]);
+
+                    try
+                    {
+                        _mailService.SendMail(cam,
+                            "PersonalTrainerActivation", cust.ContactEmail, emailCC,
+                            subject, Server.MapPath("~/MailTemplates"));
+                    }
+                    catch (Exception e)
+                    {
+                        ro.Status = ReturnStatus.Err;
+                        ro.Message = e.Message;
+                    }
+
+                    try
+                    {
+                        _mailService.SendMail(
+                            new
+                            {
+                                AdminName = userDetails.Users.FirstOrDefault() == null ? "" : userDetails.Users.FirstOrDefault().UserName,
+                                CustomerName = cust.OrganizationName
+                            },
+                            "ActivateCustomer", adminEmail, emailCC,
+                            subject, Server.MapPath("~/MailTemplates"));
+                    }
+                    catch (Exception e)
+                    {
+                        ro.Status = ReturnStatus.Err;
+                        ro.Message = e.Message;
+                    }
+                }
+            }
+
+            return ro;
+        }
+
+        [HttpPost]
+        public JsonResult DeactivateCustomerAsync(int id)
+        {
+            var userDetails = (UserDetails)(Session["AuthenticatedUserDetails"]);
+            var adminEmail = userDetails.Contacts.FirstOrDefault() == null ? "" : userDetails.Contacts.FirstOrDefault().Email;
+
+            var ro = new ReturnObjectModel()
+            {
+                Status = ReturnStatus.OK,
+                Message = "Customer deactivation process started and you will be notified by email once the process is completed"
+            };
+
+            var t = Task.Run(() =>
+            {
+                ro = ProcessDeactivation(id, userDetails, adminEmail);
+            });
+
+            return Json(ro, JsonRequestBehavior.AllowGet);
+        }
+        private ReturnObjectModel ProcessDeactivation(int customerID, UserDetails userDetails, string adminEmail)
+        {
+            var ro = new ReturnObjectModel()
+            {
+                Status = ReturnStatus.Err,
+                Message = "Customer Activated failed"
+            };
+
+            _iCustomerMgmt = ObjectFactory.GetInstance<ICustomerMasterMgmtRepository>();
+            CustomerMaster customerMaster = _iCustomerMgmt.GetCustomerMasterByTKGCustomerID(customerID);
+
+            bool result = _iCustomerManagementRepository.DeactivateCustomer(customerID);
+            if (result)
+            {
+                var cust = _iCustomerManagementRepository.GetCustomerInfoByID(customerID);
+
+
+                if (cust != null && customerMaster != null)
+                {
+                    var cam = new CustomerActivationModel
+                    {
+                        CustomerID = cust.CustomerId,
+                        ContactFirstName = cust.ContactFirstName,
+                        ContactLastName = cust.ContactLastName,
+                        LoginURL = Convert.ToString(ConfigurationManager.AppSettings["PersonalTrainerLoginURL"]) +
+                                   customerMaster.CustomerName,
+                        RegistrationURL = customerMaster.RegistrationURL,
+                        UserName = "admin",
+                        Password = "Password123",
+                        CustomerName = cust.OrganizationName,
+                        Category = cust.Category == CustomerCategoryType.Enterprise ? "Enterprise"
+                            : cust.Category == CustomerCategoryType.Individual ? "Individual"
+                            : cust.Category == CustomerCategoryType.Organization ? "Organization"
+                            : cust.Category == CustomerCategoryType.PersonalTrainer ? "Personal Trainer"
+                            : cust.Category == CustomerCategoryType.TKG ? "TKG" : "Underfined"
+                    };
+
+                    var subject = cust.Category == CustomerCategoryType.Enterprise ? "Enterprise Deactivation"
+                        : cust.Category == CustomerCategoryType.Individual ? "Individual Athlete Deactivation"
+                        : cust.Category == CustomerCategoryType.Organization ? "Organization Deactivation"
+                        : cust.Category == CustomerCategoryType.PersonalTrainer ? "Personal Trainer Deactivation"
+                        : cust.Category == CustomerCategoryType.TKG ? "TKG Activation" : "Underfined";
+
+                    var emailCC = Convert.ToString(ConfigurationManager.AppSettings["AdminEmailCC"]);
+
+                    try
+                    {
+                        _mailService.SendMail(cam,
+                            "PersonalTrainerDeactivation", cust.ContactEmail, emailCC,
+                            subject, Server.MapPath("~/MailTemplates"));
+                    }
+                    catch (Exception e)
+                    {
+                        ro.Status = ReturnStatus.Err;
+                        ro.Message = e.Message;
+                    }
+
+                    try
+                    {
+                        _mailService.SendMail(
+                            new
+                            {
+                                AdminName = userDetails.Users.FirstOrDefault() == null ? "" : userDetails.Users.FirstOrDefault().UserName,
+                                CustomerName = cust.OrganizationName
+                            },
+                            "DeactivateCustomer", adminEmail, emailCC,
+                            subject, Server.MapPath("~/MailTemplates"));
+                    }
+                    catch (Exception e)
+                    {
+                        ro.Status = ReturnStatus.Err;
+                        ro.Message = e.Message;
+                    }
+                }
+            }
+
+            return ro;
+        }
+
+    }
+}

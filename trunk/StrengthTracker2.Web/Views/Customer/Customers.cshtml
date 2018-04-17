@@ -1,0 +1,1484 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Customers";
+    Layout = "~/Views/Admin/_LayoutNew.cshtml";
+}
+<style>
+    /*#customersGrid .k-grid-content, #customersGrid tr td:last-child {
+        overflow: visible;
+    }*/
+
+    .k-grid .k-alt {
+        background-color: #fafbfc; /* specify the alternate background-color */
+    }
+
+
+    #customersGrid .k-grid-header {
+        padding: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    #customersGrid .k-grid-content {
+        overflow-y: visible;
+    }
+
+    #customersGrid tr td:last-child {
+        overflow: visible;
+    }
+
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+    }
+
+    .twenty {
+        width: 40%;
+    }
+
+    #dvSiteFooter {
+        top: 70px !important;
+    }
+
+    #customersGrid .k-grid-content-locked {
+        height: 100% !important;
+    }
+
+    #customersGrid .k-grid-header-locked {
+        vertical-align: bottom !important;
+        height: auto !important;
+    }
+
+    /*#customersGrid .k-grid-content
+    {
+        overflow: visible!important;
+
+    }*/
+
+    .custom-dropdown {
+        display: none;
+        position: fixed;
+        top: auto;
+        z-index: 99;
+        border: 1px solid #e1e1e1;
+        margin-left: 0;
+        padding-left: 0;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+        background: #fff;
+        border-radius: 3px;
+        margin-top: 36px;
+    }
+
+        .custom-dropdown li a {
+            color: #5f5f5f;
+            font-size: 13px;
+        }
+
+        .custom-dropdown li {
+            list-style-type: none;
+            padding: 3px 20px;
+            display: block;
+            text-decoration: none;
+        }
+
+        .custom-dropdown.show-div {
+            display: block;
+        }
+
+    .bootstrap-datetimepicker-widget {
+        width: 320px !important;
+    }
+    .no-border{
+        border:none;
+    }
+    .helper-heading{
+        margin-left:40px;
+        margin-right:40px;
+        background: dimgrey;
+    }
+</style>
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+<link href="~/Scripts/datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+<div class="top-bar clearfix">
+    <div class="container-fluid">
+        <div class="row gutter">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                <h3 class="page-title" id="CustomerTitle">TKG Customer Snapshot</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="mainDiv" class="main-container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel-default">
+                <div class="panel-body">
+                    <div id="customergridcontainer">
+                        <div class="clearfix">
+                            <button type="button" onclick="ShowAddCustomer(0);" class="btn btn-primary pull-right  mb-sm">
+                                <em class="fa fa-plus-circle fa-fw mr-sm"></em>Add Customer
+                            </button>
+                        </div>
+                        <div id="customersGrid" style="margin-top: 8px !important;"></div>
+                        <div id="customerPager"></div>
+                    </div>
+                    <input type="hidden" id="hdCustomerID" />
+                    <div id="AddCustomer" style="display: none;">
+                        @using (Ajax.BeginForm("AddCustomerNotNeeded", "Customer", new AjaxOptions { HttpMethod = "POST", OnSuccess = "addCustomerResult" }, new { id = "AddCustomerForm" }))
+                        {
+                            @Html.Hidden("CustomerId", 0)
+                            <div class="">
+                                <div class="panel-heading" style="display: none;">Add Customer</div>
+                                <div class="panel-body">
+                                    <div id="accordionAdd" class="panel-group">
+                                        <div class="">
+                                            <div class="panel-heading bb">
+                                                <label style="font-weight:normal;display: inline-block;max-width: 100%;margin-bottom: 5px;color:white;" id="custprofile">Customer Profile</label>
+                                                <div class="required pull-right" style="color:white;">* Required fields</div>
+                                                <h4 class="panel-title" style="display: none;">
+                                                    <a data-toggle="collapse" data-parent="#accordionAdd" href="#collapseCustomerDetailsAdd"></a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapseCustomerDetailsAdd" class="panel-collapse">
+                                                <div class="panel-body">
+                                                    <form class="form-horizontal">
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label" id="organizationNameLabel">Organization Name *</label>
+                                                            <div class="col-lg-7">
+                                                                @Html.TextBox("OrganizationName", "", new { @class = "form-control", @placeholder = "Organization Name", @required = "required" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label" id="userNameLabel">User Name</label>
+                                                            <div class="col-lg-7">
+                                                                @Html.TextBox("UserName", "", new { @class = "form-control", @placeholder = "User Name", @disabled = "disabled" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">Category *</label>
+                                                            <div class="col-lg-7">
+                                                                <select id="lstCategory" name="state" class="form-control m-b" required>
+                                                                    <option value="0">Select Category</option>
+                                                                    <option value="1">Individual</option>
+                                                                    <option value="2">Personal Trainer</option>
+                                                                    <option value="3">Organization</option>
+                                                                    <option value="4">Enterprise</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">Website</label>
+                                                            <div class="col-lg-7">
+                                                                @Html.TextBox("Website", "", new { @class = "form-control", @placeholder = "Website URL" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6" style="display:none;">
+                                                            <label class="col-lg-5 control-label">Customer Phone #</label>
+                                                            <div class="col-lg-7">
+                                                                @Html.TextBox("CustomerPhone", "", new { @class = "form-control", @placeholder = "Customer Phone Number" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">Address 1*</label>
+                                                            <div class="col-lg-7">
+                                                                @Html.TextBox("Address", "", new { @class = "form-control", @placeholder = "Address", @required = "required", @blur = "CopyBillingAddress();" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">Address 2</label>
+                                                            <div class="col-lg-7">
+                                                                @Html.TextBox("Address2", "", new { @class = "form-control", @placeholder = "Address", @blur = "CopyBillingAddress();" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">City*</label>
+                                                            <div class="col-lg-7">
+                                                                @Html.TextBox("lstAddCustCity", "", new { @class = "form-control", @placeholder = "City", @required = "required", @blur = "CopyBillingAddress();" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">State</label>
+                                                            <div class="col-lg-7">
+                                                                <select id="lstAddCustState" name="state" class="form-control m-b state-select" onchange="CopyBillingAddress();">
+                                                                    <option value="0">Select State</option>
+                                                                    @*<option value="1">Alabama</option>
+                                                                    <option value="2">Alaska</option>
+                                                                    <option value="30">New Jersey</option>
+                                                                    <option value="35">Ohio</option>*@
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">Country</label>
+                                                            <div class="col-lg-7">
+                                                                <select name="Country" class="form-control m-b country-select" id="ddlCountry">
+                                                                    <option>Select Country</option>
+                                                                    @*<option value="3">Belgium</option>
+                                                                    <option value="2">Canada</option>
+                                                                    <option value="4">France</option>
+                                                                    <option value="5">Germany</option>
+                                                                    <option value="6">UK</option>
+                                                                    <option value="1">US</option>*@
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">ZIP Code</label>
+                                                            <div class="col-lg-7">
+                                                                @Html.TextBox("ZIPCode", "", new { @class = "form-control", @placeholder = "ZIP Code", @onblur = "CopyBillingAddress();" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">Contact First Name</label>
+                                                            <div class="col-lg-7">
+                                                                @Html.TextBox("ContactFirstName", "", new { @class = "form-control", @placeholder = "Contact First Name" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">Contact Last Name</label>
+                                                            <div class="col-lg-7">
+                                                                @Html.TextBox("ContactLastName", "", new { @class = "form-control", @placeholder = "Contact Last Name" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">Contact Phone #</label>
+                                                            <div class="col-lg-7">
+                                                                @Html.TextBox("ContactPhone", "", new { @class = "form-control", @placeholder = "Contact Phone Number" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">Alternate Phone </label>
+                                                            <div class="col-lg-7">
+                                                                @Html.TextBox("AlternatePhone", "", new { @class = "form-control", @placeholder = "Alternate Phone Number" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">Contact Email</label>
+                                                            <div class="col-lg-7">
+                                                                @Html.TextBox("ContactEmail", "", new { type = "email", @class = "form-control", @placeholder = "Contact Email" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-12"></div>
+                                                        <div class="col-lg-6">
+                                                            <label class="col-lg-5 control-label">Billing Address</label>
+                                                            <div class="col-lg-7">
+                                                                <div class="checkbox c-checkbox pull-left mt0">
+                                                                    <label>
+                                                                        <input type="checkbox" id="billingchk" value="">
+                                                                        <span class="fa fa-check"></span>Same as above
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-12"></div>
+                                                        <div id="billingDIV" style="">
+                                                            <div class="form-group col-lg-6">
+                                                                <label class="col-lg-5 control-label">Billing Address *</label>
+                                                                <div class="col-lg-7">
+                                                                    @Html.TextBox("BillingAddress", "", new { @class = "form-control", @placeholder = "Billing  Address", @required = "required" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-lg-6">
+                                                                <label class="col-lg-5 control-label">Billing Address 2</label>
+                                                                <div class="col-lg-7">
+                                                                    @Html.TextBox("BillingAddress2", "", new { @class = "form-control", @placeholder = "Address", @blur = "CopyBillingAddress();" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-lg-6">
+                                                                <label class="col-lg-5 control-label">Billing  City*</label>
+                                                                <div class="col-lg-7">
+                                                                    @Html.TextBox("lstAddCustBillingCity", "", new { @class = "form-control", @placeholder = "City", @required = "required" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-lg-6">
+                                                                <label class="col-lg-5 control-label">Billing  State</label>
+                                                                <div class="col-lg-7">
+                                                                    <select id="lstAddCustBillingState" name="state" class="form-control m-b state-select">
+                                                                        <option value="0">Select State</option>
+                                                                        @*<option value="1">Alabama</option>
+                                                                        <option value="2">Alaska</option>
+                                                                        <option value="30">New Jersey</option>
+                                                                        <option value="35">Ohio</option>*@
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-lg-6">
+                                                                <label class="col-lg-5 control-label">Billing Country</label>
+                                                                <div class="col-lg-7">
+                                                                    <select name="Country" class="form-control m-b country-select" id="ddlBillingCountry">
+                                                                        <option>Select Country</option>
+                                                                        @*<option value="3">Belgium</option>
+                                                                        <option value="2">Canada</option>
+                                                                        <option value="4">France</option>
+                                                                        <option value="5">Germany</option>
+                                                                        <option value="6">UK</option>
+                                                                        <option value="1">US</option>*@
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-lg-6">
+                                                                <label class="col-lg-5 control-label">Billing  ZIP Code</label>
+                                                                <div class="col-lg-7">
+                                                                    @Html.TextBox("BillingZIPCode", "", new { @class = "form-control", @placeholder = "Billing  ZIP Code" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="panel-heading bb helper-heading">
+                                                <label style="font-weight:normal;display: inline-block;max-width: 100%;margin-bottom: 5px;color:white;">Enable Free Trial</label>
+                                                <div class="required pull-right" style="color:white;">* Required fields</div>
+                                                <h4 class="panel-title" style="display: none;">
+                                                    <a data-toggle="collapse" data-parent="#accordionAdd" href="#collapseCustomerDetailsAdd"></a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapseCustomerDetailsServerConfig1" class="panel no-border">
+                                                <div class="panel-body">
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Free Trial Start Date</label>
+                                                        <div class="col-lg-7">
+                                                            <div id="custStatrtDatepickerFT" class="input-group date datetimepicker1">
+                                                                @Html.TextBox("FreeTrialStartDate", null, new { @class = "form-control" })
+                                                                <span class="input-group-addon">
+                                                                    <span class="fa-calendar fa"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Free Trial End Date</label>
+                                                        <div class="col-lg-7">
+                                                            <div id="custStatrtDatepickerET" class="input-group date datetimepicker1">
+                                                                @Html.TextBox("FreeTrialEndDate", "", new { @class = "form-control" })
+                                                                <span class="input-group-addon">
+                                                                    <span class="fa-calendar fa"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Free Trial Days Remaining:</label>
+                                                        <div class="col-lg-7">
+                                                            &nbsp;<label style="font-weight:normal;" class="control-label" id="lblFreeTrialDays"></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        &nbsp;
+                                                        <div class="col-lg-7">
+                                                            &nbsp;
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel-heading bb  helper-heading">
+                                                <label style="font-weight:normal;display: inline-block;max-width: 100%;margin-bottom: 5px;color:white;">Server configuration</label>
+                                                <div class="required pull-right" style="color:white;">* Required fields</div>
+                                                <h4 class="panel-title" style="display: none;">
+                                                    <a data-toggle="collapse" data-parent="#accordionAdd" href="#collapseCustomerDetailsAdd"></a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapseCustomerDetailsServerConfig" class="panel no-border">
+                                                <div class="panel-body">
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Server</label>
+                                                        <div class="col-lg-7">
+                                                            <select id="lstServer" name="server" class="form-control m-b">
+                                                                <option value="1">US East coast</option>
+                                                                <option value="2">US West coast</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Database Server</label>
+                                                        <div class="col-lg-7">
+                                                            <select id="lstDatabase" name="database" class="form-control m-b">
+                                                                <option value="1">US East coast DB</option>
+                                                                <option value="2">US West coast DB</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-12">
+                                                        <div class="col-lg-6">&nbsp;</div>
+                                                        <div class="col-lg-6 pull-right">
+                                                            <div class="pull-right">
+                                                                <input type="button" onclick="return ValidateAndSaveCustomerInfo();" class="btn btn-success pull-right  mb-sm" value="Save">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel-heading bb">
+                                                <label style="font-weight:normal;display: inline-block;max-width: 100%;margin-bottom: 5px;color:white;">Customer Contacts</label>
+                                                <div class="required pull-right" style="color:white;">* Required fields</div>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div id="contactgridcontainer">
+                                                    <div class="clearfix">
+                                                        <button type="button" onclick="ShowContactDetails(0);" class="btn btn-primary pull-right  mb-sm">
+                                                            <em class="fa fa-plus-circle fa-fw mr-sm"></em>Add Contact
+                                                        </button>
+                                                    </div>
+                                                    <div id="customerContactGrid" style="margin-top:8px; overflow:visible !important;" class="clearfix"></div>
+                                                    <div id="customerContactPager"></div>
+                                                </div>
+                                            </div>
+                                            <div class="panel-heading bb">
+                                                <label style="font-weight:normal;display: inline-block;max-width: 100%;margin-bottom: 5px;color:white;">Pricing Setup</label>
+                                                <div class="required pull-right" style="color:white;">* Required fields</div>
+                                                <h4 class="panel-title" style="display: none;">
+                                                    <a data-toggle="collapse" data-parent="#accordionAdd" href="#collapseCustomerDetailsAdd"></a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapseCustomerDetailsAddPricing" class="panel-collapse">
+                                                <div class="panel-body">
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-6 control-label">Type Of Customer</label>
+                                                        <div class="col-lg-6">
+                                                            <select id="lstPricingCustType" name="CustType" onchange="ToggleProfitDiv1()" class="form-control m-b">
+                                                                <option value="nonprofit">Non Profit</option>
+                                                                <option value="profit" selected="selected">For Profit</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6" id="divBillingFreq">
+                                                        <label class="col-lg-6 control-label" style="font-size:12.8px !important;">Billing Frequency/Amount($)</label>
+                                                        <div class="col-lg-6">
+                                                            <select id="lstPricingFreq" style="width:45%;" name="Billing" class="form-control mr col-lg-6">
+                                                                <option>Monthly</option>
+                                                                <option>Quarterly</option>
+                                                                <option>Yearly</option>
+                                                            </select>
+                                                            <div style="width:55%;" class="col-lg-6">
+                                                                <input id="txtPricingFreqAmt" placeholder="Amount" class="form-control" onblur="ChangeActiveAthPrice();">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6" id="divPaymentOption">
+                                                        <label class="col-lg-6 control-label">Payment Option</label>
+                                                        <div class="col-lg-6">
+                                                            <select id="lstPricingPaymentOption" name="PaymentOption" class="form-control m-b">
+                                                                <option>Credit Card</option>
+                                                                <option>Invoice</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6" id="divNumOfAtheletes">
+                                                        <label class="col-lg-6 control-label"># of Athletes *</label>
+                                                        <div class="col-lg-6">
+                                                            <input id="txtPricingMaxAth" placeholder="Max" class="form-control col-lg-6 mr" style="width:28%;" onblur="ChangeActiveAthPrice();">
+                                                            <input id="txtPricingActiveAth" value="" placeholder="Active" style="width:28%;margin-left:3.2px;" disabled class="form-control col-lg-6 mr">
+                                                            <input id="txtPricingRemainingAth" disabled="disabled" placeholder="Remaining" class="form-control col-lg-6 mr" style="width:35%;margin-left:3px;">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6" id="divPriceAthletes">
+                                                        <label class="col-lg-6 control-label">Price/Athletes (<em class="fa fa-usd"></em>)</label>
+                                                        <div class="col-lg-6">
+                                                            <input id="txtPricingActiveAthPrice" value="" placeholder="Active" style="width:30.1%;" disabled class="form-control col-lg-6 mr">
+                                                            <input id="txtPricingMaxAthPrice" value="" placeholder="" style="width:32%;margin-left:3.2%;" disabled class="form-control col-lg-6">
+                                                            <input id="txtPricingIncrementalPrice" value="" placeholder="" style="width:32%;margin-left:2.5%;" disabled class="form-control col-lg-6">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6" id="divPriceAdditionalAthlete">
+                                                        <label class="col-lg-6 control-label">Price/Additional Athlete(<em class="fa fa-usd"></em>)</label>
+                                                        <div class="col-lg-6">
+                                                            <input id="txtIncrementalBlock" placeholder="" class="form-control col-lg-6 mr" style="width:28%;" onblur="ChangeActiveAthPrice();">
+                                                            <input id="txtPricePerBlock" disabled="disabled" placeholder="" class="form-control col-lg-6 mr" style="width:28%;margin-left:3.2px;">
+                                                            <input id="txtPriceAddnAth" disabled="disabled" placeholder="" class="form-control col-lg-6 mr" style="width:35%;margin-left:3px;">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6" id="nonprofitenrollmentminmax" style="display:none;">
+                                                        <label class="col-lg-6 control-label">Enrollment Min/Max *</label>
+                                                        <div class="col-lg-6">
+                                                            <input placeholder="Min" id="txtCustPricingMin" style="width:45%;" class="form-control col-lg-6 mr">
+                                                            <input placeholder="Max" id="txtCustPricingMax" style="width:49%;" class="form-control col-lg-6">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6" id="divStartDate">
+                                                        <label class="col-lg-6 control-label">Start Date</label>
+                                                        <div class="col-lg-6">
+                                                            <div id="custStatrtDatepicker" class="input-group date datetimepicker2">
+                                                                <input id="txtPricingStartDate" type="text" class="form-control">
+                                                                <span class="input-group-addon">
+                                                                    <span class="fa-calendar fa"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6" id="divEndDate">
+                                                        <label class="col-lg-6 control-label">End Date</label>
+                                                        <div class="col-lg-6">
+                                                            <div id="custEndDatepicker" class="input-group date datetimepicker2">
+                                                                <input id="txtPricingEndDate" type="text" class="form-control">
+                                                                <span class="input-group-addon">
+                                                                    <span class="fa-calendar fa"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-12">
+                                                    </div>
+                                                    <div class="form-group col-lg-12">
+                                                        <div class="col-lg-6">&nbsp;</div>
+                                                        <div class="col-lg-6 pull-right">
+                                                            <div class="pull-right">
+                                                                <button type="button" id="btnCancelPricingInfo" onclick="ShowCustomerGrid();" class="btn btn-sm btn-danger">Cancel</button>
+                                                                <button type="button" id="btnAddPricingInfo" onclick="SavePricingInfo();" class="btn btn-success btn-sm">Update Pricing</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel-heading bb">
+                                                <label style="font-weight:normal;display: inline-block;max-width: 100%;margin-bottom: 5px;color:white;">Pricing History</label>
+                                                <div class="required pull-right" style="color:white;">* Required fields</div>
+                                                <h4 class="panel-title" style="display: none;">
+                                                    <a data-toggle="collapse" data-parent="#accordionAdd" href="#collapseCustomerDetailsAdd"></a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapseCustomerPricingHistory" class="panel-collapse" style="margin:0px; padding:0px;">
+                                                <div class="panel-body" style="margin:0px; padding:0px;">
+                                                    <form class="form-horizontal">
+                                                        <div class="form-group col-lg-12" style="margin:0px; padding:0px;">
+                                                            <div class="col-lg-12" style="margin:0px; padding:0px;">
+                                                                <div id="pricingHistoryGrid" style="margin-top:15px; width: 100% !important; overflow:visible !important;" class="clearfix"></div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div id="ContactDetails" style="display:none;">
+                <div id="userPicture">
+                    <div class="user-block-picture">
+                        <div class="user-block-status">
+                            <img src="../images/noimage.jpg" id="profilePicture" alt="Avatar" width="120" height="120" class="img-big img-square" style="cursor:pointer">
+                            <input type="file" id="my_file" style="display: none;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="">
+                    <div class="panel-heading bb">
+                        <div class="required pull-right">* Required fields</div>
+                        <h4 class="panel-title">Contact Details</h4>
+                    </div>
+                    <div class="panel-body">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">First Name*</label>
+                                <div class="col-lg-10">
+                                    <input type="text" placeholder="First Name" id="txtContactFirstName" class="form-control">
+                                    <input type="hidden" id="hdCustomerContactID" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Last Name*</label>
+                                <div class="col-lg-10">
+                                    <input type="text" placeholder="Last Name" id="txtContactLastName" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Phone #*</label>
+                                <div class="col-lg-10">
+                                    <input type="text" placeholder="Phone Number" id="txtContactPhone" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Email*</label>
+                                <div class="col-lg-10">
+                                    <input type="email" placeholder="Email" id="txtContactEmail" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Role*</label>
+                                <div class="col-lg-10">
+                                    <input type="text" placeholder="Contact Type" id="txtContactType" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-12">&nbsp;</div>
+                            <div class="form-group col-lg-6">&nbsp;</div>
+                            <div class="form-group col-lg-12" style="width:103% !important;">
+                                <div class="col-lg-5">&nbsp;</div>
+                                <div class="pull-right">
+                                    <button type="button" onclick="ShowAddCustomer();" class="btn btn-sm btn-default">Cancel</button>
+                                    <button type="button" onclick="SaveCustomerContact();" id="btnSaveCustomerContact" class="btn btn-success btn-sm">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="divDeletePopupConfirmation" tabindex="-1" role="dialog" aria-labelledby="confirmDeletionLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmDeletionLabel" class="modal-title">Confirm Deletion</h4>
+            </div>
+            <div class="modal-body">
+                Delete Customer?
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" id="btnDeleteCustomer" class="btn btn-primary">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmActivation" tabindex="-1" role="dialog" aria-labelledby="confirmActivationLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmActivationLabel" class="modal-title">Confirm Activation</h4>
+            </div>
+            <div class="modal-body">
+                <div id="nftrialDiv" style="display:none">
+                    Activate Customer
+                </div>
+                <div id="ftrialDiv" style="display:none">
+                    <div class="">
+                        <div>
+                            <label class="control-label">This might take few minutes.</label>
+                            <input type="hidden" id="hdActivateCustomerID" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="ActivateCustomer();">Activate</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmDeletionPricingHistory" tabindex="-1" role="dialog" aria-labelledby="confirmDeletionpricinghistoryLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmDeletionpricinghistoryLabel" class="modal-title">Confirm Deletion</h4>
+            </div>
+            <div class="modal-body">
+                Delete Pricing History?
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-primary">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script src="../Scripts/kendo.all.min.js"></script>
+    <script src="~/Scripts/StrengthTracker2/Common.js"></script>
+    <script src="~/Scripts/moment/min/moment.min.js"></script>
+    <script src="~/Scripts/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/jquery.maskedinput.js"></script>
+    <script src="~/Scripts/StrengthTracker2/customers.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(function () {
+            $("#liCustomer").addClass("active");
+            $("#CustomerPhone").mask("(999) 999-9999");
+            $("#AlternatePhone").mask("(999) 999-9999");
+            $("#ContactPhone").mask("(999) 999-9999");
+            $("#txtContactPhone").mask("(999) 999-9999");
+            $('#ZIPCode').mask("99999");
+            $('#BillingZIPCode').mask("99999");
+            $('#billingchk').click(function () {
+                if (!$(this).is(':checked')) {
+                    $("#billingDIV").show();
+                }
+                else {
+                    CopyBillingAddress();
+                    $("#billingDIV").hide();
+                }
+            });
+        });
+        function CopyBillingAddress() {
+            if ($("#billingchk").is(':checked')) {
+                $("#BillingAddress").val($("#Address").val());
+                $("#BillingAddress2").val($("#Address2").val());
+                $("#ddlBillingCountry").val($("#ddlCountry").val());
+                $("#lstAddCustBillingState").val($("#lstAddCustState").val());
+                $("#lstAddCustBillingCity").val($("#lstAddCustCity").val());
+                $("#BillingZIPCode").val($("#ZIPCode").val());
+            }
+        }
+        var contactdataSource = new kendo.data.DataSource({
+            data: [],
+            pageSize: 10
+        });
+        $("#liCustomers").addClass("active");
+        $("#customerContactGrid").kendoGrid({
+            allowCopy: true,
+            scrollable: true,
+            sortable: true,
+            filterable: true,
+            columns: [
+                {
+                    field: "FirstName",
+                    title: "Name",
+                    template: ' <img src="#=(ImagePath!="")?ImagePath:"../images/noimage.jpg" #" alt="Image" width=30 height=30 class="img-thumbnail img-circle" style="cursor: pointer;"> &nbsp;<a style="cursor: pointer;" onclick="Javascript:ShowContactDetails(#=CustomerContactId#);">#=FirstName# #=LastName#</a>',
+                },
+                {
+                    field: "Phone",
+                    title: "Phone",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "Email",
+                    title: "Email",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    },
+                    template: '<a href="mailto:#=Email#" target="_top">#=Email#</a>'
+                },
+                {
+                    field: "ContactType",
+                    title: "Contact Type ",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                }
+            ],
+            dataSource: contactdataSource
+        });
+
+        contactdataSource.read();
+        $("#customerContact").kendoPager({
+            autoBind: true,
+            dataSource: contactdataSource
+        });
+
+        $("#customersGrid").kendoTooltip({
+            filter: "th",
+            content: function (e) {
+                var target = e.target; // element for which the tooltip is shown
+                return $(target).data('title')
+            }
+        }).data("kendoTooltip");
+
+        $("#sportsPricingGrid, #sportsPricingGridEdit").kendoGrid({
+            allowCopy: true,
+            scrollable: true,
+            sortable: true,
+            filterable: true,
+            columns: [
+                {
+                    field: "Sports",
+                    title: "Sports",
+                },
+                {
+                    field: "NoOfSportsSelected",
+                    title: "# of Sports Selected",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "CostPerMonth",
+                    title: "Cost/Month",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "TotalPrice",
+                    title: "Total Price",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    },
+                    template: '#=TotalPrice#'
+                },
+            ],
+            dataSource: [
+                { Sports: "Baseball, Cricket, Soccer", NoOfSportsSelected: "3", CostPerMonth: "$50", TotalPrice: "$150" },
+                { Sports: "Basketball, Soccer", NoOfSportsSelected: "2", CostPerMonth: "$40", TotalPrice: "$80" },
+                { Sports: "Baseball, Basketball, Cricket, Soccer", NoOfSportsSelected: "4", CostPerMonth: "$60", TotalPrice: "$240" },
+            ]
+        });
+
+        function UpdateCustomerStatus(customerID) {
+            ConfirmationMessageBox({
+                confirmationMessage: 'Are you sure you want to Deactivate Customer? This might take few minutes.',
+                popupTitle: 'Deactivate Customer',
+                callback: function () {
+                    DeactivateCustomer(customerID)
+                }
+            });
+        }
+
+        function ShowActivationConfirmationPopup(customerID) {
+            if (customerID > 0) {
+                $("#ftrialDiv").show();
+                $("#nftrialDiv").hide();
+                ConfirmationMessageBox({
+                    confirmationMessage: 'This might take few minutes.',
+                    popupTitle: 'Confirm Activation',
+                    callback: function () {
+                        ActivateCustomer(customerID)
+                    }
+                });
+            }
+            else {
+                $("#ftrialDiv").hide();
+                $("#nftrialDiv").show();
+            }
+        }
+
+        function ShowEditCustomer(customerID) {
+            $.ajax({
+                url: '../Customer/GetCustomerInfoByID',
+                type: "POST",
+                data: JSON.stringify({ 'customerID': customerID }),
+                contentType: 'application/json',
+                dataType: "json",
+                cache: false,
+                success: function (result) {
+                    $("#CustomerId").val(customerID);
+                    $("#hdCustomerID").val(customerID);
+                    $("#OrganizationName").val(result.OrganizationName);
+                    $("#UserName").val(result.UserName);
+                    $("#Website").val(result.Website);
+                    $("#CustomerPhone").val(result.CustomerPhone);
+                    $("#AlternatePhone").val(result.AlternatePhone);
+                    $("#lstAddCustState").val(result.State);
+                    $("#lstAddCustCity").val(result.City);
+                    $("#lstCategory").val(result.Category);
+                    if (result.Category == 1) {
+                        $("#organizationNameLabel").empty();
+                        $("#organizationNameLabel").append("User Name *");
+                        $("#OrganizationName").prop('disabled', true);
+                    } else {
+                        $("#organizationNameLabel").empty();
+                        $('#organizationNameLabel').append("Organization Name *");
+                        $("#OrganizationName").prop('disabled', false);
+                    }
+
+                    $("#lstAddCustBillingState").val(result.BillingState);
+                    $("#lstAddCustBillingCity").val(result.BillingCity);
+                    $("#Address").val(result.Address);
+                    $("#Address2").val(result.Address2);
+                    $("#ddlCountry").val(result.Country);
+                    $("#ZIPCode").val(result.ZIPCode);
+                    $("#ContactFirstName").val(result.ContactFirstName);
+                    $("#ContactLastName").val(result.ContactLastName);
+                    $("#ContactEmail").val(result.ContactEmail);
+                    $("#ContactPhone").val(result.ContactPhone);
+                    if (result.SameAddAsAbove == true) {
+                        $("#billingchk").prop('checked', true);
+                        $("#billingDIV").hide();
+                    }
+                    $("#BillingAddress").val(result.BillingAddress);
+                    $("#BillingAddress2").val(result.BillingAddress2);
+                    $("#ddlBillingCountry").val(result.BillingCountry);
+                    $("#BillingZIPCode").val(result.BillingZIPCode);
+                    initTrialDateControls(result);
+                    $("#lstServer").val(result.ApplicationServerId);
+                    $("#lstDatabase").val(result.DatabaseServerId);
+                    LoadContactsForcustomer();
+
+                    $("#btnShowCustomerDashboard").show();
+                    $("#customergridcontainer").hide();
+                    $("#AddCustomer").show();
+                    $("#custprofile").show();
+                    $('#custprofile').text('Customer Profile');
+                    $('#CustomerTitle').text('Customer Profile');
+                    $("#ContactDetails").hide();
+
+                    $.ajax({
+                        url: '@Url.Action("GetPricingHistoryForCustomer", "Customer")',
+                        type: "POST",
+                        data: JSON.stringify({ 'customerID': $("#hdCustomerID").val() }),
+                        contentType: 'application/json',
+                        dataType: "json",
+                        success: function (result) {
+                            $("#pricingHistoryGrid").data("kendoGrid").dataSource.data(result);
+                        },
+                        error: function (req, status, errorObj) {
+                            alert('Error: Please try again');
+                        }
+                    });
+
+                    $.ajax({
+                        url: '@Url.Action("GetActiveAthletesForCustomer", "Customer")',
+                        type: "POST",
+                        data: JSON.stringify({ 'customerID': $("#hdCustomerID").val() }),
+                        contentType: 'application/json',
+                        dataType: "json",
+                        success: function (result) {
+                            $("#txtPricingActiveAth").val(result);
+                        },
+                        error: function (req, status, errorObj) {
+                            alert('Error: Please try again');
+                        }
+                    });
+                },
+                error: function (req, status, errorObj) {
+                    alert('Error: Please try again');
+                }
+            });
+        }
+
+        function ShowAddCustomer(ttype) {
+            $("#btnShowCustomerDashboard").show();
+            $("#customergridcontainer").hide();
+            $("#AddCustomer").show();
+            $("#custprofile").text("Account Information");
+            $('#CustomerTitle').text('Customer Profile');
+            $("#ContactDetails").hide();
+            $("#profilePicture").attr("src", "../images/noimage.jpg");
+        }
+        function ToggleCostControl() {
+            if (document.getElementById('editChkProgDev').checked == true) {
+                $("#editCostPerMonth").fadeIn().css("display", "inline-block");
+            }
+            else {
+                $("#editCostPerMonth").hide();
+            }
+        }
+        function ToggleAddCostControl() {
+            if (document.getElementById('addChkProgDev').checked == true) {
+                $("#addCostPerMonth").fadeIn().css("display", "inline-block");
+            }
+            else {
+                $("#addCostPerMonth").hide();
+            }
+        }
+        function ShowContactDetails(customerContactID) {
+            if (customerContactID > 0) {
+                $.ajax({
+                    url: '@Url.Action("GetContactInfo", "Customer")',
+                    type: "POST",
+                    data: JSON.stringify({ 'customerContactID': customerContactID }),
+                    contentType: 'application/json',
+                    dataType: "json",
+                    success: function (result) {
+                        $("#hdCustomerContactID").val(result.CustomerContactId);
+                        $("#txtContactFirstName").val(result.FirstName);
+                        $("#txtContactLastName").val(result.LastName);
+                        $("#txtContactPhone").val(result.Phone);
+                        $("#txtContactEmail").val(result.Email);
+                        $("#txtContactType").val(result.ContactType);
+                        $("#profilePicture").attr("src", result.ImagePath.length > 1 ? result.ImagePath : "../images/noimage.jpg");
+                    },
+                    error: function () {
+                        alert('Error: Please try again');
+                    }
+                });
+            }
+            else {
+                $("#hdCustomerContactID").val('');
+                $("#txtContactFirstName").val('');
+                $("#txtContactLastName").val('');
+                $("#txtContactPhone").val('');
+                $("#txtContactEmail").val('');
+                $("#txtContactType").val('');
+            }
+            $("#customergridcontainer").hide();
+            $("#AddCustomer").hide();
+            $("#ContactDetails").show();
+        }
+
+        function ToggleProfitDiv() {
+            if ($("#CustType").val() == 'profit') {
+                $("#ForProfitDiv").fadeIn().css("display", "inline-block");
+                $("#NonProfitDiv").hide();
+            }
+            else if ($("#CustType").val() == 'nonprofit') {
+                $("#NonProfitDiv").fadeIn().css("display", "inline-block");
+                $("#ForProfitDiv").hide();
+            }
+        }
+        function ToggleProfitDiv1() {
+            if ($("#lstPricingCustType").val() == 'profit') {
+                $("#nonprofitenrollmentminmax").hide();
+                $("#divNumOfAtheletes, #divPriceAthletes, #divPriceAdditionalAthlete").fadeIn().css("display", "inline-block");
+            }
+            else if ($("#lstPricingCustType").val() == 'nonprofit') {
+                $("#divNumOfAtheletes, #divPriceAthletes, #divPriceAdditionalAthlete").hide();
+                $("#nonprofitenrollmentminmax").fadeIn().css("display", "inline-block");
+            }
+        }
+        var pricingHistorydataSource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: '@Url.Action("GetPricingHistoryForCustomer", "Customer")',
+                    data: JSON.stringify({ 'customerID': $("#hdCustomerID").val() }),
+                    contentType: 'application/json',
+                    dataType: "json",
+                },
+                update: {
+                    url: '@Url.Action("SaveCustomerPricing", "Customer")',
+                    dataType: "jsonp",
+                    type: "post",
+                    complete: function (e) {
+                        var result = $.parseJSON(e.responseText);
+                        if (result != null) {
+                            if (result.Status == 1) {
+                                var grid = $("#pricingHistoryGrid").data("kendoGrid");
+                                grid.refresh();
+
+                            }
+                            else if (result.Status == 2) {
+                                alert(result.Message);
+                            }
+                        }
+                    }
+                },
+                destroy: {
+                    url: '../Customer/DeleteCustomerPricingHistory',
+                    dataType: "jsonp",
+                    type: "post",
+                    complete: function (e) {
+                        var result = $.parseJSON(e.responseText);
+                        if (result != null) {
+                            alert(result.Message);
+                            var grid = $("#pricingHistoryGrid").data("kendoGrid");
+                            grid.refresh();
+                        }
+                    }
+                },
+                parameterMap: function (options, operation) {
+                    if (operation !== "read") {
+                        options.StartDate = convert(options.StartDate);
+                        options.EndDate = convert(options.EndDate);
+                        return options;
+                    }
+                }
+            },
+            schema: {
+                model: {
+                    id: "CustomerPricingId",
+                    fields: {
+                        CustomerType: { editable: false, validation: { required: true } },
+                        CustomerPricingId: { editable: false, validation: { required: true } },
+                        CustomerId: { editable: false },
+                        BillingFreq: { editable: true },
+                        PaymentOption: { editable: true },
+                        ActiveAthletes: { editable: true, validation: { required: true } },
+                        MaxNumofAthlete: { editable: true, validation: { required: true } },
+                        ActivePriceAthletes: { editable: true },
+                        MaxPriceAthlete: { editable: true },
+                        PriceAdditionalAthlete: { editable: true },
+                        EnrollmentMin: { editable: true },
+                        EnrollmentMax: { editable: true },
+                        BillingAmt: { editable: true },
+                        StartDate: { editable: true, format: "{0:MM/dd/yyyy}" },
+                        EndDate: { editable: true, format: "{0:MM/dd/yyyy}" }
+                    }
+                }
+            },
+            change: function (data) { // subscribe to the CHANGE event of the data source
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+            },
+            data: [],
+            pageSize: 10
+        });
+
+        function convert(str) {
+            var date = new Date(str),
+                mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+                day = ("0" + date.getDate()).slice(-2);
+            return [mnth, day, date.getFullYear(), ].join("/");
+        }
+        var dropdownDataSource = new kendo.data.DataSource({
+            data:
+              [
+                      { kkey: "Monthly", vvalue: "Monthly" },
+                      { kkey: "Quarterly", vvalue: "Quarterly" },
+                      { kkey: "Yearly", vvalue: "Yearly" },
+              ]
+        });
+        var dropdownDataSourceCustomerType = new kendo.data.DataSource({
+            data:
+              [
+                      { kkey: "Non Profit", vvalue: "Non Profit" },
+                      { kkey: "For Profit", vvalue: "For Profit" },
+              ]
+        });
+        var dropdownDataSourcePaymentOption = new kendo.data.DataSource({
+            data:
+              [
+                      { kkey: "Credit Card", vvalue: "Credit Card" },
+                      { kkey: "Check", vvalue: "Check" },
+                      { kkey: "Invoice", vvalue: "Invoice" },
+                      { kkey: "Cash", vvalue: "Cash" },
+              ]
+        });
+        $("#pricingHistoryGrid").kendoGrid({
+            dataSource: pricingHistorydataSource,
+            allowCopy: true,
+            scrollable: true,
+            sortable: true,
+            filterable: true,
+            editable: "inline",
+            edit: function (e) {
+                var commandCell = e.container.find("td:last");
+                commandCell.html('<a class="k-grid-update" style="margin-left:18px !important;" ><em class="fa fa-1x fa-check"></em></a><div style="display: inline-block; margin: 0; text-align: center;" >&nbsp;</div><div style="display: inline-block; margin: 0; text-align: center;" >&nbsp;</div><a class="k-grid-cancel"><em class="fa fa-1x fa-ban"></em></a>');
+            },
+            columns: [
+                {
+                    field: "BillingFreq",
+                    title: "Billing Frequency",
+                    editor: dropDownEditor,
+                    width: "100px",
+                },
+                {
+                    field: "PaymentOption",
+                    title: "Payment Option",
+                    editor: dropDownEditorPaymentOption,
+                    width: "100px",
+                },
+                 {
+                     field: "ActiveAthletes",
+                     title: "Active # of Athletes",
+                     width: "100px",
+                 },
+                {
+                    field: "MaxNumofAthlete",
+                    title: "Max # of Athletes",
+                    width: "100px",
+                },
+                {
+                    field: "ActivePriceAthletes",
+                    title: "Active Price/Athlete",
+                    template: "<em class='fa fa-usd'></em> #=ActivePriceAthletes#",
+                    width: "100px",
+                },
+                {
+                    field: "MaxPriceAthlete",
+                    title: "Max Price/Athlete",
+                    template: "<em class='fa fa-usd'></em> #=MaxPriceAthlete#",
+                    width: "100px",
+                },
+                {
+                    field: "PriceAdditionalAthlete",
+                    title: "Price/Additional Athlete",
+                    template: "<em class='fa fa-usd'></em> #=PriceAdditionalAthlete#",
+                    width: "100px",
+                },
+                {
+                    field: "EnrollmentMin",
+                    title: "Enrollment Min",
+                    width: "100px",
+                },
+                {
+                    field: "EnrollmentMax",
+                    title: "Enrollment Max",
+                    width: "100px",
+                },
+                {
+                    field: "BillingAmt",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    },
+                    title: "Billing Amount",
+                    template: "# if (BillingAmt != null) { #" +
+                              "<span data-content=<em class='fa fa-usd'></em> #=BillingAmt#" +
+                              "# } else { #" +
+                              "<span data-content='#: BillingAmt#'></span>" +
+                              "# } #",
+                    width: "100px",
+                },
+                {
+                    field: "StartDate",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    },
+                    width: "90px",
+                    title: "Start Date",
+                    editor: dateTimeEditor,
+                    format: "{0:MM/dd/yyyy}"
+                },
+                {
+                    field: "EndDate",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    },
+                    width: "90px",
+                    title: "End Date",
+                    editor: dateTimeEditor,
+                    format: "{0:MM/dd/yyyy}"
+                },
+                {
+                    command: [{
+                        template: ' <a class="k-grid-edit" href="javascript:void(0)" style="margin-left:18px !important;" ><em class="fa fa-1x fa-pencil"></em></a>',
+                        name: "edit", text: "",
+                        text: {
+                            cancel: "",
+                            update: "",
+                            edit: ""
+                        }
+                    },
+                    {
+                        template: ' <div style="display: inline-block; margin: 0; text-align: center;" >&nbsp;</div>',
+                    },
+                        {
+                            template: ' <a class="k-grid-delete" href="javascript:void(0)" ><em class="fa fa-1x fa-trash"></em></a>',
+                            name: "delete", text: "",
+                        }],
+                    title: "Action",
+                    width: "90px",
+                }
+            ]
+        });
+        $("#pricingHistoryGrid").kendoTooltip({
+            filter: "th",
+            content: function (e) {
+                var target = e.target; // element for which the tooltip is shown
+                return $(target).data('title')
+            }
+        }).data("kendoTooltip");
+        function dropDownEditor(container, options) {
+            $('<input data-text-field="kkey" data-value-field="vvalue" data-bind="value:' + options.field + '"/>')
+                        .appendTo(container)
+                       .kendoDropDownList({
+                           dataSource: dropdownDataSource,
+                           dataTextField: "kkey",
+                           dataValueField: "vvalue"
+                       });
+        };
+        function dropDownEditorCustomerType(container, options) {
+            $('<input data-text-field="kkey" data-value-field="vvalue" data-bind="value:' + options.field + '"/>')
+                        .appendTo(container)
+                       .kendoDropDownList({
+                           dataSource: dropdownDataSourceCustomerType,
+                           dataTextField: "kkey",
+                           dataValueField: "vvalue"
+                       });
+        };
+        function dropDownEditorPaymentOption(container, options) {
+            $('<input data-text-field="kkey" data-value-field="vvalue" data-bind="value:' + options.field + '"/>')
+                        .appendTo(container)
+                       .kendoDropDownList({
+                           dataSource: dropdownDataSourcePaymentOption,
+                           dataTextField: "kkey",
+                           dataValueField: "vvalue"
+                       });
+        };
+        function dateTimeEditor(container, options) {
+            $('<input data-text-field="' + options.field + '" data-value-field="' + options.field + '" data-bind="value:' + options.field + '" data-format="' + options.format + '"/>')
+                    .appendTo(container)
+                    .kendoDatePicker({ format: "MM/dd/yyyy" });
+        }
+        function ShowLocationPage() {
+            window.location.href = "Locations";
+        }
+        function ShowDeletePricingHistoryConfirmationPopup() {
+            $('#confirmDeletionPricingHistory').modal('show');
+        }
+        document.getElementById("my_file").onchange = function () {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                // get loaded data and render thumbnail.
+                document.getElementById("profilePicture").src = e.target.result;
+            };
+            // read the image file as a data URL.
+            if (this.files[0]) {
+                reader.readAsDataURL(this.files[0]);
+            }
+        };
+        $("#profilePicture").click(function () {
+            $("input[id='my_file']").click();
+        });
+        function SaveCustomerContact() {
+            if (window.FormData !== undefined) {
+                var fileUpload = $("input[id='my_file']").get(0);
+                var files = fileUpload.files;
+                var fileData = new FormData();
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                }
+                var customerID = $("#hdCustomerID").val().length > 0 ? $("#hdCustomerID").val() : 0;
+                var customerContact = {
+                    'CustomerContactId': $("#hdCustomerContactID").val().length > 0 ? $("#hdCustomerContactID").val() : 0,
+                    'CustomerId': customerID,
+                    'FirstName': $("#txtContactFirstName").val(),
+                    'LastName': $("#txtContactLastName").val(),
+                    'Phone': $("#txtContactPhone").val(),
+                    'Email': $("#txtContactEmail").val(),
+                    'ContactType': $("#txtContactType").val()
+                };
+                // Adding one more key to FormData object
+                fileData.append('customerContact', JSON.stringify(customerContact));
+                $.ajax({
+                    url: '@Url.Action("AddCustomerContact", "Customer")',
+                    type: "POST",
+                    data: fileData,
+                    contentType: false, // Not to set any content header
+                    processData: false, // Not to process data
+                    dataType: "json",
+                    success: function (result) {
+                        alert(result.Message);
+                        //window.location.reload();
+                        $("#txtContactFirstName").val('');
+                        $("#txtContactLastName").val('');
+                        $("#txtContactPhone").val('');
+                        $("#txtContactEmail").val('');
+                        $("#txtContactType").val('');
+                        var fileInput = $('#my_file');
+                        fileInput.replaceWith(fileInput.val('').clone(true));
+                        LoadContactsForcustomer();
+                        ShowAddCustomer();
+
+                    },
+                    error: function (req, status, errorObj) {
+                        alert('Error: Please try again');
+                    }
+                });
+            }
+            else {
+                alert("FormData is not supported.");
+            }
+        }
+        function LoadContactsForcustomer() {
+            $.ajax({
+                url: '@Url.Action("GetContactsForCustomer", "Customer")',
+                type: "POST",
+                data: JSON.stringify({ 'customerID': $("#hdCustomerID").val() }),
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (result) {
+                    $("#customerContactGrid").data("kendoGrid").dataSource.data(result);
+                },
+                error: function (req, status, errorObj) {
+                    alert('Error: Please try again');
+                }
+            });
+        }
+        function SavePricingInfo() {
+            var customerID = $("#hdCustomerID").val().length > 0 ? $("#hdCustomerID").val() : 0;
+            var customerPricing = {
+                'customerID': customerID,
+                'CustomerType': $("#lstPricingCustType").val(),
+                'BillingFreq': $("#lstPricingFreq").val(),
+                'BillingAmt': $("#txtPricingFreqAmt").val(),
+                'PaymentOption': $("#lstPricingPaymentOption").val(),
+                'ActiveAthletes': $("#txtPricingActiveAth").val(),
+                'ActivePriceAthletes': $("#txtPricingMaxAth").val(),
+                'MaxNumofAthlete': $("#txtPricingMaxAth").val(),
+                'ActivePriceAthletes': $("#txtPricingActiveAthPrice").val(),
+                'MaxPriceAthlete': $("#txtPricingMaxAthPrice").val(),
+                'PriceAdditionalAthlete': $("#txtPriceAddnAth").val(),
+                'StartDate': $("#txtPricingStartDate").val(),
+                'EndDate': $("#txtPricingEndDate").val(),
+                'EnrollmentMin': $("#txtCustPricingMin").val(),
+                'EnrollmentMax': $("#txtCustPricingMax").val()
+            };
+            $.ajax({
+                url: '../Customer/SaveCustomerPricing',
+                type: "POST",
+                data: JSON.stringify({ 'ph': customerPricing }),
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (result) {
+                    alert(result.Message);
+                    $("#txtPricingFreqAmt").val('');
+                    $("#txtPricingMaxAth").val('');
+                    $("#txtPriceAddnAth").val('');
+                    $("#txtPricingStartDate").val('');
+                    $("#txtPricingEndDate").val('');
+                    $("#txtCustPricingMin").val('');
+                    $("#txtCustPricingMax").val('');
+                    $("#txtPricingRemainingAth").val('');
+                    $("#txtIncrementalBlock").val('');
+                    $("#txtPricePerBlock").val('');
+                    $("#txtPricingActiveAthPrice").val('');
+                    $("#txtPricingMaxAthPrice").val('');
+                    $("#txtPricingIncrementalPrice").val('');
+                    $.ajax({
+                        url: '@Url.Action("GetPricingHistoryForCustomer", "Customer")',
+                        type: "POST",
+                        data: JSON.stringify({ 'customerID': $("#hdCustomerID").val() }),
+                        contentType: 'application/json',
+                        dataType: "json",
+                        success: function (result) {
+                            $("#pricingHistoryGrid").data("kendoGrid").dataSource.data(result);
+                        },
+                        error: function () {
+                            alert('Error: Please try again');
+                        }
+                    });
+                },
+                error: function (req, status, errorObj) {
+                    alert('Error: Please try again');
+                }
+            });
+        }
+        function ActivateCustomer(id) {
+            loading_img(true);
+            //var id = $("#hdActivateCustomerID").val();
+            $.ajax({
+                url: '../Customer/ActivateCustomerAsync',
+                type: "POST",
+                data: { id: id },
+                success: function (result) {
+                    $('#confirmActivation').modal('hide');
+                    loading_img(false);
+                    alert(result.Message);
+                },
+                error: function () {
+                    $('#confirmActivation').modal('hide');
+                    loading_img(false);
+                    alert('Error: Please try again');
+                }
+            });
+        }
+        function ChangeActiveAthPrice() {
+            if ($("#txtPricingFreqAmt").val() !== "" && $("#txtPricingMaxAth").val() !== "" && $("#txtIncrementalBlock").val()) {
+                var pricePerAth = $("#txtPricingFreqAmt").val() / $("#txtPricingMaxAth").val();
+                $("#txtPricingActiveAthPrice").val(pricePerAth.toFixed(2));
+
+                var pendingNumOfAth = (parseInt($("#txtPricingMaxAth").val()) + parseInt($("#txtIncrementalBlock").val())) - parseInt($("#txtPricingActiveAth").val());
+                $("#txtPricingRemainingAth").val(pendingNumOfAth);
+
+                var pricePerBlock = (parseFloat($("#txtPricingFreqAmt").val()) / parseFloat($("#txtPricingMaxAth").val())) * 0.95 * parseFloat($("#txtIncrementalBlock").val());
+                $("#txtPricePerBlock").val(pricePerBlock.toFixed(2));
+
+                var perAddnAthletePrice = parseFloat($("#txtPricePerBlock").val()) / parseFloat($("#txtIncrementalBlock").val());
+                $("#txtPriceAddnAth").val(perAddnAthletePrice.toFixed(2));
+
+                var currNumofAth = (parseFloat($("#txtPricingFreqAmt").val()) + parseFloat($("#txtPricePerBlock").val())) / parseInt($("#txtPricingMaxAth").val());
+                $("#txtPricingMaxAthPrice").val(currNumofAth.toFixed(2));
+
+                var basenIncremental = (parseFloat($("#txtPricingFreqAmt").val()) + parseFloat($("#txtPricePerBlock").val())) / (parseFloat($("#txtPricingMaxAth").val()) + parseFloat($("#txtIncrementalBlock").val()));
+                $("#txtPricingIncrementalPrice").val(basenIncremental.toFixed(2));
+            }
+        }
+        function DeactivateCustomer(id) {
+            loading_img(true);
+            $.ajax({
+                url: '../Customer/DeactivateCustomerAsync',
+                type: "POST",
+                data: { id: id },
+                success: function (result) {
+                    $('#confirmActivation').modal('hide');
+                    loading_img(false);
+                    alert(result.Message);
+                },
+                error: function () {
+                    $('#confirmActivation').modal('hide');
+                    loading_img(false);
+                    alert('Error: Please try again');
+                }
+            });
+        }
+    </script>
+}

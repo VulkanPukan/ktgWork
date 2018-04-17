@@ -1,0 +1,531 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Profile";
+    Layout = "~/Views/Coach/_LayoutNew.cshtml";
+}
+
+@*<div class="wrapper">*@
+<!-- End aside-->
+
+<div class="top-bar clearfix">
+    <!-- Container fluid starts -->
+    <div class="container-fluid">
+        <!-- Row starts -->
+        <div class="row gutter">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                <h3 class="page-title">Athlete Profile</h3>
+            </div>
+        </div>
+        <!-- Row ends -->
+    </div>
+    <!-- Container fluid ends -->
+</div>
+
+
+<div class="main-container">
+    <div id="profileDiv">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <input type="image" src="../images/noimage.jpg" width="80" height="80" id="profilePicture" />
+                <input type="file" id="my_file" style="display: none;" />
+            </div>
+         </div>
+         <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="panel panel-light">
+                        <div class="panel-heading">
+                            <div class="page-title pull-right" style="color:#ffffff">* Required fields</div>
+                            <h4 class="panel-title">Athlete Details</h4>
+                        </div>
+                        <div class="panel-body">
+                                <div id="accordionAdd" class="panel-group">
+
+                                        <div >
+                                            <form class="form-horizontal">
+                                                <input type="hidden" id="hdnAthleteID" value="@Model.UserId" />
+                                                <input type="hidden" id="hdnUserType" value="@Model.UserType" />
+                                                <input type="hidden" id="hdnUserIsPending" value="@Model.IsPending" />
+                                                <input type="hidden" id="hdnUserAccountEnabled" value="@Model.IsAccountEnabled" />
+                                                @*<div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">Profile Picture</label>
+                                <div class="col-lg-7">
+                                    <input type="image" src="../images/noimage.jpg" class="media-object img-circle thumb48" />
+                                    <input type="file" id="my_file" style="display: none;" />
+                                </div>
+                            </div>*@
+                                                <div class="form-group col-lg-12" style="margin-bottom:0px;">
+
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">First Name *</label>
+                                                    <div class="col-lg-7">
+                                                        <input placeholder="First Name" class="form-control" id="txtAthleteFirstName" value="@Model.FirstName">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">Last Name *</label>
+                                                    <div class="col-lg-7">
+                                                        <input placeholder="Last Name" class="form-control" id="txtAthleteLastName" value="@Model.LastName">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">  Address1 </label>
+                                                    <div class="col-lg-7">
+                                                        <input type="text" placeholder="Address1" class="form-control" id="txtAthleteAddress1" value="@Model.AddressOne" />
+
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">Address 2 </label>
+                                                    <div class="col-lg-7">
+                                                        <input type="text" placeholder="Address2" class="form-control" id="txtAthleteAddress2" value="@Model.AddressTwo" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">City</label>
+                                                    <div class="col-lg-7">
+                                                        <input placeholder="City" class="form-control" id="txtAthleteCity" value="@Model.City">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">State/Zip Code</label>
+                                                    <div class="col-lg-7">
+                                                        @Html.DropDownList("stateID", null, "Select a state", new { @style = "width:45%; padding:0px;", @name = "state", @class = "form-control mr col-lg-6 state-select", @id = "ddlAthleteState" })
+                                                        <div style="width:49%; padding:0px;margin-left: 15px;" class="col-lg-6">
+                                                            <input placeholder="ZIP Code" class="form-control" id="txtAthleteZip" value="@Model.Zip">
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                @*<div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">Zip Code</label>
+                                <div class="col-lg-7">
+                                    <input placeholder="ZIP Code" class="form-control">
+                                </div>
+                            </div>*@
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">Phone No.</label>
+                                                    <div class="col-lg-7">
+                                                        <input placeholder="Phone No" class="form-control" id="txtAthletePhone" value="@Model.Phone">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">Alt Phone No.</label>
+                                                    <div class="col-lg-7">
+                                                        <input placeholder="Phone No" class="form-control" id="txtAthleteAlternatePhone" value="@Model.AlternatePhone">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">Email</label>
+                                                    <div class="col-lg-7">
+                                                        <input type="email" placeholder="Email" class="form-control" id="txtAthleteEmail" value="@Model.Email">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">Alt Email</label>
+                                                    <div class="col-lg-7">
+                                                        <input type="email" placeholder="Comma Seperated Email" class="form-control" id="txtAthleteSecondaryEmail" value="@Model.SecondaryEmail">
+                                                    </div>
+
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">DOB</label>
+                                                    <div class="col-lg-7">
+                                                        @*<div data-pick-date="false" class="datetimepicker input-group date mb-lg" style="margin-bottom:0px !important;">*@
+                                                        <input type="text" id="txtAthleteDOB" class="form-control" placeholder="Date of Birth" value="@Model.DOB">
+                                                        @*<span class="input-group-addon">
+                                        <span class="fa fa-calendar fa-clock-o"></span>
+                                    </span>*@
+                                                        @*<label class="col-lg-5 control-label">Age</label>21*@
+                                                        @*</div>*@
+                                                    </div>
+
+
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">Gender</label>
+                                                    <div class="col-lg-7">
+                                                        @Html.DropDownList("Gender", new List<SelectListItem>{new SelectListItem{ Text="Male", Value="1"}, new SelectListItem{ Text="Female", Value="2"} }, new { @id="ddlAthleteGender", @name = "Gender", @class = "form-control m-b" })
+                                                        @*<select name="Gender" class="form-control m-b" id="ddlAthleteGender" value="@Model.Gender">
+                                                            <option value="1">Male</option>
+                                                            <option value="2">Female</option>
+                                                        </select>*@
+                                                    </div>
+                                                </div>
+                                                @*<div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Sport *</label>
+                                                        <div class="col-lg-7">
+                                                       <select name="profilePosition" class="form-control m-b" id="ddlAthleteSport">
+                            <option>Archery</option>
+                            <option>Shooting</option>
+                                                           <option>Swimming</option>
+                                                           <option>Horse Riding</option>
+
+                                                             </select>
+                                                    </div>
+                                                </div>*@
+                                                @*<div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">Position*</label>
+                                                                                                            <div class="col-lg-7">
+                                                         <select name="profileParticipants" class="form-control m-b" id="ddlAthletePosition">
+                            <option>Yes</option>
+                            <option>No</option>
+                                                             </select>
+                                                    </div>
+                                            </div>*@
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">School</label>
+                                                    <div class="col-lg-7">
+                                                        <input placeholder="School" name="SchoolName" value="@Model.SchoolName" class="form-control" id="txtAthleteSchool">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">Strength Training Experienced</label>
+                                                    <div class="col-lg-7">
+                                                        @Html.DropDownList("ParticipateInTravelTeam", new List<SelectListItem>{new SelectListItem{ Text="Yes", Value="1"}, new SelectListItem{ Text="No", Value="2"} }, new { @id="ddlAthleteExperienced", @name = "ParticipateInTravelTeam", @class = "form-control m-b" })
+                                                        @*<select name="profileParticipants" class="form-control m-b" id="ddlAthleteExperienced">
+                                                            <option value="1">Yes</option>
+                                                            <option value="2">No</option>
+                                                        </select>*@
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">Travel Club/Team</label>
+                                                    <div class="col-lg-7">
+                                                        <input placeholder="Travel Club/Team" name="TravelTeamName" class="form-control" id="txtAthleteTravelClub" value="@Model.TravelTeamName">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">Travel Club/Level</label>
+                                                    <div class="col-lg-7">
+                                                        @Html.DropDownList("PlayingLevel", new List<SelectListItem>{new SelectListItem{ Text="A", Value="1"}, new SelectListItem{ Text="B", Value="2"}, new SelectListItem{ Text="C", Value="3"} }, new { @id="ddllAthleteTravelClubLevel", @name = "PlayingLevel", @class = "form-control m-b" })
+                                                        @*<select name="PlayingLevel" class="form-control m-b" id="ddllAthleteTravelClubLevel" value="@Model.PlayingLevel">
+                                                            <option value="1">A</option>
+                                                            <option value="2">B</option>
+                                                            <option value="3">C</option>
+                                                        </select>*@
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">Athlete sport</label>
+
+                                                    <div class="col-lg-7">
+                                                        @Html.DropDownList("sportId", new SelectList(Model.AvailableSport, "Id", "Name", Model.AthleteDefaultSportId), "Select Athlete sport", new { @name = "sportId", @class = "form-control m-b" })
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label class="col-lg-5 control-label">Grade *</label>
+                                                    <div class="col-lg-7">
+                                                        <input type="text" name="Grade" value="@Model.Grade" placeholder="Grade" id="txtAthleteGrade" class="form-control m-b" onkeypress="return isNumber(event);" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">Team</label>
+                                                            <div class="col-lg-7">
+                                                                <input type="text" id="txtTeamName" disabled="disabled" class="form-control m-b" value="@Model.TeamName" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">Coach</label>
+                                                            <div class="col-lg-7">
+                                                                <input type="text" id="txtCoachName" disabled="disabled" class="form-control m-b" value="@Model.CoachName" />
+                                                        </div>
+                                                    </div>
+                                                @* Have Participated in more than 3 months of continuos intelligent resistance traiing*@
+                                                <div class="form-group col-lg-12">
+                                                    <div class="pull-right" style="width:10%">
+                                                        <button type="button" onclick="SaveAthleteProfile();" class="btn btn-primary btn-sm" style="width:75px">Save</button>
+                                                        @*<button type="button" onclick="javascript:void();" class="btn btn-danger btn-sm" style="width:75px">Cancel</button>*@
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                    <!-- END panel-->
+                                    <!-- START panel-->
+                                    @*<div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordionAdd" href="#collapsePricingSetupAdd" class="collapsed">Pricing Setup</a>
+                        </h4>
+                    </div>
+                    <div id="collapsePricingSetupAdd" class="panel-collapse collapse" style="height: 0px;">
+                        <div class="panel-body">
+                            <form class="form-horizontal">
+                                <div class="form-group col-lg-6">
+                                    <label class="col-lg-5 control-label">Customer Name *</label>
+                                    <div class="col-lg-7">
+                                        <input placeholder="Customer Name" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label class="col-lg-5 control-label">Contact Name *</label>
+                                    <div class="col-lg-7">
+                                        <input placeholder="Last Name" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label class="col-lg-5 control-label">Contact Phone *</label>
+                                    <div class="col-lg-7">
+                                        <input placeholder="Contact Phone" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label class="col-lg-5 control-label">Contact Email *</label>
+                                    <div class="col-lg-7">
+                                        <input type="email" placeholder="Contact Email" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label class="col-lg-5 control-label">Address *</label>
+                                    <div class="col-lg-7">
+                                        <textarea placeholder="Address" class="form-control"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-lg-offset-2 col-lg-10">
+                                        <div class="required">* Required fields</div>
+                                    </div>
+                                </div>
+
+                                <div class="pull-right">
+                                    <button type="button" onclick="ShowCustomerGrid();" class="btn btn-sm btn-default">Cancel</button>
+                                    <button type="button" onclick="ShowCustomerGrid();" class="btn btn-primary btn-sm">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>*@
+                                    <!-- END panel-->
+                                </div>
+                        </div>
+                      
+                    </div>
+                </div>
+            </div>
+         
+        </div>
+
+        <div id="ChangePasswordDiv" style="display:none;">
+
+            <div class="">
+                <div class="panel-heading bb">
+                    Select New Password
+                    <div class="required pull-right">* Required fields</div>
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal">
+
+                        <div class="form-group col-lg-6">
+                            <label class="col-lg-5 control-label">New Password*</label>
+                            <div class="col-lg-7">
+                                <input type="password" placeholder="First Name" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="col-lg-5 control-label">Confirm Password *</label>
+                            <div class="col-lg-7">
+                                <input type="password" placeholder="Last Name" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12">&nbsp;</div>
+
+                        <div class="pull-right" style="" width:25%">
+                            <button type="button" onclick="ShowProfileDiv();" class="btn btn-primary btn-sm">Reset Password</button>
+
+                        </div>
+
+
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+@section Scripts {
+	@Scripts.Render("~/bundles/jquery")
+	<script src="../Scripts/slider/js/bootstrap-slider.js"></script>
+	<script src="../Scripts/sparklines/jquery.sparkline.min.js"></script>
+	<script src="../Scripts/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="../Scripts/kendo.all.min.js"></script>
+	<script src="~/Scripts/moment/min/moment.min.js"></script>
+	<script src="~/Scripts/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="~/Scripts/jquery.maskedinput.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		function ShowProfileDiv() {
+			$("#profileDiv").show();
+			$("#ChangePasswordDiv").hide();
+		}
+
+		function ShowChangePasswordDiv() {
+
+			$("#profileDiv").hide();
+			$("#ChangePasswordDiv").show();
+
+		}
+		if ($("#txtAthleteDOB").val() !== "") {
+		    $("#txtAthleteDOB").val($("#txtAthleteDOB").val().substr(0, $("#txtAthleteDOB").val().indexOf(" ")));
+		    var athleteDOB = new Date($("#txtAthleteDOB").val());
+		    $("#txtAthleteDOB").val(('0' + (athleteDOB.getMonth() + 1)).slice(-2) + '/' + ('0' + athleteDOB.getDate()).slice(-2) + '/' + athleteDOB.getFullYear());
+		}
+		//$(document).ready(function () {
+		//    $("#nominee_one_dob").datepicker({
+		//        changeMonth: true,
+		//        changeYear: true,
+		//        dateFormat: 'yy-mm-dd',
+
+		//        onSelect: function (date) {
+		//            var dob = new Date(date);
+		//            var today = new Date();
+
+		//            if (dob.getFullYear() + 18 < today.getFullYear()) {
+		//                alert("Under 18");
+		//            }
+		//            else {
+		//                alert(" Over 18");
+		//            }
+		//        }
+
+		//    });
+		//});
+
+
+		$("input[type='image']").click(function() {
+			$("input[id='my_file']").click();
+		});
+		document.getElementById("my_file").onchange = function() {
+
+			var reader = new FileReader();
+
+			reader.onload = function(e) {
+				// get loaded data and render thumbnail.
+				document.getElementById("profilePicture").src = e.target.result;
+			};
+
+			if (this.files[0]) {
+				// read the image file as a data URL.
+				reader.readAsDataURL(this.files[0]);
+			}
+		};
+		//function LoadAthleteProfile(userId) {
+		//    $.ajax({
+		//        url: '../Coach/GetAthleteInfoByID',
+		//        type: "POST",
+		//        data: JSON.stringify({ 'athleteID': userId }),
+		//        contentType: 'application/json',
+		//        dataType: "json",
+		//        success: function (result) {
+		//            athleteModel = result;
+
+		//            var athleteDOB = (result.DOB != null && result.DOB != undefined) ? new Date(parseInt(result.DOB.substr(6))) : null;
+		//            if (athleteDOB != null) {
+		//                $("#txtAthleteDOB").val(('0' + (athleteDOB.getMonth() + 1)).slice(-2) + '/' + ('0' + athleteDOB.getDate()).slice(-2) + '/' + athleteDOB.getFullYear());
+		//            }
+		//           // (result.Gender == null) ? $("#ddlAthleteGender").val(0) : $("#ddlAthleteGender").val(result.Gender);
+		//            //(result.PositionID == null) ? $("#ddlAthletePosition").val(0) : $("#ddlAthletePosition").val(result.PositionID);
+
+		//            $("#txtAthleteSchool").val(result.School);
+		//            $("#ddlAthleteExperienced").val(result.Experienced == true ? "1" : "2");
+		//            (result.Experienced == null) ? $("#ddlAthleteExperienced").val(0) : $("#ddlAthleteExperienced").val(result.Experienced == true ? "1" : "2");
+
+		//            $("#txtAthleteTravelClub").val(result.TravelTeamName);
+		//            $("#ddllAthleteTravelClubLevel").val(result.PlayingLevel);
+		//            (result.TravelTeamLevel == null) ? $("#ddllAthleteTravelClubLevel").val(0) : $("#ddllAthleteTravelClubLevel").val(result.TravelTeamLevel);
+		//            $("#profilePicture").attr("src", (result.UserImagePath != null && result.UserImagePath.length > 1) ? result.UserImagePath : "../images/noimage.jpg");
+		//        },
+		//        error: function (req, status, errorObj) {
+		//            alert('Error: Please try again');
+		//        }
+		//    });
+		//}
+		$(document).ready(function () {
+		    $("#hdnUserIsPending").val("@Model.IsPending");
+		    $("#hdnUserAccountEnabled").val("@Model.IsAccountEnabled");
+			var userId = getUrlVars('UserId');
+			$("#txtAthletePhone").mask("(999) 999-9999");
+			$("#txtAthleteAlternatePhone").mask("(999) 999-9999");
+			$('#txtAthleteDOB').mask("99/99/9999", { placeholder: "MM/DD/YYYY", clearIfNotMatch: true });
+			$("#txtAthleteZip").mask("99999");
+		});
+
+		function SaveAthleteProfile() {
+			// Checking whether FormData is available in browser
+			if (window.FormData !== undefined) {
+
+				var fileUpload = $("input[id='my_file']").get(0);
+				var files = fileUpload.files;
+
+				// Create FormData object
+				var fileData = new FormData();
+
+				// Looping over all files and add it to FormData object
+				for (var i = 0; i < files.length; i++) {
+					fileData.append(files[i].name, files[i]);
+				}
+				var athleteModel = {};
+				athleteModel.FirstName = $("#txtAthleteFirstName").val();
+				athleteModel.LastName = $("#txtAthleteLastName").val();
+				athleteModel.DOB = $("#txtAthleteDOB").val();
+				athleteModel.UserType = $("#hdnUserType").val();
+				athleteModel.Gender = $("#ddlAthleteGender").val();
+				athleteModel.Grade = $("#txtAthleteGrade").val();
+				athleteModel.UserType = $("#hdnUserType").val();
+				athleteModel.UserID = $("#hdnAthleteID").val();
+				athleteModel.AddressOne = $("#txtAthleteAddress1").val();
+				athleteModel.AddressTwo = $("#txtAthleteAddress2").val();
+				athleteModel.City = $("#txtAthleteCity").val();
+				athleteModel.Email = $("#txtAthleteEmail").val();
+				athleteModel.SecondaryEmail = $("#txtAthleteSecondaryEmail").val();
+				athleteModel.ZipCode = $("#txtAthleteZip").val();
+				athleteModel.Phone = $("#txtAthletePhone").val();
+				athleteModel.AlternatePhone = $("#txtAthleteAlternatePhone").val();
+				athleteModel.StateID = $("#ddlAthleteState").val();
+				athleteModel.AthleteDefaultSportId = $("#sportId").val();
+				athleteModel.PositionID = $("#ddlAthletePosition").val();
+				athleteModel.SchoolName = $("#txtAthleteSchool").val();
+				athleteModel.TravelTeamName = $("#txtAthleteTravelClub").val();
+				athleteModel.PlayingLevel = $("#ddllAthleteTravelClubLevel").val();
+			    //athleteModel.ParticipateInTravelTeam = $("#ddlAthleteExperienced").val() == 1 ? true : false;
+				athleteModel.ParticipateInTravelTeam = $("#ddlAthleteExperienced").val();
+				athleteModel.TravelTeamLevel = $("#ddllAthleteTravelClubLevel").val();
+				athleteModel.IsPending = $("#hdnUserIsPending").val();
+				athleteModel.IsAccountEnabled = $("#hdnUserAccountEnabled").val();
+				if (files.length > 0) {
+					athleteModel.UserImagePath = files[0].name;
+				}
+
+				// Adding one more key to FormData object
+				fileData.append('athleteViewModel', JSON.stringify(athleteModel));
+
+				$.ajax({
+					url: '@Url.Action("SaveAthlete", "Coach")',
+					type: "POST",
+					data: JSON.stringify(athleteModel),
+					contentType: "application/json", // Not to set any content header
+					//processData: false, // Not to process data
+					dataType: "json",
+					success: function(result) {
+						alert(result.Message);
+						window.location.reload();
+					},
+					error: function(req, status, errorObj) {
+						alert('Error: Please try again');
+					}
+				});
+			} else {
+				alert("FormData is not supported.");
+			}
+		}
+	</script>
+
+<script type="text/javascript" charset="utf-8">
+    $("#liAthlete").addClass("active");
+</script>
+}
+

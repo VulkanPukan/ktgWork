@@ -1,0 +1,548 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="no-ie">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <title>@ViewBag.Title</title>
+    @*@Styles.Render("~/Content/css")*@
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="@Url.Content("~/content/bootstrap.css")">
+    <!-- Vendor CSS-->
+    <link rel="stylesheet" href="~/content/fontawesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/content/animo/animateanimo.css">
+    <!-- App CSS-->
+    <link rel="stylesheet" href="~/content/app.css">
+    <link rel="stylesheet" href="~/content/common.css">
+    <link href="~/Content/StrengthTracker2/strengthtracker.common.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="~/Images/favicon.png">
+
+    <script src="~/Scripts/fastclick/fastclick.js" type="application/javascript"></script>
+
+    <style>
+        .navbar-top .navbar-header {
+            width: 250px !important;
+            text-align: center;
+        }
+
+        #dvSiteHeader {
+            width: 98.9% !important;
+        }
+
+        #dvSiteFooter {
+            border-top-color: #ddd !important;
+            border-bottom-color: #fff !important;
+            color: #333 !important;
+            background-color: white !important;
+            border-width: 1px 0 !important;
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+            width: 98.8% !important;
+            height: 60px !important;
+            bottom: 0;
+            position: relative !important;
+            top: 300px !important;
+        }
+
+            #dvSiteFooter a {
+                color: black !important;
+            }
+    </style>
+
+</head>
+<body>
+    <div class="ajax-loading-block-window" style="display: none">
+        <div class="loading-image">
+        </div>
+    </div>
+    <div class="wrapper">
+        <nav role="navigation" class="navbar navbar-default navbar-top navbar-fixed-top" id="dvSiteHeader">
+            <!-- START navbar header-->
+            <div class="navbar-header">
+                <a href="@Url.Action("Index", "Coach")" class="navbar-brand">
+                    <div class="brand-logo" style="padding-top: 20px !important;">
+                        @*<img src="../Images/logo.png" alt="App Logo" class="img-responsive">*@
+                        @*<img src="../Images/saqs-headerlogo.png" alt="App Logo" class="img-responsive">*@
+                        StrengthTracker
+                    </div>
+                    <div class="brand-logo-collapsed" style="padding-top: 20px !important;">
+                        @*<img src="../Images/logo-single.png" alt="App Logo" class="img-responsive">*@
+                        StrengthTracker
+                    </div>
+                </a>
+            </div>
+            <!-- END navbar header-->
+            <!-- START Nav wrapper-->
+            <div class="nav-wrapper">
+                <!-- START Left navbar-->
+                <ul class="nav navbar-nav">
+                    <li>
+                        <!-- Button used to collapse the left sidebar. Only visible on tablet and desktops-->
+                        <a href="#" data-toggle-state="aside-collapsed" data-persists="true" class="hidden-xs">
+                            <em class="fa fa-navicon"></em>
+                        </a>
+                        <!-- Button to show/hide the sidebar on mobile. Visible on mobile only.-->
+                        <a href="#" data-toggle-state="aside-toggled" class="visible-xs">
+                            <em class="fa fa-navicon"></em>
+                        </a>
+                    </li>
+                    <!-- START Messages menu (dropdown-list)-->
+                    <li class="dropdown dropdown-list">
+                        <a href="#" data-toggle="dropdown" data-play="fadeIn" class="dropdown-toggle">
+                            <em class="fa fa-envelope-o"></em>
+                            <div class="label label-danger">21</div>
+                        </a>
+                        <!-- START Dropdown menu-->
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-menu-header">You have 5 new messages</li>
+                            <li>
+                                <div class="scroll-viewport">
+                                    <!-- START list group-->
+                                    <div class="list-group scroll-content">
+                                        <!-- START list group item-->
+                                        <a href="#" class="list-group-item">
+                                            <div class="media">
+                                                <div class="pull-left">
+                                                    <img src="@Url.Content("~/Images/user/01.jpg")" alt="Image" class="media-object img-circle thumb48">
+                                                </div>
+                                                <div class="media-body clearfix">
+                                                    <small class="pull-right">2h</small>
+                                                    <strong class="media-heading text-primary">
+                                                        <span class="point point-success point-md"></span>Rina Carter
+                                                    </strong>
+                                                    <p class="mb-sm">
+                                                        <small>Curabitur sodales nisl eu enim suscipit eu faucibus dui mattis.</small>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <!-- END list group item-->
+                                        <!-- START list group item-->
+                                        <a href="#" class="list-group-item">
+                                            <div class="media">
+                                                <div class="pull-left">
+                                                    <img src="@Url.Content("~/Images/user/04.jpg")" alt="Image" class="media-object img-circle thumb48">
+                                                </div>
+                                                <div class="media-body clearfix">
+                                                    <small class="pull-right">3h</small>
+                                                    <strong class="media-heading text-primary">
+                                                        <span class="point point-success point-md"></span>Michael Reynolds
+                                                    </strong>
+                                                    <p class="mb-sm">
+                                                        <small>Curabitur sodales nisl eu enim suscipit eu faucibus dui mattis.</small>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <!-- END list group item-->
+                                        <!-- START list group item-->
+                                        <a href="#" class="list-group-item">
+                                            <div class="media">
+                                                <div class="pull-left">
+                                                    <img src="@Url.Content("~/Images/user/03.jpg")" alt="Image" class="media-object img-circle thumb48">
+                                                </div>
+                                                <div class="media-body clearfix">
+                                                    <small class="pull-right">4h</small>
+                                                    <strong class="media-heading text-primary">
+                                                        <span class="point point-danger point-md"></span>Britanny Pierce
+                                                    </strong>
+                                                    <p class="mb-sm">
+                                                        <small>Curabitur sodales nisl eu enim suscipit eu faucibus dui mattis.</small>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <!-- END list group item-->
+                                        <!-- START list group item-->
+                                        <a href="#" class="list-group-item">
+                                            <div class="media">
+                                                <div class="pull-left">
+                                                    <img src="@Url.Content("~/Images/user/05.jpg")" alt="Image" class="media-object img-circle thumb48">
+                                                </div>
+                                                <div class="media-body clearfix">
+                                                    <small class="pull-right">4h</small>
+                                                    <strong class="media-heading text-primary">
+                                                        <span class="point point-danger point-md"></span>Laura Cole
+                                                    </strong>
+                                                    <p class="mb-sm">
+                                                        <small>Curabitur sodales nisl eu enim suscipit eu faucibus dui mattis.</small>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <!-- END list group item-->
+                                        <!-- START list group item-->
+                                        <a href="#" class="list-group-item">
+                                            <div class="media">
+                                                <div class="pull-left">
+                                                    <img src="@Url.Content("~/Images/user/06.jpg")" alt="Image" class="media-object img-circle thumb48">
+                                                </div>
+                                                <div class="media-body clearfix">
+                                                    <small class="pull-right">4h</small>
+                                                    <strong class="media-heading text-primary">
+                                                        <span class="point point-danger point-md"></span>Carolyn Pretty
+                                                    </strong>
+                                                    <p class="mb-sm">
+                                                        <small>Curabitur sodales nisl eu enim suscipit eu faucibus dui mattis.</small>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <!-- END list group item-->
+                                    </div>
+                                    <!-- END list group-->
+                                </div>
+                            </li>
+                            <!-- START dropdown footer-->
+                            <li class="p">
+                                <a href="#" class="text-center">
+                                    <small class="text-primary">READ ALL</small>
+                                </a>
+                            </li>
+                            <!-- END dropdown footer-->
+                        </ul>
+                        <!-- END Dropdown menu-->
+                    </li>
+                    <!-- END Messages menu (dropdown-list)-->
+                    <li>
+                        <!-- Button to clear all site options stored option from browser storage-->
+                        <a href="#" data-toggle="reset">
+                            <em class="fa fa-refresh"></em>
+                        </a>
+                    </li>
+                </ul>
+                <!-- END Left navbar-->
+                <!-- START Right Navbar-->
+                <ul class="nav navbar-nav navbar-right">
+                    <!-- Search icon-->
+                    <li>
+                        <a href="#" data-toggle="navbar-search">
+                            <em class="fa fa-search"></em>
+                        </a>
+                    </li>
+                    <!-- START Alert menu-->
+                    <li class="dropdown dropdown-list">
+                        <a href="#" data-toggle="dropdown" data-play="fadeIn" class="dropdown-toggle" style="margin-right: 15px;">
+                            <em class="fa fa-bell-o"></em>
+                            <div class="label label-info">35</div>
+                        </a>
+                        <!-- START Dropdown menu-->
+                        <ul class="dropdown-menu">
+                            <li>
+                                <!-- START list group-->
+                                <div class="list-group">
+                                    <!-- list item-->
+                                    <a href="#" class="list-group-item">
+                                        <div class="media">
+                                            <div class="pull-left">
+                                                <em class="fa fa-envelope-o fa-2x text-success"></em>
+                                            </div>
+                                            <div class="media-body clearfix">
+                                                <div class="media-heading">Unread messages</div>
+                                                <p class="m0">
+                                                    <small>You have 10 unread messages</small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <!-- list item-->
+                                    <a href="#" class="list-group-item">
+                                        <div class="media">
+                                            <div class="pull-left">
+                                                <em class="fa fa-cog fa-2x"></em>
+                                            </div>
+                                            <div class="media-body clearfix">
+                                                <div class="media-heading">New settings</div>
+                                                <p class="m0">
+                                                    <small>There are new settings available</small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <!-- list item-->
+                                    <a href="#" class="list-group-item">
+                                        <div class="media">
+                                            <div class="pull-left">
+                                                <em class="fa fa-fire fa-2x"></em>
+                                            </div>
+                                            <div class="media-body clearfix">
+                                                <div class="media-heading">Updates</div>
+                                                <p class="m0">
+                                                    <small>There are
+                                                        <span class="text-primary">2</span>new updates available
+                                                    </small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <!-- last list item -->
+                                    <a href="#" class="list-group-item">
+                                        <small>Unread notifications</small>
+                                        <span class="badge">14</span>
+                                    </a>
+                                </div>
+                                <!-- END list group-->
+                            </li>
+                        </ul>
+                        <!-- END Dropdown menu-->
+                    </li>
+                    <!-- END Alert menu-->
+                    <!-- START User menu-->
+                    @*                    <li class="dropdown">
+                        <a href="#" data-toggle="dropdown" data-play="fadeIn" class="dropdown-toggle">
+                            <em class="fa fa-tencent-weibo"></em>
+                        </a>
+                        <!-- START Dropdown menu-->
+                        <ul class="dropdown-menu">
+                            <li>
+                                <div class="p">
+                                    <p>Overall progress</p>
+                                    <div class="progress progress-striped progress-xs m0">
+                                        <div role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar-success progress-70">
+                                            <span class="sr-only">70% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="#">Profile</a>
+                            </li>
+                            <li>
+                                <a href="#">Settings</a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    Notifications<div class="label label-info pull-right">5</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    Messages<div class="label label-danger pull-right">10</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">Logout</a>
+                            </li>
+                        </ul>
+                        <!-- END Dropdown menu-->
+                    </li>
+                    <!-- END User menu-->
+                    <!-- START Contacts button-->
+                    <li>
+                        <a href="#" data-toggle-state="offsidebar-open">
+                            <em class="fa fa-comment-o"></em>
+                        </a>
+                    </li>*@
+                    <!-- END Contacts menu-->
+                </ul>
+                <!-- END Right Navbar-->
+            </div>
+            <!-- END Nav wrapper-->
+            <!-- START Search form-->
+            <form role="search" class="navbar-form">
+                <div class="form-group has-feedback">
+                    <input type="text" placeholder="Type and hit Enter.." class="form-control">
+                    <div data-toggle="navbar-search-dismiss" class="fa fa-times form-control-feedback"></div>
+                </div>
+                <button type="submit" class="hidden btn btn-default">Submit</button>
+            </form>
+            <!-- END Search form-->
+        </nav>
+        <!-- END Top Navbar-->
+        <!-- START aside-->
+        <aside class="aside">
+            <!-- START Sidebar (left)-->
+            <nav class="sidebar">
+                <!-- START user info-->
+                <div class="item user-block">
+                    <!-- User picture-->
+                    <div class="user-block-picture">
+                        <div class="user-block-status">
+                            @if (Session["AuthenticatedUser"] != null)
+                         {
+                             int userID = ((StrengthTracker2.Core.Repository.Entities.Actors.User)(Session["AuthenticatedUser"])).UserId;
+                             StrengthTracker2.Core.Repository.Entities.Actors.UserDetails userDetails = (StrengthTracker2.Core.Repository.Entities.Actors.UserDetails)(Session["AuthenticatedUserDetails"]);
+                             StrengthTracker2.Core.Repository.Entities.Actors.UserImage image = userDetails.UserImages.Where(ui => ui.UserId == userID).FirstOrDefault();
+                             var userFirstName = ((StrengthTracker2.Core.Repository.Entities.Actors.User)(Session["AuthenticatedUser"])).FirstName;
+                             var imgPath = image == null ? "" : image.ImagePath;
+                            <img src="@imgPath" alt="Image" class="media-object img-circle thumb48">
+                         }
+                        else
+                        {
+                            <img src="../images/05.jpg" alt="Avatar" width="60" height="60" class="img-thumbnail img-circle">
+                        }                            
+                            @*<img src="../images/05.jpg" alt="Avatar" width="60" height="60" class="img-thumbnail img-circle">*@
+                            <div class="point point-success point-lg"></div>
+                        </div>
+                        <!-- Status when collapsed-->
+                    </div>
+                    <!-- Name and Role-->
+                    <div class="user-block-info">
+                        <div class="user-block-name item-text dropdown">
+                            Welcome Coach
+                            <a href="javascript:void(0);" style="color: #727399;" data-toggle="dropdown" data-play="fadeIn" class="dropdown-toggle">
+                                <em class="fa fa-chevron-down"></em>
+                            </a>
+                            <!-- START Dropdown menu-->
+                            <ul class="dropdown-menu" style="min-width: 140px !important;">
+                                <li>
+                                    <a href="@Url.Action("Profile", "Coach")" onclick='window.location="@Url.Action("Profile", "Athlete")";' >My Profile</a>
+                                </li>
+                                <li>
+                                    <a href="Javascript:void(0);" onclick='Logout("@Url.Action("Logout", "Account")");'>Logout</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <span class="user-block-role">Coach</span>
+                    </div>
+                </div>
+                <!-- END user info-->
+                <ul class="nav">
+                    <!-- START Menu-->
+                    <li class="nav-heading">Main</li>
+                    <li id="liDashboard">
+                        <a href="@Url.Action("Dashboard", "Coach")" onclick='window.location="@Url.Action("Dashboard", "Coach")";' title="Dashboard" data-toggle="collapse-next" class="no-submenu">
+                            <em class="fa fa-dot-circle-o"></em>
+                            <span class="item-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li id="liIndex">
+                        <a href="@Url.Action("Index", "Coach")" onclick='window.location="@Url.Action("Index", "Coach")";' title="Clients" data-toggle="collapse-next" class="no-submenu">
+                            <em class="fa fa-users"></em>
+                            <span class="item-text">Athletes</span>
+                        </a>
+                    </li>
+                    <li id="liSesssionLogin">
+                        <a href="@Url.Action("Login", "Workout")/Login" onclick='window.location="@Url.Action("Login", "Workout")/Login";' title="Session Login" data-toggle="collapse-next" class="no-submenu">
+                            <em class="fa fa-eye"></em>
+                            <span class="item-text">Session Login</span>
+                        </a>
+                    </li>
+                    <li style="display:none;">
+                        <a href="" title="Schedule" data-toggle="collapse-next" class="has-submenu">
+                            <em class="fa fa-calendar"></em>
+                            <div class="label label-primary pull-right"></div>
+                            <span class="item-text">Schedule</span>
+                        </a>
+                        <!-- START SubMenu item-->
+                        <ul class="nav collapse">
+                            <li id="liSchedule">
+                                <a href="@Url.Action("Schedule", "Coach")" onclick='window.location="@Url.Action("Schedule", "Coach")";' title="Schedule" data-toggle="" class="no-submenu">
+                                    <span class="item-text">Programs</span>
+                                </a>
+                            </li>
+                            <li id="liHoliday">
+                                <a href="@Url.Action("Holiday", "Coach")" onclick='window.location="@Url.Action("Holiday", "Coach")";' title="Holiday" data-toggle="" class="no-submenu">
+                                    <span class="item-text">Holidays</span>
+                                </a>
+                            </li>
+                            <li id="liCapacity">
+                                <a href="@Url.Action("Capacity", "Coach")" onclick='window.location="@Url.Action("Capacity", "Coach")";' title="Capacity" data-toggle="" class="no-submenu">
+                                    <span class="item-text">Capacity</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <!-- END SubMenu item-->
+                    </li>
+                    <!-- END Menu-->
+                </ul>
+            </nav>
+            <!-- END Sidebar (left)-->
+        </aside>
+        <section>
+            @RenderBody()
+            <!--footer -->
+        </section>
+
+        <div class="navbar navbar-default navbar-fixed-bottom footer" id="dvSiteFooter">
+            <div class="navbar-text">
+                © 2016. Strength Tracker
+            </div>
+            <div class="navbar-text-center" style="width: 95%;">Powered by Strength Tracker</div>
+            <div class="navbar-right" style="margin-right: 0 !important">
+
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Contact</a></li>
+
+                        <li>&nbsp;&nbsp;&nbsp;</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="navbar-right">
+                <ul class="nav navbar-nav">
+
+                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                    <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                    <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                    <li>&nbsp;&nbsp;&nbsp;</li>
+                    <li>&nbsp;&nbsp;&nbsp;</li>
+                    <li>&nbsp;&nbsp;&nbsp;</li>
+                    <li>&nbsp;&nbsp;&nbsp;</li>
+
+                </ul>
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @RenderSection("scripts", required: false)
+    <script src="~/content/animo/animo.min.js"></script>
+    <script src="~/Scripts/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/chosen/chosen.jquery.min.js"></script>
+    <script src="~/Scripts/filestyle/bootstrap-filestyle.min.js"></script>
+    <script src="~/Scripts/storejson2.min.js"></script>
+    <script src="~/Scripts/slider/js/bootstrap-slider.js"></script>
+    <script src="~/Scripts/sparklines/jquery.sparkline.min.js"></script>
+    <script src="~/Scripts/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.resize.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.pie.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.time.min.js"></script>
+    <script src="~/Scripts/flot/jquery.flot.categories.min.js"></script>
+    <script src="~/Scripts/app.js"></script>
+    <script src="~/Scripts/pages.js"></script>
+    <script src="~/Scripts/StrengthTracker2/Common.js"></script>
+    <script>
+
+        var checkeventcount = 1, prevTarget;
+        $('.modal').on('show.bs.modal', function (e) {
+            if (typeof prevTarget == 'undefined' || (checkeventcount == 1 && e.target != prevTarget)) {
+                prevTarget = e.target;
+                checkeventcount++;
+                e.preventDefault();
+                $(e.target).appendTo('body').modal('show');
+            }
+            else if (e.target == prevTarget && checkeventcount == 2) {
+                checkeventcount--;
+            }
+        });
+
+        var box = '<div tabindex="-1" id="alertModal" class="modal fade" id="confirmDeletion" role="dialog" aria-hidden="true" aria-labelledby="confirmDeletionLabel" style="display: none;"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button class="close" aria-hidden="true" type="button" data-dismiss="modal">X</button><h4 class="modal-title" id="confirmDeletionLabel">Message from webpage</h4></div><div id="alertModalBody" class="modal-body">Are you sure you wanna do some evil?</div><div class="modal-footer"><button class="btn btn-default" type="button" data-dismiss="modal">OK</button></div></div></div></div>';
+        if ($('#alertModal').length == 0) {
+            $("body").append(box);
+        }
+
+        window.alert = function (dialog, button) {
+            $("#alertModalBody").html(dialog.replace(/\n/, "<br />"));
+            $('#alertModal').modal('show');
+
+            $(".btn-default").click(function () {
+                $(this).unbind('click');               //very important, DO NOT REMOVE!
+                $(".btn-primary").unbind('click');	   //very important, DO NOT REMOVE!
+            });
+
+            return false;
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,620 @@
+﻿@{
+    ViewBag.Title = "Strength Tracker | Programs";
+    Layout = "~/Views/Admin/_LayoutNew.cshtml";
+
+    var isSuperUser = false;
+    if (Session["CustomerObj"] != null)
+    {
+        var customerObj = ((StrengthTracker2.Core.Repository.Entities.TKGMaster.CustomerMaster)(Session["CustomerObj"]));
+        if (customerObj != null)
+        {
+            isSuperUser = customerObj.IsSuperAdmin;
+        }
+    }
+
+    var canAddProgram = false;
+    var canEditProgram = false;
+    var canDeleteProgram = false;
+    if (Session["UserRole"] != null)
+    {
+        var userRole = (StrengthTracker2.Core.Repository.Entities.Security.RoleDetails)(Session["UserRole"]);
+        var userPermissons = userRole.RolePermissions;
+        canAddProgram = userPermissons.Any(p => p.PermissionID == 1 && p.CanAdd == true);
+        canEditProgram = userPermissons.Any(p => p.PermissionID == 1 && p.CanEdit == true);
+        canDeleteProgram = userPermissons.Any(p => p.PermissionID == 1 && p.CanDelete == true);
+    }
+
+    var isIndividualAthlete = false;
+    if (Session["AuthenticatedUser"] != null) //For Individual Athlete
+    {
+
+        var authenticatedUser = Session["AuthenticatedUser"] as StrengthTracker2.Core.Repository.Entities.Actors.User;
+
+        isIndividualAthlete = authenticatedUser.IsIndividualAthlete;
+
+        if (authenticatedUser.IsIndividualAthlete)
+        {
+            canAddProgram = true;
+            canEditProgram = true;
+            canDeleteProgram = true;
+            isSuperUser = false;
+        }
+    }
+}
+<style>
+    .k-grid .k-alt {
+        background-color: #f1f5fa; /* specify the alternate background-color */
+    }
+    .k-grid .k-grid-header .k-header .k-link {
+        height: auto;
+    }
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+    }
+    #programGrid .k-grid-content, #programGrid tr td:last-child {
+        overflow: visible;
+    }
+    #programEditGrid .k-grid-content, #programEditGrid tr td:last-child {
+        overflow: visible;
+    }
+    #tkgprogramGrid .k-grid-content, #tkgprogramGrid tr td:last-child {
+        overflow: visible;
+    }
+    #programGrid .k-grid-header {
+        padding-right: 0 !important;
+    }
+    .navbar-top .navbar-header {
+        width: 250px !important;
+        text-align: center;
+    }
+    #dvSiteFooter {
+        top: 4% !important;
+    }
+    td > a {
+        color:#337ab7;
+    }
+    td > a:hover {
+        color:#337ab7;
+    }
+</style>
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+<div class="top-bar clearfix">
+    <div class="container-fluid">
+        <div class="row gutter">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                <h3 class="page-title">Programs</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-container">
+    <div class="row gutter">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div id="usergridcontainer">
+                <div class="clearfix">
+                    <label style="text-decoration:underline;">Inactive Program (or Under Development)</label>
+                    @if (canAddProgram || isIndividualAthlete)
+                    {
+                        <button type="button" onclick="AddProgram();" class="btn btn-primary pull-right  mb-sm">
+                            <em class="fa fa-plus-circle fa-fw mr-sm"></em>Create Program
+                        </button>
+                    }
+                </div>
+                <div id="usersGrid" class="clearfix"></div>
+            </div>
+            <div id="programEditGrid" style="margin-top:8px;"></div>
+            <div id="programEditPager"></div>
+            <label style="text-decoration:underline;margin-top:30px;">Active Programs</label>
+            <div id="programGrid" style="margin-top:10px;"></div>
+            <div id="programPager"></div>
+            @if(!isSuperUser)
+            {
+                <label style="text-decoration:underline;margin-top:30px;">StrengthTracker Programs</label>
+                <div id="tkgprogramGrid" style="margin-top:10px;"></div>
+                <div id="tkgprogramPager"></div>
+            }
+        </div>
+    </div>
+</div>
+<div id="copyProgram" tabindex="-1" role="dialog" aria-labelledby="copyProgramLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="copyProgramLabel" class="modal-title">Copy Program</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel-default">
+                    @*<div class="panel-heading">Details</div>*@
+                    <div class="">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">From</label>
+                                <div class="col-lg-9">
+                                    <label class="control-label" id="lblCopyProgramTitle"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Name*</label>
+                                <div class="col-lg-9">
+                                    <input type="text" placeholder="New Program Name" id="txtCopyNewProgramName" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Description*</label>
+                                <div class="col-lg-9">
+                                    <input type="text" placeholder="New Program Description" id="txtCopyNewProgramDesc" class="form-control">
+                                    <input type="hidden" id="hdCopyProgramID" />
+                                    <input type="hidden" id="hdIsSelfCopy" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="CopyProgram();">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmDeletion" tabindex="-1" role="dialog" aria-labelledby="confirmDeletionLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmDeletionLabel" class="modal-title">Confirm Deletion</h4>
+            </div>
+            <div class="modal-body" style="margin-left:16px;">
+                <form>
+                    <div class="form-group">
+                        <span>Delete program?</span>
+                        <input type="hidden" id="hdDelProgramID" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-success">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="DeleteProgram();">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmActivation" tabindex="-1" role="dialog" aria-labelledby="confirmActivationLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmActivationLabel" class="modal-title">Confirm Activation</h4>
+            </div>
+            <div class="modal-body">
+                <label id="lblActivateProgramText" style="font-weight:normal;">Activate program?</label>
+                <input type="hidden" id="hdActivateProgramID" />
+                <input type="hidden" id="hdActivateorDeactivate" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" id="btnActivateProgram" class="btn btn-primary" onclick="ActivateProgram();">Activate</button>
+            </div>
+        </div>
+    </div>
+</div>
+@if (isSuperUser)
+{
+    <input type="hidden" id="hdIsSuperAdmin" value="true" />
+}
+@section Scripts {
+    @*@Scripts.Render("~/bundles/jquery")*@
+    <script src="../Scripts/kendo.all.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $("#liProgram").addClass("active");
+        var programdataSource = new kendo.data.DataSource({
+            transport: {
+                read: function (options) {
+                    $.ajax({
+                        type: "GET",
+                        url: "@Url.Action("GetPrograms", "Admin")",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        success: function (result) {
+                            if ($("#hdIsSuperAdmin").length) {
+                                var grid = $("#programGrid").data("kendoGrid");
+                                grid.hideColumn("IsTKGProgram");
+                            }
+                            options.success(result.Data);
+                        }
+                    });
+                }
+            },
+            pageSize: 10
+        });
+
+        $("#programGrid").kendoGrid({
+            allowCopy: true,
+            resizeable: true,
+            scrollable: false,
+            sortable: true,
+            //filterable: true,
+            columns: [
+                {
+                    field: "Name",
+                    width: "220px",
+                    @if (canEditProgram)
+                    {
+                            @:template: '#if (!IsTKGProgram) {# <a href=' + "@Url.Action("ProgramExercises", "Admin")?programID=#=ProgramID#&p=false" + '>#=Name#</a> #} else {# <a href=' + "@Url.Action("ProgramExercises", "Admin")?programID=#=ProgramID#&p=true" + '>#=Name#</a> #}#',
+                    }
+                    else
+                    {
+                        @:template:'#=Name#'
+                    }
+                },
+                {
+                    field: "Description"
+                },
+                {
+                    field: "NumebrofSessions",
+                    title: "Sessions",
+                    width: "80px",
+                    attributes: {
+                        style: 'text-align:center;'
+                    }
+                },
+                {
+                    field: "NumberofSteps",
+                    title: "Steps",
+                    width: "80px",
+                    attributes: {
+                        style: 'text-align:center;'
+                    }
+                },
+                {
+                    field: "NumberofGroups",
+                    title: "Groups",
+                    width: "80px",
+                    attributes: {
+                        style: 'text-align:center;'
+                    }
+                },
+                //{
+                //    field: "IsTKGProgram",
+                //    title: "Admin Program",
+                //    template: '#if (IsTKGProgram) {# <i class="fa fa-circle" aria-hidden="true" style="color:green;"></i> #} else {# <i class="fa fa-circle" aria-hidden="true"></i> #}#',
+                //    attributes: {
+                //        style: 'text-align:center;'
+                //    }
+                //},
+                {
+                    field: "Actions",
+                    filterable: false,
+                    width: "150px",
+                    template: '<div class="btn-group mb-sm">' +
+                           '<button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle">Select…</button>' +
+                           '<button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle">' +
+                            '<span class="caret"></span></button>' +
+                           '<ul class="dropdown-menu" role="menu" style="min-width:102px !important;">' +
+                            @if (canEditProgram)
+                            {
+                                @:'<li><a href="javascript:void(0);" onclick="ShowActivationConfirmationPopup(#=ProgramID#, \'#=Activate#\');">#=Activate#</a></li>' +
+                            }
+                            @if (canAddProgram)
+                            {
+                                @:'<li><a href="javascript:void(0);" onclick="ShowCopyProgramPopup(#=ProgramID#, \'#=Name#\', \'#=SelfCopy#\');">Copy</a></li>' +
+                            }
+                            @if (canDeleteProgram)
+                            {
+                                @:'<li><a href="javascript:void(0);" onclick="ShowDeleteConfirmationPopup(#=ProgramID#, \'#=AllowDelete#\');">Delete</a></li>' +
+                            }
+                         '</ul>' +
+                      '</div>'
+                },
+            ],
+            dataSource: programdataSource
+        });
+        $("#programPager").kendoPager({
+            autoBind: true,
+            dataSource: programdataSource
+        });
+        var programEditdataSource = new kendo.data.DataSource({
+            transport: {
+                read: function (options) {
+                    $.ajax({
+                        type: "GET",
+                        url: "@Url.Action("GetEditPrograms", "Admin")",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        success: function (result) {
+                            if ($("#hdIsSuperAdmin").length) {
+                                var grid = $("#programEditGrid").data("kendoGrid");
+                                grid.hideColumn("IsTKGProgram");
+                            }
+
+                            options.success(result.Data);
+                        }
+                    });
+                }
+            },
+            pageSize: 10
+        });
+        $("#programEditGrid").kendoGrid({
+            allowCopy: true,
+            resizeable: true,
+            scrollable: false,
+            sortable: true,
+            //filterable: true,
+            columns: [
+                {
+                    field: "Name",
+                    width: "220px",
+                     @if (canEditProgram)
+                     {
+                         @:template: '#if (!IsTKGProgram) {# <a href=' + "@Url.Action("ManageProgram", "Admin")?programID=#=ProgramID#&p=false" + '>#=Name#</a> #} else {# <a href=' + "@Url.Action("ManageProgram", "Admin")?programID=#=ProgramID#&p=true" + '>#=Name#</a> #}#'
+                     }
+                    else
+                    {
+                        @:template: '#=Name#'
+                    }
+                },
+                {
+                    field: "Description"
+                },
+                {
+                    field: "NumebrofSessions",
+                    title: "Sessions",
+                    width: "80px",
+                    attributes: {
+                        style: 'text-align:center;'
+                    }
+                },
+                {
+                    field: "NumberofSteps",
+                    title: "Steps",
+                    width: "80px",
+                    attributes: {
+                        style: 'text-align:center;'
+                    }
+                },
+                {
+                    field: "NumberofGroups",
+                    title: "Groups",
+                    width: "80px",
+                    attributes: {
+                        style: 'text-align:center;'
+                    }
+                },
+                //{
+                //    field: "IsTKGProgram",
+                //    title: "Admin Program",
+                //    template: '#if (IsTKGProgram) {# <i class="fa fa-circle" aria-hidden="true" style="color:green;"></i> #} else {# <i class="fa fa-circle" aria-hidden="true"></i> #}#',
+                //    attributes: {
+                //        style: 'text-align:center;'
+                //    }
+                //},
+                {
+                    field: "Actions",
+                    filterable: false,
+                    width: "150px",
+                    template: '<div class="btn-group mb-sm">' +
+                           '<button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle">Select…</button>' +
+                           '<button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle">' +
+                              '<span class="caret"></span>' +
+                           '</button>' +
+                           '<ul role="menu" class="dropdown-menu" style="min-width:102px !important;">' +
+                               @if (canEditProgram)
+                               {
+                                   @:'<li><a href="javascript:void(0);" onclick="ShowActivationConfirmationPopup(#=ProgramID#, \'#=Activate#\');">#=Activate#</a></li>' +
+                               }
+                               @if (canAddProgram)
+                               {
+                                   @:'<li><a href="javascript:void(0);" onclick="ShowCopyProgramPopup(#=ProgramID#, \'#=Name#\', \'#=SelfCopy#\');">Copy</a></li>' +
+                               }
+                               @if (canDeleteProgram)
+                               {
+                                   @:'<li><a href="javascript:void(0);" onclick="ShowDeleteConfirmationPopup(#=ProgramID#, \'#=AllowDelete#\');">Delete</a></li>' +
+                               }
+                           '</ul>' +
+                        '</div>'
+                },
+            ],
+            dataSource: programEditdataSource
+        });
+        $("#programEditPager").kendoPager({
+            autoBind: true,
+            dataSource: programEditdataSource
+        });
+        var tkgProgramdataSource = new kendo.data.DataSource({
+            transport: {
+                read: function (options) {
+                    $.ajax({
+                        type: "GET",
+                        url: "@Url.Action("GetTKGPrograms", "Admin")",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        success: function (result) {
+                            if ($("#hdIsSuperAdmin").length) {
+                                var grid = $("#tkgprogramGrid").data("kendoGrid");
+                                grid.hideColumn("IsTKGProgram");
+                            }
+                            options.success(result.Data);
+                        }
+                    });
+                }
+            },
+            pageSize: 10
+        });
+
+        $("#tkgprogramGrid").kendoGrid({
+            allowCopy: true,
+            resizeable: true,
+            scrollable: false,
+            sortable: true,
+            //filterable: true,
+            columns: [
+                {
+                    field: "Name",
+                    width: "220px",
+                    @if (canEditProgram)
+                    {
+                            @:template: '#if (!IsTKGProgram) {# <a href=' + "@Url.Action("ProgramExercises", "Admin")?programID=#=ProgramID#&p=false" + '>#=Name#</a> #} else {# <a href=' + "@Url.Action("ProgramExercises", "Admin")?programID=#=ProgramID#&p=true" + '>#=Name#</a> #}#',
+                    }
+                    else
+                    {
+                        @:template:'#=Name#'
+                    }
+                },
+                {
+                    field: "Description"
+
+                },
+                {
+                    field: "NumebrofSessions",
+                    title: "Sessions",
+                    width: "80px",
+                    attributes: {
+                        style: 'text-align:center;'
+                    }
+                },
+                {
+                    field: "NumberofSteps",
+                    title: "Steps",
+                    width: "80px",
+                    attributes: {
+                        style: 'text-align:center;'
+                    }
+                },
+                {
+                    field: "NumberofGroups",
+                    title: "Groups",
+                    width: "80px",
+                    attributes: {
+                        style: 'text-align:center;'
+                    }
+                },
+                //{
+                //    field: "IsTKGProgram",
+                //    title: "Admin Program",
+                //    template: '#if (IsTKGProgram) {# <i class="fa fa-circle" aria-hidden="true" style="color:green;"></i> #} else {# <i class="fa fa-circle" aria-hidden="true"></i> #}#',
+                //    attributes: {
+                //        style: 'text-align:center;'
+                //    }
+                //},
+                {
+                    field: "Actions",
+                    filterable: false,
+                    width: "150px",
+                    template: '<div class="btn-group mb-sm">' +
+                           '<button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle">Select…</button>' +
+                           '<button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle">' +
+                            '<span class="caret"></span></button>' +
+                           '<ul class="dropdown-menu" role="menu" style="min-width:102px !important;">' +
+                           '<li><a href="javascript:void(0);" onclick="ShowCopyProgramPopup(#=ProgramID#, \'#=Name#\', \'#=SelfCopy#\');">Copy</a></li>' +
+                         '</ul>' +
+                      '</div>'
+                },
+            ],
+            dataSource: tkgProgramdataSource
+        });
+        $("#tkgprogramPager").kendoPager({
+            autoBind: true,
+            dataSource: tkgProgramdataSource
+        });
+        function AddProgram() {
+            window.location = "@Url.Action("ManageProgram", "Admin")" + "?p=false";
+        }
+        function ShowDeleteConfirmationPopup(delProgramID, allowDelete) {
+            if (allowDelete === "true") {
+                $("#hdDelProgramID").val(delProgramID);
+                $('#confirmDeletion').modal('show');
+            }
+            else {
+                alert("You are not allowed to delete this program");
+            }
+        }
+        function DeleteProgram() {
+            $.ajax({
+                url: "@Url.Action("DeleteProgram", "Admin")",
+                type: "POST",
+                data: { 'programID': $("#hdDelProgramID").val() },
+                dataType: "json",
+                success: function (result) {
+                    alert(result.Message);
+                    window.location.reload();
+                },
+                error: function (req, status, errorObj) {
+                    alert("Error: Please try again later");
+                }
+            });
+        }
+        function ShowCopyProgramPopup(ProgramID, ProgramName, SelfCopy) {
+            $("#hdCopyProgramID").val(ProgramID);
+            $("#hdIsSelfCopy").val(SelfCopy);
+            $("#lblCopyProgramTitle").text(ProgramName);
+            $('#copyProgram').modal('show');
+        }
+        function CopyProgram() {
+            if ($("#hdIsSelfCopy").val() === "true") {
+                $.ajax({
+                    url: "@Url.Action("CopyProgam", "Admin")",
+                    type: "POST",
+                    data: { 'copyFromProgramID': $("#hdCopyProgramID").val(), 'newProgramName': $("#txtCopyNewProgramName").val(), 'newProgramDesc': $("#txtCopyNewProgramDesc").val() },
+                    dataType: "json",
+                    success: function (result) {
+                        $('#copyProgram').modal('hide');
+                        window.location.reload();
+                    },
+                    error: function (req, status, errorObj) {
+                        $('#copyProgram').modal('hide');
+                        alert("Error: Please try again later");
+                    }
+                });
+            }
+            else {
+                $.ajax({
+                    url: "@Url.Action("CopyTKGProgam", "Admin")",
+                    type: "POST",
+                    data: { 'copyFromProgramID': $("#hdCopyProgramID").val(), 'newProgramName': $("#txtCopyNewProgramName").val(), 'newProgramDesc': $("#txtCopyNewProgramDesc").val() },
+                    dataType: "json",
+                    success: function (result) {
+                        alert(result.Message);
+                        window.location.reload();
+                    },
+                    error: function (req, status, errorObj) {
+                        alert("Error: Please try again later");
+                    }
+                });
+            }
+        }
+        function ShowActivationConfirmationPopup(activateProgramID, isActive) {
+            $("#hdActivateProgramID").val(activateProgramID);
+            if (isActive === "Activate") {
+                $("#btnActivateProgram").text("Activate");
+                $("#lblActivateProgramText").text("Activate Program?");
+                $("#confirmActivationLabel").text("Confirm Activation");
+                $("#hdActivateorDeactivate").val("true");
+            }
+            else {
+                $("#btnActivateProgram").text("Deactivate");
+                $("#lblActivateProgramText").text("Deactivate Program?");
+                $("#confirmActivationLabel").text("Confirm Deactivation");
+                $("#hdActivateorDeactivate").val("false");
+            }
+            $('#confirmActivation').modal('show');
+        }
+        function ActivateProgram() {
+            $.ajax({
+                url: "@Url.Action("ActivateProgam", "Admin")",
+                type: "POST",
+                data: { 'programID': $("#hdActivateProgramID").val(), 'activate': $("#hdActivateorDeactivate").val() },
+                dataType: "json",
+                success: function (result) {
+                    alert(result.Message);
+                    window.location.reload();
+                },
+                error: function (req, status, errorObj) {
+                    alert("Error: Please try again later");
+                }
+            });
+        }
+    </script>
+}

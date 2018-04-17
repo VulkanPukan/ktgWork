@@ -1,0 +1,1228 @@
+﻿
+@{
+    ViewBag.Title = "Strength Tracker | Customers";
+    Layout = "~/Views/Admin/_LayoutNew.cshtml";
+}
+<style>
+    .k-grid .k-alt {
+        background-color: #fafbfc; /* specify the alternate background-color */
+    }
+
+
+    #customersGrid .k-grid-header {
+        padding: 0 !important;
+    }
+
+    #customersGrid .k-grid-content {
+        /*overflow-y: visible;*/
+    }
+
+    #customersGrid tr td:last-child {
+        overflow: visible;
+    }
+
+    .k-grid .k-grid-header .k-header {
+        white-space: normal;
+    }
+
+    .twenty {
+        width: 40%;
+    }
+
+    #customersGrid .k-grid-header {
+        padding-right: 0 !important;
+    }
+
+    #dvSiteFooter {
+        top: 1050px !important;
+    }
+</style>
+<link rel="stylesheet" href="../content/kendo.common.min.css" />
+<link rel="stylesheet" href="../content/kendo.silver.min.css">
+<link href="~/Scripts/datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+<div class="top-bar clearfix">
+    <div class="container-fluid">
+        <div class="row gutter">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                <h3>
+                    <label style="font-weight:normal;display: inline-block;max-width: 100%;margin-bottom: 5px;" id="CustTitle">TKG Customer Snapshot</label>
+                </h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel-default">
+                <div class="panel-body">
+                    <div id="customergridcontainer">
+                        <div class="clearfix">
+                            @if (Session["UserRole"] != null)
+                            {
+                                var userRole = (StrengthTracker2.Core.Repository.Entities.Security.RoleDetails)(Session["UserRole"]);
+                                var userPermissons = userRole.RolePermissions;
+
+                                var userAddPermission = userPermissons.Where(p => p.PermissionID == 3 && p.CanAdd == true).ToList();
+                                if (userAddPermission != null && userAddPermission.Count > 0)
+                                {
+                            <div class="=pull-right">
+                                <button type="button" onclick="ShowAddCustomer();" class="mb-sm btn btn-primary pull-right">
+                                    <em class="fa fa-plus-circle fa-fw mr-sm"></em>Add Customer
+                                </button>
+                            </div>
+                                }
+                                var userEditPermission = userPermissons.Where(p => p.PermissionID == 3 && p.CanEdit == true).ToList();
+                                if (userEditPermission != null && userEditPermission.Count > 0)
+                                {
+                            <input id="permissionEdit" name="permissionEdit" type="hidden" value="1">
+                                }
+                                else
+                                {
+                            <input id="permissionEdit" name="permissionEdit" type="hidden" value="0">
+                                }
+                                var userDelPermission = userPermissons.Where(p => p.PermissionID == 3 && p.CanDelete == true).ToList();
+                                if (userDelPermission != null && userDelPermission.Count > 0)
+                                {
+                            <input id="permissionDelete" name="permissionDelete" type="hidden" value="1">
+                                }
+                                else
+                                {
+                            <input id="permissionDelete" name="permissionDelete" type="hidden" value="0">
+                                }
+                            }
+                        </div>
+                        <div id="customersGrid" style="margin-top: 8px !important;"></div>
+                        <div id="customerPager"></div>
+                    </div>
+                    <div id="AddCustomer" style="display: none;">
+                        <div class="">
+                            <div class="panel-heading" style="display: none;">Add Customer</div>
+                            <div class="panel-body">
+                                <div id="accordionAdd" class="panel-group">
+                                    <div class="">
+                                        <div class="panel-heading bb">
+                                            <label style="font-weight:normal;display: inline-block;max-width: 100%;margin-bottom: 5px;" id="custprofile"></label>
+                                            <label id="numOfLocations" style="font-weight:bold;max-width: 100%;margin-bottom: 5px;margin-left:260px;"># of locations: <a href="javascript:void(0)" onclick="ShowLocationPage();">6</a></label>
+                                            <div class="required pull-right">* Required fields</div>
+                                            <h4 class="panel-title" style="display: none;">
+                                                <a data-toggle="collapse" data-parent="#accordionAdd" href="#collapseCustomerDetailsAdd"></a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseCustomerDetailsAdd" class="panel-collapse">
+                                            <div class="panel-body">
+                                                <form class="form-horizontal">
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Organization Name *</label>
+                                                        <div class="col-lg-7">
+                                                            <input placeholder="Organization Name" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Website</label>
+                                                        <div class="col-lg-7">
+                                                            <input placeholder="Website URL" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Customer Phone # *</label>
+                                                        <div class="col-lg-7">
+                                                            <input placeholder="Customer Phone Number" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Alternate Phone </label>
+                                                        <div class="col-lg-7">
+                                                            <input placeholder="Alternate Phone Number" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Address 1 *</label>
+                                                        <div class="col-lg-7">
+                                                            <input type="text" placeholder="Address" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Address 2 *</label>
+                                                        <div class="col-lg-7">
+                                                            <input type="text" placeholder="Address" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">State</label>
+                                                        <div class="col-lg-7">
+                                                            <select name="state" class="form-control m-b">
+                                                                <option>Select State</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">City</label>
+                                                        <div class="col-lg-7">
+                                                            <select name="state" class="form-control m-b">
+                                                                <option>Select City</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">ZIP Code</label>
+                                                        <div class="col-lg-7">
+                                                            <input type="email" placeholder="ZIP Code" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Contact First Name</label>
+                                                        <div class="col-lg-7">
+                                                            <input placeholder="Contact First Name" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Contact Last Name</label>
+                                                        <div class="col-lg-7">
+                                                            <input placeholder="Contact Last Name" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Contact Email</label>
+                                                        <div class="col-lg-7">
+                                                            <input placeholder="Contact Email" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Contact Phone #</label>
+                                                        <div class="col-lg-7">
+                                                            <input placeholder="Contact Phone Number" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Billing Address</label>
+                                                        <div class="col-lg-7">
+                                                            <div class="checkbox c-checkbox pull-left mt0">
+                                                                <label>
+                                                                    <input type="checkbox" id="billingchk" checked value="">
+                                                                    <span class="fa fa-check"></span>Same as above
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">&nbsp;</label>
+                                                        <div class="col-lg-7">
+                                                            &nbsp;
+                                                        </div>
+                                                    </div>
+                                                    <div id="billingDIV" style="display:none">
+                                                        <div class="form-group col-lg-12">
+
+                                                            <div class="col-lg-7">
+                                                                &nbsp;
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">Billing Address *</label>
+                                                            <div class="col-lg-7">
+                                                                <input type="text" placeholder="Billing  Address" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">Billing  State</label>
+                                                            <div class="col-lg-7">
+                                                                <select name="state" class="form-control m-b">
+                                                                    <option>Select State</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">Billing  City</label>
+                                                            <div class="col-lg-7">
+                                                                <select name="state" class="form-control m-b">
+                                                                    <option>Select City</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <label class="col-lg-5 control-label">Billing  ZIP Code</label>
+                                                            <div class="col-lg-7">
+                                                                <input type="email" placeholder="Billing  ZIP Code" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                        <div class="panel-heading bb">
+                                            Enable Free Trial
+                                            <div class="required pull-right">* Required fields</div>
+                                            <h4 class="panel-title" style="display: none;">
+                                                <a data-toggle="collapse" data-parent="#accordionAdd" href="#collapseCustomerDetailsAdd"></a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseCustomerDetailsServerConfig1" class="panel-collapse">
+                                            <div class="panel-body">
+                                                <form class="form-horizontal">
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Free Trial Start Date</label>
+                                                        <div class="col-lg-7">
+                                                            <div id="custStatrtDatepickerFT" class="input-group date datetimepicker1">
+                                                                <input type="text" class="form-control">
+                                                                <span class="input-group-addon">
+                                                                    <span class="fa-calendar fa"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Free Trial End Date</label>
+                                                        <div class="col-lg-7">
+                                                            <div id="custStatrtDatepickerET" class="input-group date datetimepicker1">
+                                                                <input type="text" class="form-control">
+                                                                <span class="input-group-addon">
+                                                                    <span class="fa-calendar fa"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Free Trial Set for:</label>
+                                                        <div class="col-lg-7">
+                                                            &nbsp;<label style="font-weight:normal;" class="control-label">10 Days</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        &nbsp;
+                                                        <div class="col-lg-7">
+                                                            &nbsp;
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="panel-heading bb">
+                                            Server configuration
+                                            <div class="required pull-right">* Required fields</div>
+                                            <h4 class="panel-title" style="display: none;">
+                                                <a data-toggle="collapse" data-parent="#accordionAdd" href="#collapseCustomerDetailsAdd"></a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseCustomerDetailsServerConfig" class="panel-collapse">
+                                            <div class="panel-body">
+                                                <form class="form-horizontal">
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Server</label>
+                                                        <div class="col-lg-7">
+                                                            <select name="server" class="form-control m-b">
+                                                                <option>US East coast</option>
+                                                                <option>US West coast</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-5 control-label">Database Server</label>
+                                                        <div class="col-lg-7">
+                                                            <select name="database" class="form-control m-b">
+                                                                <option>US East coast DB</option>
+                                                                <option>US West coast DB</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="panel-heading bb">
+                                            Customer Contacts
+                                        </div>
+                                        <div class="panel-body">
+                                            <div id="contactgridcontainer">
+                                                <div class="clearfix">
+                                                    <button type="button" onclick="ShowContactDetails();" class="btn btn-primary pull-right  mb-sm">
+                                                        <em class="fa fa-plus-circle fa-fw mr-sm"></em>Add Contact
+                                                    </button>
+                                                </div>
+                                                <div id="customerContactGrid" style="margin-top:8px; overflow:visible !important;" class="clearfix"></div>
+                                                <div id="customerContactPager"></div>
+                                            </div>
+                                        </div>
+                                        <div class="panel-heading bb" id="dvPricingSetup">
+                                            Pricing Setup
+                                            <div class="required pull-right">* Required fields</div>
+                                            <h4 class="panel-title" style="display: none;">
+                                                <a data-toggle="collapse" data-parent="#accordionAdd" href="#collapseCustomerDetailsAdd"></a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseCustomerDetailsAddPricing" class="panel-collapse">
+                                            <div class="panel-body">
+                                                <form class="form-horizontal">
+                                                    <div class="form-group col-lg-6">
+                                                        <label class="col-lg-6 control-label">Type Of Customer</label>
+                                                        <div class="col-lg-6">
+                                                            <select id="CustType1" name="CustType" onchange="ToggleProfitDiv1()" class="form-control m-b">
+                                                                <option value="nonprofit">Non Profit</option>
+                                                                <option value="profit" selected="selected">For Profit</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6" id="divBillingFreq">
+                                                        <label class="col-lg-6 control-label">Billing Frequency/Amount</label>
+                                                        <div class="col-lg-6">
+                                                            <select style="width:45%; padding:0px;" name="Billing" class="form-control mr col-lg-6">
+                                                                <option>Monthly</option>
+                                                                <option>Quarterly</option>
+                                                                <option>Yearly</option>
+                                                            </select>
+                                                            <div style="width:49%; padding:0px;" class="col-lg-6">
+                                                                <input placeholder="Amount" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6" id="divPaymentOption">
+                                                        <label class="col-lg-6 control-label">Payment Option</label>
+                                                        <div class="col-lg-6">
+                                                            <select name="PaymentOption" class="form-control m-b">
+                                                                <option>Credit Card</option>
+                                                                <option>Check</option>
+                                                                <option>Invoice</option>
+                                                                <option>Cash</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6" id="divNumOfAtheletes">
+                                                        <label class="col-lg-6 control-label"># of Athletes *</label>
+                                                        <div class="col-lg-6">
+                                                            <input placeholder="Active" style="width:45%;" disabled class="form-control col-lg-6 mr">
+                                                            <input placeholder="Max" style="width:49%;" class="form-control col-lg-6">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6" id="divPriceAthletes">
+                                                        <label class="col-lg-6 control-label">Price/Athletes (<em class="fa fa-usd"></em>)</label>
+                                                        <div class="col-lg-6">
+                                                            <input placeholder="Active" style="width:45%;" disabled class="form-control col-lg-6 mr">
+                                                            <input placeholder="Max" style="width:49%;" disabled class="form-control col-lg-6">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6" id="divPriceAdditionalAthlete">
+                                                        <label class="col-lg-6 control-label">Price/Additional Athlete(<em class="fa fa-usd"></em>)</label>
+                                                        <div class="col-lg-6">
+                                                            <input placeholder="Price/Additional Athlete" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6" id="nonprofitenrollmentminmax" style="display:none;">
+                                                        <label class="col-lg-6 control-label">Enrollment Min/Max *</label>
+                                                        <div class="col-lg-6">
+                                                            <input placeholder="Min" style="width:45%;" class="form-control col-lg-6 mr">
+                                                            <input placeholder="Max" style="width:49%;" class="form-control col-lg-6">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6" id="divStartDate">
+                                                        <label class="col-lg-6 control-label">Start Date</label>
+                                                        <div class="col-lg-6">
+                                                            <div id="custStatrtDatepicker" class="input-group date datetimepicker1">
+                                                                <input type="text" class="form-control">
+                                                                <span class="input-group-addon">
+                                                                    <span class="fa-calendar fa"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-6" id="divEndDate">
+                                                        <label class="col-lg-6 control-label">End Date</label>
+                                                        <div class="col-lg-6">
+                                                            <div id="custEndDatepicker" class="input-group date datetimepicker1">
+                                                                <input type="text" class="form-control">
+                                                                <span class="input-group-addon">
+                                                                    <span class="fa-calendar fa"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-lg-12">
+                                                    </div>
+                                                    <div class="form-group col-lg-12">
+                                                        <div class="col-lg-6">&nbsp;</div>
+                                                        <div class="col-lg-6 pull-right">
+                                                            <div class="pull-right">
+                                                                <button type="button" onclick="ShowCustomerGrid();" class="btn btn-sm btn-default">Cancel</button>
+                                                                <button type="button" onclick="ShowCustomerGrid();" class="btn btn-primary btn-sm">Add New</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="panel-heading bb" id="dvPricingHistory">
+                                            Pricing History
+                                            <h4 class="panel-title" style="display: none;">
+                                                <a data-toggle="collapse" data-parent="#accordionAdd" href="#collapseCustomerDetailsAdd"></a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseCustomerPricingHistory" class="panel-collapse" style="margin:0px; padding:0px;">
+                                            <div class="panel-body" style="margin:0px; padding:0px;">
+                                                <form class="form-horizontal">
+                                                    <div class="form-group col-lg-12" style="margin:0px; padding:0px;">
+                                                        <div class="col-lg-12" style="margin:0px; padding:0px;">
+                                                            <div id="pricingHistoryGrid" style="margin-top:15px; width: 100% !important; overflow:visible !important;" class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="ContactDetails" style="display:none;">
+                <div id="userPicture">
+                    <div class="user-block-picture">
+                        <div class="user-block-status">
+                            <img src="../images/noimage.jpg" id="profilePicture" alt="Avatar" width="120" height="120" class="img-big img-square" style="cursor:pointer">
+                            <input type="file" id="my_file" style="display: none;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="">
+                    <div class="panel-heading bb">
+                        &nbsp;
+                        <div class="required pull-right">* Required fields</div>
+                    </div>
+                    <div class="panel-body">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">First Name*</label>
+                                <div class="col-lg-10">
+                                    <input type="text" placeholder="First Name" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Last Name*</label>
+                                <div class="col-lg-10">
+                                    <input type="text" placeholder="Last Name" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Phone #*</label>
+                                <div class="col-lg-10">
+                                    <input type="text" placeholder="Phone Number" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Email*</label>
+                                <div class="col-lg-10">
+                                    <input type="text" placeholder="Email" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Contact Type*</label>
+                                <div class="col-lg-10">
+                                    <input type="text" placeholder="Contact Type" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-12">&nbsp;</div>
+                            <div class="form-group col-lg-6">&nbsp;</div>
+                            <div class="form-group col-lg-12" style="width:103% !important;">
+                                <div class="col-lg-5">&nbsp;</div>
+                                <div class="pull-right">
+                                    <button type="button" onclick="ShowAddCustomer();" class="btn btn-sm btn-default">Cancel</button>
+                                    <button type="button" onclick="ShowAddCustomer();" class="btn btn-primary btn-sm">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmDeletion" tabindex="-1" role="dialog" aria-labelledby="confirmDeletionLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmDeletionLabel" class="modal-title">Confirm Deletion</h4>
+            </div>
+            <div class="modal-body">
+                Delete Customer?
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-primary">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmActivation" tabindex="-1" role="dialog" aria-labelledby="confirmActivationLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmActivationLabel" class="modal-title">Enable Free Trial</h4>
+            </div>
+            <div class="modal-body">
+                <div id="nftrialDiv" style="display:none">
+                    Enable Free Trial
+                </div>
+                <div id="ftrialDiv" style="display:none">
+                    <div class="">
+                        <div>
+                            <label class="control-label">Free Trial Start Date *</label>
+                            <div>
+                                <div id="custStatrtDatepickerFT3" class="input-group date datetimepicker1">
+                                    <input type="text" class="form-control">
+                                    <span class="input-group-addon">
+                                        <span class="fa-calendar fa"></span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="control-label">Free Trial End Date *</label>
+                                <div>
+                                    <div id="custStatrtDatepickerFT2" class="input-group date datetimepicker1">
+                                        <input type="text" class="form-control">
+                                        <span class="input-group-addon">
+                                            <span class="fa-calendar fa"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <br />
+                                <label style="font-weight:bold;display: inline-block;max-width: 100%;margin-bottom: 5px;">Free Trial set for : </label> &nbsp;<label style="font-weight:normal;display: inline-block;max-width: 100%;margin-bottom: 5px;" id="NoOfDay"> 10 </label> Days.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-primary">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmDeletionPricingHistory" tabindex="-1" role="dialog" aria-labelledby="confirmDeletionpricinghistoryLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+                <h4 id="confirmDeletionpricinghistoryLabel" class="modal-title">Confirm Deletion</h4>
+            </div>
+            <div class="modal-body">
+                Delete Pricing History?
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-primary">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script src="../Scripts/kendo.all.min.js"></script>
+    <script src="~/Scripts/moment/min/moment.min.js"></script>
+    <script src="~/Scripts/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(function () {
+            $('.datetimepicker1').datetimepicker({
+                disabledHours: true,
+                format: 'MM/DD/YYYY'
+            });
+        });
+        var customerdataSource = new kendo.data.DataSource({
+            data: [
+                { CustomerName: "24 hour fitness", MaxAthletes: "500", CostPerAthlete: "100", BillingAmmount: "2,000", ActiveAthlete: "100", NumOfLocations: "6", ProfitNonProfit: "Profit", StartDate: "06/11/2016", Status: "Inactive", FreeTrialStartDate: '06/11/2016', FreeTrialEndDate: '10/12/2016', FreeTrailNoOfDays: 10, Type: 'Profit', ActivateDeActivate: "New" },
+                { CustomerName: "Time fitness", MaxAthletes: "400", CostPerAthlete: "100", BillingAmmount: "3,000", ActiveAthlete: "90", NumOfLocations: "5", ProfitNonProfit: "Non-Profit", StartDate: "10/01/2016", Status: "Active", FreeTrialStartDate: 'NA', FreeTrialEndDate: 'NA', FreeTrailNoOfDays: 0, Type: 'Profit', ActivateDeActivate: "DeActivate" },
+                { CustomerName: "Lat fitness", MaxAthletes: "300", CostPerAthlete: "100", BillingAmmount: "1,000", ActiveAthlete: "110", NumOfLocations: "7", ProfitNonProfit: "Profit", StartDate: "09/11/2016", Status: "Active", FreeTrialStartDate: 'NA', FreeTrialEndDate: 'NA', FreeTrailNoOfDays: 0, Type: 'Non Profit', ActivateDeActivate: "DeActivate" },
+                { CustomerName: "Gold gym", MaxAthletes: "500", CostPerAthlete: "100", BillingAmmount: "5,000", ActiveAthlete: "50", NumOfLocations: "3", ProfitNonProfit: "Non-Profit", StartDate: "08/04/2016", Status: "Active", FreeTrialStartDate: 'NA', FreeTrialEndDate: 'NA', FreeTrailNoOfDays: 0, Type: 'Non Profit', ActivateDeActivate: "DeActivate" },
+                { CustomerName: "Aptitude gym", MaxAthletes: "500", CostPerAthlete: "100", BillingAmmount: "4,000", ActiveAthlete: "70", NumOfLocations: "4", ProfitNonProfit: "Non-Profit", StartDate: "10/05/2016", Status: "New", FreeTrialStartDate: 'NA', FreeTrialEndDate: 'NA', FreeTrailNoOfDays: 0, Type: 'Profit', ActivateDeActivate: "Activate" },
+            ],
+            pageSize: 10
+        });
+        var contactdataSource = new kendo.data.DataSource({
+            data: [
+                { FirstName: "John", LastName: "Erick", Phone: "(502) 885 25", Email: "client@to.com", ContactType: "CEO", ImagePath: "../images/user/02.jpg" },
+                { FirstName: "David", LastName: "Ray", Phone: "(502) 885 00", Email: "dr@testctc.com", ContactType: "Admin", ImagePath: "../images/user/03.jpg" },
+                { FirstName: "Ericka", LastName: "B.", Phone: "+004 885 00", Email: "denn@ity.com", ContactType: "Accounts", ImagePath: "../images/user/05.jpg" },
+                { FirstName: "John", LastName: "Doe", Phone: "+001 355 44", Email: "joh@emo.com", ContactType: "Sales", ImagePath: "../images/user/10.jpg" },
+                { FirstName: "Joe", LastName: "Smith", Phone: "+001 100 44", Email: "joeh@tt.com", ContactType: "Accounts", ImagePath: "../images/user/09.jpg" },
+            ],
+            pageSize: 10
+        });
+        $("#liCustomers").addClass("active");
+        $("#customersGrid").kendoGrid({
+            selectable: "multiple cell",
+            allowCopy: true,
+            width: '800px',
+            scrollable: true,
+            sortable: true,
+            filterable: true,
+            resizable: true,
+            columns: [
+                {
+                    field: "CustomerName",
+                    title: "Organization",
+                    width: "75px",
+                    locked: true,
+                    lockable: true,
+                    template: GetCustomTemplateOrganisation()
+                },
+                {
+                    field: "MaxAthletes",
+                    title: "Max Athletes",
+                    width: "90px",
+                    locked: true,
+                    lockable: true,
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                 {
+                     field: "ActiveAthlete",
+                     title: "Active Athlete",
+                     width: "90px",
+                     locked: true,
+                     attributes: {
+                         style: 'white-space: nowrap '
+                     }
+                 },
+                {
+                    field: "CostPerAthlete",
+                    title: "Price/ Athlete",
+                    width: "95px",
+                    locked: true,
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "NumOfLocations",
+                    title: "# of Locations",
+                    width: "90px",
+                    template: '<a href="javascript:void(0)" onclick="ShowLocationPage();">#=NumOfLocations#</a>',
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "BillingAmmount",
+                    title: "Billing Amt",
+                    width: "85px",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    },
+                    template: "<em class='fa fa-usd'></em> #=BillingAmmount#"
+                },
+                {
+                    field: "StartDate",
+                    title: "Start Date",
+                    width: "90px",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "Status",
+                    title: "Status",
+                    width: "80px",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: 'FreeTrialStartDate',
+                    title: 'Free Trial Start Date',
+                    width: "73px"
+
+                },
+                {
+                    field: 'FreeTrialEndDate',
+                    title: 'Free Trial End Date',
+                    width: "73px"
+
+                },
+                {
+                    field: 'FreeTrailNoOfDays',
+                    title: 'Trial Days left',
+                    width: "73px"
+
+                },
+
+                 {
+                     field: 'Type',
+                     title: 'Type',
+                     width: "70px"
+
+                 },
+                {
+                    field: "Actions",
+                    title: "Actions",
+                    width: "145px",
+                    template: GetCustomTemplateActionDelete()
+
+                }
+            ],
+            dataSource: customerdataSource
+        });
+
+        customerdataSource.read();
+        $("#customerPager").kendoPager({
+            autoBind: true,
+            dataSource: customerdataSource
+        });
+
+        $("#customerContactGrid").kendoGrid({
+            selectable: "multiple cell",
+            allowCopy: true,
+            scrollable: true,
+            sortable: true,
+            filterable: true,
+            columns: [
+                {
+                    field: "FirstName",
+                    title: "Name",
+                    template: ' <img src="#=ImagePath#" alt="Image" width=45 height=45 class="img-thumbnail img-circle" style="cursor: pointer;"> &nbsp;<a href="javascript:ShowContactDetails()" onclick="Javascript:ShowContactDetails();">#=FirstName# #=LastName#</a>',
+
+                },
+                {
+                    field: "Phone",
+                    title: "Phone",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "Email",
+                    title: "Email",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    },
+                    template: '<a href="mailto:#=Email#" target="_top">#=Email#</a>'
+                },
+                {
+                    field: "ContactType",
+                    title: "Contact Type ",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                }
+            ],
+            dataSource: contactdataSource
+        });
+
+        contactdataSource.read();
+        $("#customerContact").kendoPager({
+            autoBind: true,
+            dataSource: contactdataSource
+        });
+
+        $("#customersGrid").kendoTooltip({
+            filter: "th",
+            content: function (e) {
+                var target = e.target; // element for which the tooltip is shown
+                return $(target).data('title')
+            }
+        }).data("kendoTooltip");
+
+        $("#sportsPricingGrid, #sportsPricingGridEdit").kendoGrid({
+            selectable: "multiple cell",
+            allowCopy: true,
+            scrollable: true,
+            sortable: true,
+            filterable: true,
+            columns: [
+                {
+                    field: "Sports",
+                    title: "Sports",
+                },
+                {
+                    field: "NoOfSportsSelected",
+                    title: "# of Sports Selected",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "CostPerMonth",
+                    title: "Cost/Month",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    }
+                },
+                {
+                    field: "TotalPrice",
+                    title: "Total Price",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    },
+                    template: '#=TotalPrice#'
+                },
+            ],
+            dataSource: [
+                { Sports: "Baseball, Cricket, Soccer", NoOfSportsSelected: "3", CostPerMonth: "$50", TotalPrice: "$150" },
+                { Sports: "Basketball, Soccer", NoOfSportsSelected: "2", CostPerMonth: "$40", TotalPrice: "$80" },
+                { Sports: "Baseball, Basketball, Cricket, Soccer", NoOfSportsSelected: "4", CostPerMonth: "$60", TotalPrice: "$240" },
+            ]
+        });
+
+        function ShowDeleteConfirmationPopup() {
+            $('#confirmDeletion').modal('show');
+        }
+        function ShowActivationConfirmationPopup(FreeNoOfDays) {
+            if (FreeNoOfDays > 0) {
+                $("#ftrialDiv").show();
+                $("#nftrialDiv").hide();
+            }
+            else {
+                $("#ftrialDiv").hide();
+                $("#nftrialDiv").show();
+            }
+            $('#confirmActivation').modal('show');
+        }
+
+        function ShowEditCustomer() {
+            $("#btnShowCustomerDashboard").show();
+            $("#customergridcontainer").hide();
+            //$("#EditCustomers").show();
+            $("#AddCustomer").show();
+            $("#custprofile").text("Account Information");
+            $('#CustTitle').text('Customer Profile');
+            $("#ContactDetails").hide();
+        }
+
+        function ShowAddCustomer(ttype) {
+            $("#btnShowCustomerDashboard").show();
+            $("#customergridcontainer").hide();
+            $("#AddCustomer").show();
+            $("#custprofile").text("Account Information");
+            $('#CustTitle').text('Customer Profile');
+            $("#ContactDetails").hide();
+        }
+
+        function ShowCustomerGrid() {
+            $("#btnShowCustomerDashboard").hide();
+            $("#customergridcontainer").show();
+            $("#AddCustomer").hide();
+            $("#ContactDetails").hide();
+            $('#CustTitle').text('TKG Customer Snapshot');
+
+        }
+        function ToggleCostControl() {
+            if (document.getElementById('editChkProgDev').checked == true) {
+                $("#editCostPerMonth").fadeIn().css("display", "inline-block");
+            }
+            else {
+                $("#editCostPerMonth").hide();
+            }
+        }
+        function ToggleAddCostControl() {
+            if (document.getElementById('addChkProgDev').checked == true) {
+                $("#addCostPerMonth").fadeIn().css("display", "inline-block");
+            }
+            else {
+                $("#addCostPerMonth").hide();
+            }
+        }
+
+        function ShowContactDetails() {
+            $("#customergridcontainer").hide();
+            $("#AddCustomer").hide();
+            $("#ContactDetails").show();
+            $("#profilePicture").attr("src", "../images/noimage.jpg");
+        }
+
+        function ToggleProfitDiv() {
+            if ($("#CustType").val() == 'profit') {
+                $("#ForProfitDiv").fadeIn().css("display", "inline-block");
+                $("#NonProfitDiv").hide();
+            }
+            else if ($("#CustType").val() == 'nonprofit') {
+                $("#NonProfitDiv").fadeIn().css("display", "inline-block");
+                $("#ForProfitDiv").hide();
+            }
+        }
+
+        function ToggleProfitDiv1() {
+            if ($("#CustType1").val() == 'profit') {
+                $("#nonprofitenrollmentminmax").hide();
+                $("#divNumOfAtheletes, #divPriceAthletes, #divPriceAdditionalAthlete").fadeIn().css("display", "inline-block");
+            }
+            else if ($("#CustType1").val() == 'nonprofit') {
+                $("#divNumOfAtheletes, #divPriceAthletes, #divPriceAdditionalAthlete").hide();
+                $("#nonprofitenrollmentminmax").fadeIn().css("display", "inline-block");
+            }
+        }
+        var pricingHistorydataSource = new kendo.data.DataSource({
+            data:
+        [
+                { CustomerType: "For Profit", PaymentOption: "Credit Card", BillingFreq: "Monthly", ActiveAthletes: "70", MaxNumofAthlete: "80", ActivePriceAthletes: "10", MaxPriceAthlete: "20", PriceAdditionalAthlete: "8", EnrollmentMin: "", EnrollmentMax: "", BillingAmt: "1,000", StartDate: "10/15/2016", EndDate: "" },
+                { CustomerType: "For Profit", PaymentOption: "Check", BillingFreq: "Monthly", ActiveAthletes: "45", MaxNumofAthlete: "50", ActivePriceAthletes: "10", MaxPriceAthlete: "25", PriceAdditionalAthlete: "10", EnrollmentMin: "", EnrollmentMax: "", BillingAmt: "600", StartDate: "05/06/2016", EndDate: "10/14/2016" },
+                { CustomerType: "For Profit", PaymentOption: "Cash", BillingFreq: "Quarterly", ActiveAthletes: "40", MaxNumofAthlete: "40", ActivePriceAthletes: "8", MaxPriceAthlete: "15", PriceAdditionalAthlete: "8", EnrollmentMin: "", EnrollmentMax: "", BillingAmt: "500", StartDate: "06/01/2016", EndDate: "05/05/2016" },
+                { CustomerType: "Non Profit", PaymentOption: "Cash", BillingFreq: "Quarterly", ActiveAthletes: "40", MaxNumofAthlete: "40", ActivePriceAthletes: "8", MaxPriceAthlete: "15", PriceAdditionalAthlete: "8", EnrollmentMin: "", EnrollmentMax: "", BillingAmt: "500", StartDate: "06/01/2016", EndDate: "05/05/2016" }
+        ],
+            pageSize: 10
+        });
+
+        var dropdownDataSource = new kendo.data.DataSource({
+            data:
+              [
+                      { kkey: "Monthly", vvalue: "Monthly" },
+                      { kkey: "Quarterly", vvalue: "Quarterly" },
+                      { kkey: "Yearly", vvalue: "Yearly" },
+              ]
+        });
+
+        var dropdownDataSourceCustomerType = new kendo.data.DataSource({
+            data:
+              [
+                      { kkey: "Non Profit", vvalue: "Non Profit" },
+                      { kkey: "For Profit", vvalue: "For Profit" },
+              ]
+        });
+
+        var dropdownDataSourcePaymentOption = new kendo.data.DataSource({
+            data:
+              [
+                      { kkey: "Credit Card", vvalue: "Credit Card" },
+                      { kkey: "Check", vvalue: "Check" },
+                      { kkey: "Invoice", vvalue: "Invoice" },
+                      { kkey: "Cash", vvalue: "Cash" },
+              ]
+        });
+
+        $("#pricingHistoryGrid").kendoGrid({
+            allowCopy: true,
+            scrollable: true,
+            sortable: true,
+            filterable: true,
+            editable: "inline",
+            edit: function (e) {
+                var commandCell = e.container.find("td:last");
+                commandCell[0].className = "";
+                commandCell.html('<a class="k-grid-update" style="margin-left:18px !important;"><em class="fa fa-1x fa-check"></em></a><div style="display: inline-block; margin: 0; text-align: center;" >&nbsp;</div><div style="display: inline-block; margin: 0; text-align: center;" >&nbsp;</div><a class="k-grid-cancel"><em class="fa fa-1x fa-ban"></em></a>');
+            },
+            columns: [
+                {
+                    field: "BillingFreq",
+                    title: "Billing Frequency",
+                    editor: dropDownEditor,
+                    width: "100px",
+                },
+                {
+                    field: "PaymentOption",
+                    title: "Payment Option",
+                    editor: dropDownEditorPaymentOption,
+                    width: "100px",
+                },
+                 {
+                     field: "ActiveAthletes",
+                     title: "Active # of Athletes",
+                     width: "100px",
+                 },
+                {
+                    field: "MaxNumofAthlete",
+                    title: "Max # of Athletes",
+                    width: "100px",
+                },
+                {
+                    field: "ActivePriceAthletes",
+                    title: "Active Price/Athlete",
+                    template: "<em class='fa fa-usd'></em> #=ActivePriceAthletes#",
+                    width: "100px",
+                },
+                {
+                    field: "MaxPriceAthlete",
+                    title: "Max Price/Athlete",
+                    template: "<em class='fa fa-usd'></em> #=MaxPriceAthlete#",
+                    width: "100px",
+                },
+                {
+                    field: "PriceAdditionalAthlete",
+                    title: "Price/Additional Athlete",
+                    template: "<em class='fa fa-usd'></em> #=PriceAdditionalAthlete#",
+                    width: "100px",
+                },
+                {
+                    field: "EnrollmentMin",
+                    title: "Enrollment Min",
+                    width: "100px",
+                },
+                {
+                    field: "EnrollmentMax",
+                    title: "Enrollment Max",
+                    width: "100px",
+                },
+                {
+                    field: "BillingAmt",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    },
+                    title: "Billing Amount",
+                    template: "<em class='fa fa-usd'></em> #=BillingAmt#",
+                    width: "100px",
+                },
+                {
+                    field: "StartDate",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    },
+                    width: "90px",
+                    title: "Start Date",
+                    editor: dateTimeEditor,
+                    format: "{0:MM/dd/yyyy}",
+                },
+                {
+                    field: "EndDate",
+                    attributes: {
+                        style: 'white-space: nowrap '
+                    },
+                    width: "90px",
+                    title: "End Date",
+                    editor: dateTimeEditor,
+                    format: "{0:MM/dd/yyyy}"
+
+                },
+                {
+                    command: [{
+                        template: ' <a class="k-grid-edit" href="javascript:void(0)" style="margin-left:18px !important;" ><em class="fa fa-1x fa-pencil"></em></a>',
+                        name: "edit", text: "",
+                        text: {
+                            cancel: "",
+                            update: "",
+                            edit: ""
+                        }
+                    },
+                    {
+                        template: ' <div style="display: inline-block; margin: 0; text-align: center;" >&nbsp;</div>',
+                    },
+                        {
+                            template: ' <a class="k-grid-delete" href="javascript:void(0)" ><em class="fa fa-1x fa-trash"></em></a>',
+                            name: "delete", text: "",
+                        }],
+                    title: "Action",
+                    width: "90px",
+                },
+            ],
+            dataSource: pricingHistorydataSource
+        });
+
+        $("#pricingHistoryGrid").kendoTooltip({
+            filter: "th",
+            content: function (e) {
+                var target = e.target; // element for which the tooltip is shown
+                return $(target).data('title')
+            }
+        }).data("kendoTooltip");
+
+        function dropDownEditor(container, options) {
+            $('<input data-text-field="kkey" data-value-field="vvalue" data-bind="value:' + options.field + '"/>')
+                        .appendTo(container)
+                       .kendoDropDownList({
+                           dataSource: dropdownDataSource,
+                           dataTextField: "kkey",
+                           dataValueField: "vvalue"
+                       });
+        };
+
+        function dropDownEditorCustomerType(container, options) {
+            $('<input data-text-field="kkey" data-value-field="vvalue" data-bind="value:' + options.field + '"/>')
+                        .appendTo(container)
+                       .kendoDropDownList({
+                           dataSource: dropdownDataSourceCustomerType,
+                           dataTextField: "kkey",
+                           dataValueField: "vvalue"
+                       });
+        };
+
+        function dropDownEditorPaymentOption(container, options) {
+            $('<input data-text-field="kkey" data-value-field="vvalue" data-bind="value:' + options.field + '"/>')
+                        .appendTo(container)
+                       .kendoDropDownList({
+                           dataSource: dropdownDataSourcePaymentOption,
+                           dataTextField: "kkey",
+                           dataValueField: "vvalue"
+                       });
+        };
+
+        function dateTimeEditor(container, options) {
+            $('<input data-text-field="' + options.field + '" data-value-field="' + options.field + '" data-bind="value:' + options.field + '" data-format="' + options.format + '"/>')
+                    .appendTo(container)
+                    .kendoDatePicker({});
+        }
+
+        function ShowLocationPage() {
+            window.location.href = "Locations";
+        }
+
+        $(document).ready(function () {
+            $('#billingchk').click(function () {
+                if (!$(this).is(':checked')) {
+                    $("#billingDIV").show();
+                }
+                else {
+                    $("#billingDIV").hide();
+                }
+            });
+        });
+
+        function ShowDeletePricingHistoryConfirmationPopup() {
+            $('#confirmDeletionPricingHistory').modal('show');
+        }
+
+        $("#profilePicture").click(function () {
+            $("input[id='my_file']").click();
+        });
+
+        function GetCustomTemplateOrganisation() {
+            var canEdit = $("#permissionEdit").val();
+
+            if (1 == canEdit)
+                return '<a href="javascript:void(0)" onclick="ShowEditCustomer();">#=CustomerName#</a>';
+            else
+                return '#=CustomerName#';
+        }
+
+        function GetCustomTemplateActionDelete() {
+            var canDelete = $("#permissionDelete").val();
+            var template = "";
+            if (1 == canDelete)
+                template = '<div class="btn-group mb-sm">' +
+                       '<button type="button" data-toggle="dropdown" class="btn btn-default">Select…</button>' +
+                       '<button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">' +
+                          '<span class="caret"></span>' +
+                       '</button>' +
+                       '<ul role="menu" class="dropdown-menu" style="min-width:102px !important;">' +
+                          '#if(FreeTrailNoOfDays == 0){#' +
+                          '<li><a href="javascript:void(0);" onclick="ShowActivationConfirmationPopup(#=FreeTrailNoOfDays#);">#=ActivateDeActivate#</a></li>' +
+                          '#}else{#' +
+                          '<li><a href="javascript:void(0);" onclick="ShowActivationConfirmationPopup(#=FreeTrailNoOfDays#);">Enable Free Trial</a></li>' +
+                          '#}#' +
+                          '<li><a href="javascript:void(0);" onclick="ShowDeleteConfirmationPopup();">Delete</a></li>' +
+                          '<li><a href="javascript:void(0);" onclick="ShowEditCustomer();">View Profile</a></li>' +
+                          '<li><a href="javascript:void(0);" ">View Dashbaord</a></li>' +
+                       '</ul>' +
+                    '</div>';
+
+            else
+                template = '<div class="btn-group mb-sm">' +
+                       '<button type="button" data-toggle="dropdown" class="btn btn-default">Select…</button>' +
+                       '<button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">' +
+                          '<span class="caret"></span>' +
+                       '</button>' +
+                       '<ul role="menu" class="dropdown-menu" style="min-width:102px !important;">' +
+                          '#if(FreeTrailNoOfDays == 0){#' +
+                          '<li><a href="javascript:void(0);" onclick="ShowActivationConfirmationPopup(#=FreeTrailNoOfDays#);">#=ActivateDeActivate#</a></li>' +
+                          '#}else{#' +
+                          '<li><a href="javascript:void(0);" onclick="ShowActivationConfirmationPopup(#=FreeTrailNoOfDays#);">Enable Free Trial</a></li>' +
+                          '#}#' +
+                          '<li><a href="javascript:void(0);" onclick="ShowEditCustomer();">View Profile</a></li>' +
+                          '<li><a href="javascript:void(0);" ">View Dashbaord</a></li>' +
+                       '</ul>' +
+                    '</div>'
+            return template;
+        }
+    </script>
+}
