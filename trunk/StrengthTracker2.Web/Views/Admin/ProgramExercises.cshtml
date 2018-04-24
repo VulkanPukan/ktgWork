@@ -269,10 +269,6 @@
     <script type="text/javascript" charset="utf-8">
         $("#liProgram").addClass("active");
         var programDataSource = null;
-        var isActiveProgram = "@ViewBag.IsActiveProgram";
-        if (isActiveProgram == "True") {
-            alert("Active Programs are ‘view only’.  Please Deactivate this Program to edit it.  If an Athlete is using the Program, copy and rename the Program then edit the renamed Program");
-        }
         $("#programGrid").kendoGrid({
             selectable: true,
             allowCopy: true,
@@ -286,6 +282,11 @@
         });
 
         $(function () {
+                var isActiveProgram = "@ViewBag.IsActiveProgram";
+                if (isActiveProgram === "True") {
+                    alert("Active Programs are ‘view only’.  Please Deactivate this Program to edit it.  If an Athlete is using the Program, copy and rename the Program then edit the renamed Program");
+                }
+
             $("#lstSessionNum").empty();
             var arrSessionStr = '@Html.Raw(Json.Encode(ViewBag.SessionModelList))';
             arrSessionStr = arrSessionStr.replace("\"]", "");

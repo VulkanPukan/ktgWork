@@ -1,0 +1,5 @@
+#Ignore these directories
+/.nuget/
+/.vs/
+/External Dlls/
+/lib/KENDOUIMVC/

@@ -170,7 +170,7 @@
             <div class="modal-body" style="margin-left:16px;">
                 <form>
                     <div class="form-group">
-                        <span>Delete program?</span>
+                        <span>Deleting a Program is permanent. After Deletion you will not be able to access or Activate the Program again.</span>
                         <input type="hidden" id="hdDelProgramID" />
                     </div>
                 </form>
@@ -301,10 +301,6 @@
                             @if (canAddProgram)
                             {
                                 @:'<li><a href="javascript:void(0);" onclick="ShowCopyProgramPopup(#=ProgramID#, \'#=Name#\', \'#=SelfCopy#\');">Copy</a></li>' +
-                            }
-                            @if (canDeleteProgram)
-                            {
-                                @:'<li><a href="javascript:void(0);" onclick="ShowDeleteConfirmationPopup(#=ProgramID#, \'#=AllowDelete#\');">Delete</a></li>' +
                             }
                          '</ul>' +
                       '</div>'
@@ -595,7 +591,7 @@
             }
             else {
                 $("#btnActivateProgram").text("Deactivate");
-                $("#lblActivateProgramText").text("Deactivate Program?");
+                $("#lblActivateProgramText").text("It is recommended that you review the Athletes Module to ensure that this Program is not Assigned to an Active Athlete before Deactivating it.  Moving an Active Program to Inactive may jeopardize an Athlete’s Daily Workout. Changes to Active Programs can be made through a sequence of Copy/Rename/Edit/Activate");
                 $("#confirmActivationLabel").text("Confirm Deactivation");
                 $("#hdActivateorDeactivate").val("false");
             }

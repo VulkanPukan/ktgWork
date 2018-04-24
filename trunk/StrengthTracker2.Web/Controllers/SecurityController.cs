@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using StrengthTracker2.Core.Repository.Contracts.Account;
+using StrengthTracker2.Core.Repository.Contracts.Customers;
 
 namespace StrengthTracker2.Web.Controllers
 {
@@ -20,7 +22,10 @@ namespace StrengthTracker2.Web.Controllers
 
         #region Private Members
 
+        private readonly IUserDataVisibilityRepository userDataVisibilityRepository = ObjectFactory.GetInstance<IUserDataVisibilityRepository>();
         private readonly IRoleManagement _iRoleManagement = ObjectFactory.GetInstance<IRoleManagement>();
+        private IAccount _iAccount = ObjectFactory.GetInstance<IAccount>();
+        private ICustomerLocationRoleMgmtRepository _icustomerLocationRoleMgmtRepository = ObjectFactory.GetInstance<ICustomerLocationRoleMgmtRepository>();
 
         #endregion
 
@@ -35,6 +40,17 @@ namespace StrengthTracker2.Web.Controllers
         {
             try
             {
+
+                if (CheckUserEx(id))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Unable to delete Role, because user with this role exists!"
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
+
                 if (_iRoleManagement.DeleteRoleById(id))
                     return Json(new
                     {
@@ -59,12 +75,22 @@ namespace StrengthTracker2.Web.Controllers
             }
 
         }
+
         [HttpPost]
         public JsonResult UpdateRoleById(int id)
         {
             try
             {
-                    if (_iRoleManagement.UpdateRoleById(id))
+                if (CheckUserEx(id))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Unable to Update Role Status, because user with this role exists!"
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (_iRoleManagement.UpdateRoleById(id))
                     return Json(new
                     {
                         success = true,
@@ -238,6 +264,32 @@ namespace StrengthTracker2.Web.Controllers
             }
           
             return Json(roleDetailsViewModel, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// Checking for an existing user with this role
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        bool CheckUserEx(int id)
+        {
+           
+            var a = _iAccount.ListAllTKGAdminUsers();
+            foreach (var item in a.Users)
+            {
+              
+                var customerLocationRoles = _icustomerLocationRoleMgmtRepository.customerLocationRoles(item.UserId);
+
+                var firstRoleId = customerLocationRoles.Count > 0 ? Convert.ToInt32(customerLocationRoles[0].RoleId.Split(';')[0]) : -1;
+
+
+                if (firstRoleId == id)
+                    return true;
+
+            }
+
+            return false;
         }
     }
 }

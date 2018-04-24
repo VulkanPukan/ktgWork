@@ -93,6 +93,9 @@ C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\Dapper.dll
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\DapperExtensions.dll
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\EntityFramework.dll
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\Kendo.Mvc.dll
+C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\Microsoft.SqlServer.ConnectionInfo.dll
+C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\Microsoft.SqlServer.Management.Sdk.Sfc.dll
+C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\Microsoft.SqlServer.Smo.dll
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\Microsoft.Web.Infrastructure.dll
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\MyProgrammer.Core.dll
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\Newtonsoft.Json.dll
@@ -117,10 +120,13 @@ C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\WebGrease.dll
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\WebActivator.dll
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\CommonServiceLocator.dll
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\MyProgrammer.Mail.dll
+C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\Microsoft.SqlServer.SqlClrProvider.dll
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\Microsoft.SqlServer.SqlEnum.dll
-C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\Microsoft.SqlServer.Dmf.dll
+C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\Microsoft.SqlServer.Dmf.Common.dll
+C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\Microsoft.SqlServer.Diagnostics.STrace.dll
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\Microsoft.SqlServer.ServiceBrokerEnum.dll
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\RazorEngine.dll
+C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\Microsoft.SqlServer.Dmf.dll
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\MyProgrammer.Core.pdb
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\StrengthTracker2.Common.pdb
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\StrengthTracker2.Core.pdb
@@ -165,6 +171,12 @@ C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\sv-SE\Kendo.Mvc.resourc
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\tr-TR\Kendo.Mvc.resources.dll
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\uk-UA\Kendo.Mvc.resources.dll
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\zh-CN\Kendo.Mvc.resources.dll
+C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\ru\Microsoft.SqlServer.ConnectionInfo.resources.dll
+C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\ru\Microsoft.SqlServer.Management.Sdk.Sfc.resources.dll
+C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\ru\Microsoft.SqlServer.Smo.resources.dll
+C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\ru\Microsoft.SqlServer.SqlEnum.resources.dll
+C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\ru\Microsoft.SqlServer.Dmf.Common.resources.dll
+C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\bin\ru\Microsoft.SqlServer.ServiceBrokerEnum.resources.dll
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\obj\Debug\StrengthTracker2.Web.csprojResolveAssemblyReference.cache
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\obj\Debug\StrengthTracker2.Web.csproj.CoreCompileInputs.cache
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.Web\obj\Debug\StrengthTracker2.Web.dll

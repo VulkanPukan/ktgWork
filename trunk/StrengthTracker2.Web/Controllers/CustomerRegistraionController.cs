@@ -20,7 +20,7 @@ using StrengthTracker2.Core.Repository.Entities.TKGMaster;
 using StrengthTracker2.Web.Models;
 using StrengthTracker2.Web.Models.Registration;
 using StrengthTracker2.Web.Helpers;
-
+using StrengthTracker2.Core.Repository.Contracts.Teams;
 
 namespace StrengthTracker2.Web.Controllers
 {
@@ -37,6 +37,7 @@ namespace StrengthTracker2.Web.Controllers
         private readonly IAccount _iAccount = ObjectFactory.GetInstance<IAccount>();
         private readonly IRegistrationManager _registrationService = ObjectFactory.GetInstance<IRegistrationManager>();
         private readonly ISportsManagementRepository _sportService = ObjectFactory.GetInstance<ISportsManagementRepository>();
+        private readonly ITeamManagmentRepository teamService = ObjectFactory.GetInstance<ITeamManagmentRepository>();
 
         public ActionResult PersonalTrainer()
         {
@@ -289,6 +290,8 @@ namespace StrengthTracker2.Web.Controllers
             {
                 var contact = _mapperService.Map<UserRegistrationModel, Contact>(customerModel);
                 var user = _mapperService.Map<UserRegistrationModel, User>(customerModel);
+                var iaTeamName = ConfigurationManager.AppSettings["IndividualAthleteTeamName"];
+                var iaDefaultTeam = teamService.GetTeamByName(iaTeamName);
 
                 contact.AddressOne = contact.AddressOne == null ? "" : contact.AddressOne;
 
@@ -322,12 +325,11 @@ namespace StrengthTracker2.Web.Controllers
                     user.DOB = DateTime.Now.AddYears(100);
                 }
                 user.IsPending = true;
-                user.TeamID = 0; //Not needed as we show no team in Athlete page
+                user.TeamID = iaDefaultTeam == null ? 0 : iaDefaultTeam.ID; 
                 user.Password = SecurityUtility.EncryptText(ProjectTempValues.TemporaryPassword); //TODO: Temporary solution. Later to add a new field for unencrypted password
                 user.IsIndividualAthlete = true; //Used for only TKG. Please mark it as FALSE for all other customers
                 user.IsAccountEnabled = true;
                 user.ShowWelcome = true;
-
 
                 var userDetails = new UserDetails();
                 userDetails.Users.Add(user);

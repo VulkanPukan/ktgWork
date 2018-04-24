@@ -95,6 +95,11 @@ namespace StrengthTracker2.Persistence.Repository.Teams
             return teamManagement.UpdateTeamStatus(teamId);
         }
 
+        public BLENT.Team GetTeamByName(string name)
+        {
+            return Convert(teamManagement.GetTeamByName(name));
+        }
+
         private BLENT.Team Convert(DALENT.Team team)
         {
             var result = new BLENT.Team();

@@ -1,4 +1,5 @@
 ﻿var permissionRowCount = 0;
+var MaxImageSize = 2;
 var userdataSource = new kendo.data.DataSource({
     transport: {
         read: function (options) {
@@ -344,6 +345,13 @@ function SaveAddUser() {
         var fileUpload = $("input[id='my_file']").get(0);
         var fileName = '';
         if (fileUpload.files.length > 0) {
+            var fileSize = fileUpload.files[0].size / 1024 / 1024
+            if (!MaxImageSize)
+                MaxImageSize = 2;
+            if (fileSize >= MaxImageSize) {
+                alert("Please use image less or equal 2MB.");
+                return false;
+            }
             fileName = fileUpload.files[0].name;
         }
 
@@ -478,15 +486,6 @@ function GetUserDetails(id) {
                         });
                     }
                 }
-                //else if (result.CoachType == 3) {
-                //    if (result.TeamIDs != null && result.TeamIDs !== "") {
-                //        //$("input[name='TeamName']").each(function () {
-                //        //});
-                //        $.each(result.TeamIDs.split(","), function (intIndex, objValue) {
-                //            $("#chkTeamID" + objValue).attr("checked", "true");
-                //        });
-                //    }
-                //}
                 if (result.IsAthleticDirector == true) {
                     $("#chkAthleticDirector").prop("checked", true);
                 }
@@ -505,6 +504,7 @@ function GetUserDetails(id) {
                     //$("#profilePicture").attr("src", (result.UserImage.ImagePath != null && result.UserImage.ImagePath.length > 1) ? result.UserImage.ImagePath : "../images/noimage.jpg");
                     $("#profilePicture").attr("src", (result.ProfilePicture != null && result.ProfilePicture.length > 1) ? result.ProfilePicture : "../images/noimage.jpg");
                 }
+                MaxImageSize = result.ProfilePictureMaxSize;
                 // added for userlocation role grid by srinivas
                 BindUserLocationRole($('#hdUserID').val());
                 var qryPV = getUrlVars()["pv"];

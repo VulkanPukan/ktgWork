@@ -3,6 +3,7 @@
     Layout = "~/Views/Admin/_LayoutNew.cshtml";
 }
 
+
 <style>
     .navbar-top .navbar-header {
         width: 250px !important;
@@ -189,9 +190,15 @@
     var gridColumns = [];
     var exerciseDataSource = null;
     var isActiveProgram = "@ViewBag.IsActiveProgram";
+
+    if (isActiveProgram == "True") {
+        alert("Active Programs are ‘view only’.  Please Deactivate this Program to edit it.  If an Athlete is using the Program, copy and rename the Program then edit the renamed Program");
+    }
+
         if (isActiveProgram == "True") {
-            alert("Active Programs are ‘view only’.  Please Deactivate this Program to edit it.  If an Athlete is using the Program, copy and rename the Program then edit the renamed Program");
+            //alert("Active Programs are ‘view only’.  Please Deactivate this Program to edit it.  If an Athlete is using the Program, copy and rename the Program then edit the renamed Program");
         }
+
     $("#exercisesGrid").kendoGrid({
         allowCopy: true,
         scrollable: true,
@@ -206,6 +213,9 @@
     });
     $(document).ready(function () {
         $('#sessionList option:eq(1)').attr('selected', 'selected');
+        var mess = @Html.Raw(Json.Encode(ViewBag.Message));
+        if (mess != null)
+            alert(mess);
         OnSessionChange();
     });
     function OnSessionChange() {

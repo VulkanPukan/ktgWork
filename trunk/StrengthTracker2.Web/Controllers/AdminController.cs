@@ -364,6 +364,7 @@ namespace StrengthTracker2.Web.Controllers
 
         public ActionResult ProgramDWSession(int programID)
         {
+
             var prog = _iProgramMgmtRepository.GetProgrambyID(programID);
 
             _iSportMgmtRepository = ObjectFactory.GetInstance<ISportsManagementRepository>();
@@ -394,6 +395,15 @@ namespace StrengthTracker2.Web.Controllers
             };
             ViewBag.ProgramName = prog.Title;
             ViewBag.IsActiveProgram = prog.IsActive;
+            if (Session["Saved"] != null)
+            {
+                if ((bool) Session["Saved"])
+                {
+                    ViewBag.Message = "Congratulations You’ve Completed Creating a New Program";
+                    Session["Saved"] = null;
+                }
+
+            }
             return View(model);
         }
 
@@ -954,7 +964,7 @@ namespace StrengthTracker2.Web.Controllers
             //        }
             //    }
             //}
-
+            
             if (authenticatedUser.IsIndividualAthlete)
             {
                 list = list.Where(a => a.UserId == authenticatedUser.UserId).ToList();
@@ -971,7 +981,7 @@ namespace StrengthTracker2.Web.Controllers
                     Email = item.UserName,
                     UserImagePath = item.UserImage.ImagePath ?? "../images/noimage.jpg",
                     IsActive = item.IsAccountEnabled,
-                    ActivationDate = item.IsAccountEnabled ? item.EnablementDate.ToShortDateString() : String.Empty,
+                    ActivationDate = item.IsAccountEnabled ?  item.EnablementDate.ToString("dd/MM/yyyy") /*item.EnablementDate.Day + "/" + item.EnablementDate.Month + "/" + item.EnablementDate.Year*/ : String.Empty,
                     School = item.SchoolName,
                     Phone = item.ContactInformation.PhoneNumber,
                     Sport = item.Sport.Name,
@@ -1110,7 +1120,8 @@ namespace StrengthTracker2.Web.Controllers
             User athlete = _iAthleteManagementRepository.GetAthleteInfoByID(athleteID);
 
             var target = _mapperService.Map<User, AthleteViewModel>(athlete);
-
+            target.School = athlete.SchoolName;
+            target.TravelTeamLevel = athlete.PlayingLevel;
             if (athlete.ContactInformation != null)
             {
                 target.ContactID = athlete.ContactInformation.ID;
@@ -1131,6 +1142,7 @@ namespace StrengthTracker2.Web.Controllers
                 target.UserImageId = athlete.UserImage.ImageId;
                 target.UserImagePath = athlete.UserImage.ImagePath;
             }
+            target.ProfilePictureMaxSize = ConfigurationManager.AppSettings["ProfilePictureMaxSize"];
             if (athlete.Coach != null)
             {
                 target.CoachName = athlete.Coach.FirstName + " " + athlete.Coach.LastName;
@@ -1150,13 +1162,12 @@ namespace StrengthTracker2.Web.Controllers
                 })
                 .ToList();
 
-            SelectListViewModel posSel = new SelectListViewModel
+            target.Positions.Add(new SelectListViewModel
             {
                 Value = "0",
                 Text = "--Select Position--",
                 Selected = false
-            };
-            target.Positions.Add(posSel);
+            });
 
             target.Sports = _iSportMgmtRepository.ListSports()
                 .Select(g => new SelectListViewModel()
@@ -1167,31 +1178,28 @@ namespace StrengthTracker2.Web.Controllers
                 })
                 .ToList();
 
-            var posSport = new SelectListViewModel
+            target.Sports.Add(new SelectListViewModel
             {
                 Value = "0",
                 Text = "--Select Sport--",
                 Selected = false
-            };
-            target.Sports.Add(posSport);
+            });
 
-            target.States = new List<SelectListViewModel>();
-            SelectListViewModel posState = new SelectListViewModel
+            target.States = _iStateRepository.ListStates()
+                .Select(s => new SelectListViewModel()
+                {
+                    Value = s.ID.ToString(),
+                    Text = s.Name,
+                    Selected = target.StateID == s.ID
+                })
+                .ToList();
+
+            target.States.Add(new SelectListViewModel()
             {
                 Value = "0",
                 Text = "--Select State--",
                 Selected = false
-            };
-            target.States.Add(posState);
-
-            foreach (var state in _iStateRepository.ListStates())
-            {
-                posState = new SelectListViewModel();
-                posState.Value = state.ID.ToString();
-                posState.Text = state.Name;
-                posState.Selected = target.SportID == state.ID;
-                target.States.Add(posState);
-            }
+            });
 
             var userRegistration = _iAccount.GetRegistrationForUser(athlete.UserId);
             if (userRegistration != null)
@@ -1199,7 +1207,7 @@ namespace StrengthTracker2.Web.Controllers
                 target.LocationId = userRegistration.LocationId;
                 target.Location = _iCustomerLocationMgmtRepository.GetCustomerLocation(target.LocationId).LocationName;
             }
-
+           
             return Json(athlete == null ? new AthleteViewModel() : target, JsonRequestBehavior.AllowGet);
         }
 
@@ -1703,6 +1711,25 @@ namespace StrengthTracker2.Web.Controllers
 
         public ActionResult AthleteProfile()
         {
+            var showCheckbox = false;
+            var customerCategory = CustomerCategoryType.Underfined;
+            if (Session["CustomerObj"] != null)
+            {
+                var customerObj = ((CustomerMaster)(Session["CustomerObj"]));
+                if (customerObj != null)
+                {
+                    customerCategory = (CustomerCategoryType)customerObj.Category;
+                }
+            }
+
+            if (Session["AuthenticatedUser"] != null) //For Individual Athlete
+            {
+                var authenticatedUser = Session["AuthenticatedUser"] as User;
+                showCheckbox = authenticatedUser.IsIndividualAthlete
+                               || authenticatedUser.UserType == UserType.Athlete
+                               || customerCategory == CustomerCategoryType.PersonalTrainer;
+            }
+            ViewBag.ShowCheckbox = showCheckbox;
             return View();
         }
 
@@ -1995,6 +2022,7 @@ namespace StrengthTracker2.Web.Controllers
             int result = _iProgramMgmtRepository.SaveProgramInfo(progDet);
             if (result > 0)
             {
+                Session["Saved"] = true;
                 ro.Message = "Program Info saved successfully";
                 ro.Status = program.Id > 0 ? ReturnStatus.OK : ReturnStatus.Redirect;
                 ro.RedirectLocation = "Admin/ManageProgram?programID=" + result;
@@ -2165,6 +2193,7 @@ namespace StrengthTracker2.Web.Controllers
                         target.UserImage.UserId = image.UserId;
                         target.ProfilePicture = image.ImagePath;
                     }
+                    target.ProfilePictureMaxSize = ConfigurationManager.AppSettings["ProfilePictureMaxSize"];
                 }
             }
             return Json(target ?? new UserViewModel(), JsonRequestBehavior.AllowGet);
@@ -3589,7 +3618,7 @@ namespace StrengthTracker2.Web.Controllers
 
             if (filter == null || filter == "")
             {
-                filter = "coach";
+                filter = "team";
             }
 
             List<UserHistoryViewModel> userViewModelHistory = new List<UserHistoryViewModel>();

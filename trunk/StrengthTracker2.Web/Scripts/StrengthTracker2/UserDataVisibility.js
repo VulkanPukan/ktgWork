@@ -150,7 +150,6 @@ function InitUserDataVisibilityChechboxsByIsAthleticDirector(value) {
     }
 }
 function SetIsUserAthleticDirector(userId, value) {
-    loading_img(true);
     $.ajax({
         url: "../UserDataVisibility/SetUserAthleticDirector",
         type: "POST",
@@ -182,11 +181,13 @@ function InitIsUserAthleticDirector() {
 }
 function SaveIsUserAthleticDirector() {
     var value = $("#athleticDirectorCheckbox").prop("checked");
+    userId = GetUserId();
     SetIsUserAthleticDirector(userId, value);
 }
 
 
-function DeleteAllBeforeSave() {
+function DeleteAllBeforeSave(successCallback) {
+    loading_img(true);
     $.ajax({
         url: "../UserDataVisibility/DeleteAllBeforeSave",
         type: "POST",
@@ -197,6 +198,8 @@ function DeleteAllBeforeSave() {
         dataType: "json",
         success: function (result) {
             console.log("DeleteAllBeforeSave success!");
+            successCallback();
+            loading_img(false);
         },
         error: function (req, status, errorObj) {
             console.log("DeleteAllBeforeSave error!");
@@ -261,16 +264,17 @@ function InitSaveButton() {
     });
 }
 function SaveUserDataVisibility() {
-    DeleteAllBeforeSave();
-    var allCheckboxs = $(".dataVisibilityCheckbox");
-    for (var i = 0; i < allCheckboxs.length; i++) {
-        var checkbox = allCheckboxs[i];
-        if (checkbox.checked) {
-            var tr = $(checkbox).closest("tr");
-            var tds = $(tr).find('td');
-            var sportName = tds[1].innerText;
-            var teamName = tds[2].innerText;
-            SaveDataVisibilitySimple(sportName, teamName);
+    DeleteAllBeforeSave(function () {
+        var allCheckboxs = $(".dataVisibilityCheckbox");
+        for (var i = 0; i < allCheckboxs.length; i++) {
+            var checkbox = allCheckboxs[i];
+            if (checkbox.checked) {
+                var tr = $(checkbox).closest("tr");
+                var tds = $(tr).find('td');
+                var sportName = tds[1].innerText;
+                var teamName = tds[2].innerText;
+                SaveDataVisibilitySimple(sportName, teamName);
+            }
         }
-    }
+    });
 }

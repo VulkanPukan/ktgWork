@@ -118,7 +118,15 @@
                                         }
                                         else
                                         {
-                                            <div class="designation">TKG Admin</div>
+                                            if (((StrengthTracker2.Core.Repository.Entities.Security.RoleDetails)(Session["UserRole"])).Role.RoleName != "Administrator")
+                                            {
+                                                var roleObj = ((StrengthTracker2.Core.Repository.Entities.Security.RoleDetails)(Session["UserRole"])).Role;
+                                                <div class="designation">@roleObj.RoleName</div>
+                                            }
+                                            else
+                                            {
+                                                <div class="designation">TKG Admin</div>
+                                            }
                                         }
                                     }
                                 }
@@ -354,7 +362,7 @@
                 checkeventcount--;
             }
         });
-        var box = '<div tabindex="-1" id="alertModal" class="modal fade" id="confirmDeletion" role="dialog" aria-hidden="true" aria-labelledby="confirmDeletionLabel" style="display: none;"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button class="close" aria-hidden="true" type="button" data-dismiss="modal">×</button><h4 class="modal-title" id="confirmDeletionLabel">Message from webpage</h4></div><div id="alertModalBody" class="modal-body">Are you sure you want to Delete Customer?</div><div class="modal-footer"><button class="btn btn-default" type="button" data-dismiss="modal">OK</button></div></div></div></div>';
+        var box = '<div tabindex="-1" id="alertModal" class="modal fade" id="confirmDeletion" role="dialog" aria-hidden="true" aria-labelledby="confirmDeletionLabel" style="display: none;"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button class="close" aria-hidden="true" type="button" data-dismiss="modal">×</button><h4 class="modal-title" id="confirmDeletionLabel">Message from MyStrengthTracker</h4></div><div id="alertModalBody" class="modal-body">Are you sure you want to Delete Customer?</div><div class="modal-footer"><button class="btn btn-info" type="button" data-dismiss="modal">OK</button></div></div></div></div>';
         if ($('#alertModal').length == 0) {
             $("body").append(box);
         }

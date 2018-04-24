@@ -108,6 +108,7 @@ namespace StrengthTracker2.Web.Controllers
             user.IsPending = true;
             user.Password = SecurityUtility.EncryptText(ProjectTempValues.TemporaryPassword);
             user.TeamID = 0;
+            user.ShowWelcome = true;
 
             if (userRegModel.SportID == -1)
                 user.RegisteredSport = userRegModel.SportsName;
@@ -496,6 +497,7 @@ namespace StrengthTracker2.Web.Controllers
             user.IsPending = true;
             user.Password = SecurityUtility.EncryptText(ProjectTempValues.TemporaryPassword);
             user.TeamID = 0;
+            user.ShowWelcome = true;
             var customerType = (CustomerCategoryType)(Session["CustomerType"]);
             if (customerType == CustomerCategoryType.PersonalTrainer)
             {

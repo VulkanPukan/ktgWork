@@ -167,12 +167,23 @@ namespace StrengthTracker2.Web.Controllers
             }
             if (userResp.ResponsibilityType == UserResponsibilityType.Team && userResp.TeamId == 0 && String.IsNullOrWhiteSpace(userResp.TeamName) == false)
             {
-                var team = teamRepository.ListTeams().Where(t => t.Name == userResp.TeamName).FirstOrDefault();
+                var team = teamRepository.ListTeams().Where(t => ClearTeamNameString(t.Name) == ClearTeamNameString(userResp.TeamName)).FirstOrDefault();
                 if (team == null)
                     return null;
                 userResp.TeamId = team.ID;
             }
             return userResp;
+        }
+
+        private string ClearTeamNameString(string teamName)
+        {
+            var clearTeamName = teamName.Trim();
+            clearTeamName = clearTeamName.ToLower();
+            while (clearTeamName.Contains("  "))
+            {
+                clearTeamName = clearTeamName.Replace("  ", " ");
+            }
+            return clearTeamName;
         }
     }
 }

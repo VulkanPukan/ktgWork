@@ -87,19 +87,15 @@ namespace StrengthTracker2.Persistence.Functional.TKGMaster
                         sqlConnection.Close();
 
                         var scriptFile = String.Empty;
-                        var dbPath = String.Empty;
-                        var dbLogPath = String.Empty;
+                        var dbPath = Convert.ToString(ConfigurationManager.AppSettings["CustomersDBPath"]);
+                        var dbLogPath = Convert.ToString(ConfigurationManager.AppSettings["CustomersDBLogPath"]);
                         switch ((CustomerCategoryType)customer.Category)
                         {
                             case CustomerCategoryType.PersonalTrainer:
                                 scriptFile = Convert.ToString(ConfigurationManager.AppSettings["PersonalScriptFile"]);
-                                dbPath = Convert.ToString(ConfigurationManager.AppSettings["PersonalDBPath"]);
-                                dbLogPath = Convert.ToString(ConfigurationManager.AppSettings["PersonalDBLogPath"]);
                                 break;
                             case CustomerCategoryType.Organization:
                                 scriptFile = Convert.ToString(ConfigurationManager.AppSettings["OrganizationScriptFile"]);
-                                dbPath = Convert.ToString(ConfigurationManager.AppSettings["OrganizationDBPath"]);
-                                dbLogPath = Convert.ToString(ConfigurationManager.AppSettings["OrganizationDBLogPath"]);
                                 break;
                         }
                         

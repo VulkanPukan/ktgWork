@@ -13,8 +13,8 @@
                 @if (Session["AuthenticatedUser"] != null)
                 {
                     int userID = ((StrengthTracker2.Core.Repository.Entities.Actors.User)(Session["AuthenticatedUser"])).UserId;
-                    StrengthTracker2.Core.Repository.Entities.Actors.UserDetails userDetails = (StrengthTracker2.Core.Repository.Entities.Actors.UserDetails)(Session["AuthenticatedUserDetails"]);
-                    StrengthTracker2.Core.Repository.Entities.Actors.UserImage image = userDetails.UserImages.Where(ui => ui.UserId == userID).FirstOrDefault();
+                    var userDetails = (StrengthTracker2.Core.Repository.Entities.Actors.UserDetails)(Session["AuthenticatedUserDetails"]);
+                    var image = userDetails.UserImages.FirstOrDefault(ui => ui.UserId == userID);
                     var userFullName = ((StrengthTracker2.Core.Repository.Entities.Actors.User)(Session["AuthenticatedUser"])).FirstName + " " + ((StrengthTracker2.Core.Repository.Entities.Actors.User)(Session["AuthenticatedUser"])).LastName;
                     <h3 class="page-title" style="float:left;">Let's get started, @userFullName</h3>
                 }
@@ -23,8 +23,8 @@
                     <h3 class="page-title" style="float:left;">Welcome</h3>
                 }
                 <div class="pull-right" style="padding-top:30px; font-size: 20px;">
-                    <label style="vertical-align:top;">Do not show again on next logon @(Model.ShowWelcome == false ? "checked" : "")</label>
-                    <input type="checkbox" name="hideWelcomeCheckbox" id="hideWelcomeCheckbox" @(Model.ShowWelcome == false ? "checked" : "")>
+                    <label style="vertical-align:top;">Show Welcome page on logon @(Model.ShowWelcome ? "checked" : "")</label>
+                    <input type="checkbox" name="showWelcomeCheckbox" id="showWelcomeCheckbox" @(Model.ShowWelcome ? "checked" : "")>
                 </div>
             </div>
         </div>
@@ -72,8 +72,8 @@
     <script src="../Scripts/kendo.all.min.js"></script>
     <script>
         $("#liWelcome").addClass("active");
-        $("#hideWelcomeCheckbox").change(function () {
-            var value = !$("#hideWelcomeCheckbox")[0].checked;
+        $("#showWelcomeCheckbox").change(function () {
+            var value = $("#showWelcomeCheckbox")[0].checked;
             loading_img(true);
             $.ajax({
                 url: "../Admin/SetShowWelcome",
@@ -85,11 +85,11 @@
                 dataType: "json",
                 success: function (result) {
                     loading_img(false);
-                    console.log("hideWelcomeCheckbox success!");
+                    console.log("showWelcomeCheckbox success!");
                 },
-                error: function (req, status, errorObj) {
+                error: function () {
                     loading_img(false);
-                    console.log("hideWelcomeCheckbox error!");
+                    console.log("showWelcomeCheckbox error!");
                 }
             });
         })

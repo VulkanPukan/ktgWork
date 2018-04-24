@@ -37,7 +37,7 @@
 		<!-- Row starts -->
 		<div class="row gutter">
 			<div class="col-md-8 col-sm-6 col-xs-12">
-				<h3 class="page-title">User History</h3>
+				<h3 class="page-title">Athlete History</h3>
 			</div>
 		</div>
 		<!-- Row ends -->
@@ -57,12 +57,12 @@
                             <tr>
                                 <td style="width:10%"><label>Athlete Name:</label></td>
                                 <td><label id="lblAthleteName"></label></td>
-                                <td style="text-align:right;"><label>View User History By:</label></td>
-                                <td><select id="lstViewHistoryBy" onchange="ChangeUserHisotryFilter();" class="form-control m-b" style="width:200px;margin-left:20px;">
+                                <td style="text-align:right;display:none;"><label>View Athlete History By Team</label></td>
+                                @*<td><select id="lstViewHistoryBy" onchange="ChangeUserHisotryFilter();" class="form-control m-b" style="width:200px;margin-left:20px;">
                                     <option value="coach">Coach</option>
                                     <option value="team">Team</option>
 					                </select>
-                                </td>
+                                </td>*@
                             </tr>
                         </table>
                     </div>
@@ -105,8 +105,8 @@
     <script type="text/javascript" charset="utf-8">
         $("#liAthlete").addClass("active");
         var userID = '';
-        var filter = getUrlVars()["filter"];
-        $("#lstViewHistoryBy").val(filter)
+        //var filter = getUrlVars()["filter"];
+        //$("#lstViewHistoryBy").val(filter);
         var teamdataSource = new kendo.data.DataSource({
 		    transport: {
 		        read: function (options) {
@@ -146,7 +146,7 @@
 		    columns: [
                 {
                     field: "FieldName",
-                    title: 'Name'
+                    title: 'Team Name'
                 },
                 {
                     field: "StartDate",
@@ -174,12 +174,12 @@
 		    dataSource: teamdataSource
 		});
 
-		function ChangeUserHisotryFilter() {
-		    if ($("#lstViewHistoryBy").val() !== "0") {
-		        userID = getUrlVars()["userID"];
-		        filter = $("#lstViewHistoryBy").val();
-		        window.location.href = "../Admin/UserHistory?userID=" + userID + "&filter=" + filter;
-		    }
-		}
+		//function ChangeUserHisotryFilter() {
+		//    if ($("#lstViewHistoryBy").val() !== "0") {
+		//        userID = getUrlVars()["userID"];
+		//        filter = $("#lstViewHistoryBy").val();
+		//        window.location.href = "../Admin/UserHistory?userID=" + userID + "&filter=" + filter;
+		//    }
+		//}
     </script>
 }

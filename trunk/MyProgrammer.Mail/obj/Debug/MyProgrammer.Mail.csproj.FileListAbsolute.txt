@@ -9,15 +9,3 @@ D:\SVN\KTG\trunk\MyProgrammer.Mail\bin\Debug\System.Web.Razor.xml
 D:\SVN\KTG\trunk\MyProgrammer.Mail\obj\Debug\MyProgrammer.Mail.csprojResolveAssemblyReference.cache
 D:\SVN\KTG\trunk\MyProgrammer.Mail\obj\Debug\MyProgrammer.Mail.dll
 D:\SVN\KTG\trunk\MyProgrammer.Mail\obj\Debug\MyProgrammer.Mail.pdb
-C:\Users\Home\Desktop\KTG\trunk\MyProgrammer.Mail\bin\Debug\MyProgrammer.Mail.dll
-C:\Users\Home\Desktop\KTG\trunk\MyProgrammer.Mail\bin\Debug\MyProgrammer.Mail.pdb
-C:\Users\Home\Desktop\KTG\trunk\MyProgrammer.Mail\bin\Debug\MyProgrammer.Core.dll
-C:\Users\Home\Desktop\KTG\trunk\MyProgrammer.Mail\bin\Debug\RazorEngine.dll
-C:\Users\Home\Desktop\KTG\trunk\MyProgrammer.Mail\bin\Debug\System.Web.Razor.dll
-C:\Users\Home\Desktop\KTG\trunk\MyProgrammer.Mail\bin\Debug\MyProgrammer.Core.pdb
-C:\Users\Home\Desktop\KTG\trunk\MyProgrammer.Mail\bin\Debug\RazorEngine.xml
-C:\Users\Home\Desktop\KTG\trunk\MyProgrammer.Mail\bin\Debug\System.Web.Razor.xml
-C:\Users\Home\Desktop\KTG\trunk\MyProgrammer.Mail\obj\Debug\MyProgrammer.Mail.csprojResolveAssemblyReference.cache
-C:\Users\Home\Desktop\KTG\trunk\MyProgrammer.Mail\obj\Debug\MyProgrammer.Mail.csproj.CoreCompileInputs.cache
-C:\Users\Home\Desktop\KTG\trunk\MyProgrammer.Mail\obj\Debug\MyProgrammer.Mail.dll
-C:\Users\Home\Desktop\KTG\trunk\MyProgrammer.Mail\obj\Debug\MyProgrammer.Mail.pdb

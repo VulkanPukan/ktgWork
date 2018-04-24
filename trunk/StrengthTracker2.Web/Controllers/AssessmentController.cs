@@ -87,13 +87,14 @@ namespace StrengthTracker2.Web.Controllers
             var reportIdInt = Convert.ToInt32(reportId);
             if (coachIdInt < 0 || sportIdIntList.Count() == 0 || teamIdIntList.Count() == 0 || reportIdInt < 0)
                 return Json(new object[0]);
-            var teams = TeamRepository.ListTeams();
+            var teams = TeamRepository.ListTeams().Where(t => t.IsDeleted == false).ToList();
             var sports = SportRepository.ListSports(false);
             var positions = PositionRepository.ListPositions();
-            var programs = ProgramRepository.ListPrograms();
+            var programs = ProgramRepository.ListPrograms().Where(p => p.IsDeleted == false).ToList();
 
             var athletes = AccountRepository.ListUsersByType(UserType.Athlete);
             //athletes = athletes.Where(a => a.CoachID == coachIdInt).ToList();
+            athletes = athletes.Where(a => a.IsDeleted == false).ToList();
             athletes = athletes.Where(a => sportIdIntList.Contains(a.SportID) && teamIdIntList.Contains(a.TeamID)).ToList();
             var gridData = athletes.Select(a => new AssessmentGridModel
             {

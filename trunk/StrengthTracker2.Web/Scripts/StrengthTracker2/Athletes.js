@@ -4,6 +4,11 @@ var showTeamandCoachColumn;
 function SetColumnVisibility(toShoworNot) {
     showTeamandCoachColumn = toShoworNot;
 }
+function toDate(value) {
+    var dateRegExp = /^\/Date\((.*?)\)\/$/;
+    var date = dateRegExp.exec(value);
+    return new Date(parseInt(date[1]));
+}
 var athletedataSource = new kendo.data.DataSource({
     transport: {
         read: function (options) {
@@ -134,9 +139,13 @@ $("#athleteGrid").kendoGrid({
             }
         },
         {
-            field: "Activation date",
+            title: "ActivationDate",
+            field: "ActivationDate",
             width: "10%",
-            template: '#=ActivationDate#',
+            template: '#= kendo.toString(ActivationDate, \"D\") #',
+           // template: '<#= kendo.toString( toDate(ActivationDate), "dd MM yyyy" ) #>' ,
+           
+           // template: '#=ActivationDate#',
             attributes: {
                 style: 'white-space: nowrap;text-align: center;'
             }
@@ -367,6 +376,7 @@ function SetStatusForSelectedAthletes(status) {
                     else {
                         alert(result.message);
                     }
+                    $("#dvActionBar").hide();
                 }, error: function () {
                     alert(result.message);
                 }

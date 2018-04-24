@@ -30,6 +30,7 @@ namespace StrengthTracker2.Web.Models
         public bool Isfreeevaluation { get; set; }
         public bool IsActive { get; set; }
         public string UserImagePath { get; set; }
+        public string ProfilePictureMaxSize { get; set; }
         public int PositionID { get; set; }
         public int ProgramID { get; set; }
         public int StateID { get; set; }

@@ -71,6 +71,13 @@
     .breadcrumbs2 > li:last-child a {
         color: #2a303e;
     }
+
+    .k-loading-mask {
+        width: 100%;
+        height: 100%;
+        top: 0px;
+        left: 0px;
+    }
 </style>
 <link rel="stylesheet" href="../content/kendo.common.min.css" />
 <link rel="stylesheet" href="../content/kendo.silver.min.css">
@@ -576,8 +583,8 @@
     <script type="text/javascript" charset="utf-8">
         var isActiveProgram = "@ViewBag.IsActiveProgram";
         if (isActiveProgram == "True") {
-            alert(
-                "Active Programs are ‘view only’.  Please Deactivate this Program to edit it.  If an Athlete is using the Program, copy and rename the Program then edit the renamed Program");
+            //alert(
+            //    "Active Programs are ‘view only’.  Please Deactivate this Program to edit it.  If an Athlete is using the Program, copy and rename the Program then edit the renamed Program");
             $("#btnAddNewExerciseToProgram").attr("disabled", true);
             $("#btnSaveExerciseBaseInfo").attr("disabled", true);
         } else {
@@ -968,33 +975,32 @@
             });
 
             var tempoGridSelectedRowIndex = -1;
+            var tempoGridSelectedPageIndex = -1;
             var tempoGridUpdated = false;
             $("#tempogrid").kendoGrid({
                 dataBound: function() {},
                 selectable: true,
-                change: function(e) {
+                change: function (e) {
                     if (isActiveProgram == "False") {
                         var seletedRowIndex = getSelectedRowIndex();
+                        var currentPage = getCurrentPageNumber();
                         showSpinnerIconForTempoGrid();
-                        if (tempoGridSelectedRowIndex == seletedRowIndex) {
-                            //  hideSpinnerIconForTempoGrid();
-                            return;
-                        }
-                        if (tempoGridSelectedRowIndex == seletedRowIndex) {
-                            kendo.ui.progress($('#tempogrid'), false);
+                        if (tempoGridSelectedRowIndex == seletedRowIndex && tempoGridSelectedPageIndex == currentPage) {
+                            hideSpinnerIconForTempoGrid();
                             return;
                         }
 
                         tempoGridSelectedRowIndex = seletedRowIndex;
+                        tempoGridSelectedPageIndex = currentPage;
                         $('#tempogrid').data('kendoGrid').dataSource.sync();
                         $('#tempogrid').data('kendoGrid').dataSource.read();
-
-                        setTimeout(function() {
-                                //kendo.ui.progress($('#tempogrid'), true);
-                                $('#tempogrid').data('kendoGrid').refresh();
-                                selectRow(seletedRowIndex);
-                            },
-                            1000);
+                        hideSpinnerIconForTempoGrid();
+                        showSpinnerIconForTempoGrid();
+                        setTimeout(function () {
+                            $('#tempogrid').data('kendoGrid').refresh();
+                            showSpinnerIconForTempoGrid();
+                            selectRow(seletedRowIndex);
+                        }, 1000);
                     }
                 },
                 allowCopy: true,
@@ -1131,7 +1137,11 @@
                 dataSource: tempodataSource
             });
             var tempogrid = $('#tempogrid').data('kendoGrid');
-
+            function getCurrentPageNumber() {
+                var grid = $("#tempogrid").data("kendoGrid");
+                var currentPage = grid.dataSource.page();
+                return currentPage;
+            }
             function getSelectedRowIndex() {
                 return tempogrid.select()[0].rowIndex;
             };
@@ -1141,10 +1151,25 @@
             };
 
             function selectRow(seletedRowIndex) {
-                var dataItem = tempogrid.dataSource.data()[seletedRowIndex];
+                var pageNumber = getCurrentPageNumber();
+                pageNumber = pageNumber - 1;
+                var previousPagesRowsCount = pageNumber * 10;
+                var dataItem = tempogrid.dataSource.data()[seletedRowIndex + previousPagesRowsCount];
                 var temp = tempogrid.table.find('tr[data-uid="' + dataItem.uid + '"]');
                 tempogrid.select(temp);
                 editRow(seletedRowIndex + 3);
+            };
+            function showSpinnerIconForTempoGrid() {
+                var paddingTop = $("#tempogrid .k-grid-header").height();
+                var paddingBottom = $("#tempogrid .k-pager-wrap").height();
+                kendo.ui.progress($('#tempogrid'), true);
+                var loadingMask = $("#tempogrid .k-loading-mask");
+                loadingMask.css('padding-top', paddingTop);
+                //loadingMask.css('margin-bottom', paddingBottom);
+                //$('<div class="k-loading-mask" style="width: 100%; height: 100%; top: 0px; left: 0px;"><span class="k-loading-text">Loading...</span><div class="k-loading-image"></div><div class="k-loading-color"></div></div>').appendTo('#tempogrid .k-grid-content');
+            };
+            function hideSpinnerIconForTempoGrid() {
+                kendo.ui.progress($('#tempogrid'), false);
             };
 
             $("#lstMovementType").change(function() {

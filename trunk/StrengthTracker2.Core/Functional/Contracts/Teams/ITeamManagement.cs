@@ -36,5 +36,7 @@ namespace StrengthTracker2.Core.Functional.Contracts.Teams
         bool DeleteTeam(int teamId);
 
         bool UpdateTeamStatus(int teamId);
+
+        Team GetTeamByName(string name);
     }
 }

@@ -2,13 +2,31 @@
     ViewBag.Title = "Register";
     Layout = "~/Views/Registration/_Layout.cshtml";
     var imagePath = Session["CustomerImage"];
+    var prefix = Session["PersonalPrefix"];
+    var isPersonalTrainer = (StrengthTracker2.Core.DataTypes.CustomerCategoryType)Session["CustomerType"] == StrengthTracker2.Core.DataTypes.CustomerCategoryType.PersonalTrainer;
+    var isOrganosation = (StrengthTracker2.Core.DataTypes.CustomerCategoryType)Session["CustomerType"] == StrengthTracker2.Core.DataTypes.CustomerCategoryType.Organization;
+    var orgName = Convert.ToString(Session["CustomerName"]);
+    var dateBeforeYear = new DateTime(DateTime.Now.Year, 1, 1).AddYears(-25);
 }
 <form id="frmRegisterAthlete">
     <div id="login-wrapper" style="width:680px;min-height:710px;">
         <div id="login_header">
-	        <img src="@imagePath" class="logo" alt="Personal Trainer" style="max-width:max-content;float:none !important;" />
+            @if (isPersonalTrainer){
+                <img src="@imagePath" class="logo" alt="Personal Trainer" style="max-width:max-content;float:none !important;" />
+            }
+            else
+            {
+                <img src="../Images/noimage.jpg" class="logo" alt="Personal Trainer" style="max-width:max-content;float:none !important;" />
+            }
 	    </div>
-        <h5 style="margin-top:0px !important;padding-top:5px !important;">Sign up with @ViewBag.CustomerNameForDisplay.</h5>
+        @if (isPersonalTrainer)
+        {
+            <h5 style="margin-top:0px !important;padding-top:5px !important;">Sign up with @ViewBag.CustomerNameForDisplay.</h5>
+        }
+        else
+        {
+            @orgName
+        }
         <div style="float:right;width:19.7%;">* Required fields</div>
         <br />
         <br />
@@ -64,8 +82,8 @@
             <div class="form-block"><!-- For some reason drop down has to be placed after the text box for select to be displayed on left. Same as Gender -->
                 <select name="DOBIsBefore94" mandatory id="DOBIsBefore94" style= "float:left;width:45%;border:thin solid #bed2e5;height:42px;padding:10px 0 10px 10px; margin-top: 10px;" onblur="ChangeTab('ddlAthleteSport');">
                     <option selected="selected" value="0">Select Birth Year *</option>
-                    <option value="2">After 1994</option>
-                    <option value="1">Before 1994</option>
+                    <option value="2">After @dateBeforeYear.ToString("yyyy")</option>
+                    <option value="1">Before @dateBeforeYear.ToString("yyyy")</option>
                 </select>
             </div>
             <div class="form-block">

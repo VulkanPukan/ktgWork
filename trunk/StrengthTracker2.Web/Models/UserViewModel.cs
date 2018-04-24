@@ -18,6 +18,10 @@ namespace StrengthTracker2.Web.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string ProfilePicture { get; set; }
+        /// <summary>
+        /// Max size of profile pictire in MB
+        /// </summary>
+        public string ProfilePictureMaxSize { get; set; }
         public string FullName { get; set; }
         /// <summary>
         /// Holds the Date of Birth information of the logged in user

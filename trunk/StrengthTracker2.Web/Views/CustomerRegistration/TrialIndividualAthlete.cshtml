@@ -2,6 +2,7 @@
     ViewBag.Title = "Register";
     Layout = "~/Views/Registration/_Layout.cshtml";
     var imagePath = Session["CustomerImage"];
+    var dateBeforeYear = new DateTime(DateTime.Now.Year, 1, 1).AddYears(-25);
 }
 <form id="frmRegisterAthlete">
     <div id="login-wrapper" style="width:680px;min-height:710px;">
@@ -64,8 +65,8 @@
             <div class="form-block"><!-- For some reason drop down has to be placed after the text box for select to be displayed on left. Same as Gender -->
                 <select name="DOBIsBefore94" mandatory id="DOBIsBefore94" style= "float:left;width:45%;border:thin solid #bed2e5;height:42px;padding:10px 0 10px 10px;" onblur="ChangeTab('txtAthleteSport');">
                     <option selected="selected" value="0">Select Birth Year *</option>
-                    <option value="2">After 1994</option>
-                    <option value="1">Before 1994</option>
+                    <option value="2">After @dateBeforeYear.ToString("yyyy")</option>
+                    <option value="1">Before @dateBeforeYear.ToString("yyyy")</option>
                 </select>
             </div>
             <div class="form-block">

@@ -333,5 +333,31 @@ namespace StrengthTracker2.Persistence.Functional.Teams
             return lstResult;
         }
 
+        public Team GetTeamByName(string name)
+        {
+            Team team = null;
+            try
+            {
+                using (
+                    var sqlConnection = System.Web.HttpContext.Current.Session["CustomerConnStr"] != null
+                        ? new SqlConnection(Convert.ToString(System.Web.HttpContext.Current.Session["CustomerConnStr"]))
+                        : null)
+                {
+                    sqlConnection.Open();
+                    var predicateGroup = new PredicateGroup { Operator = GroupOperator.And, Predicates = new List<IPredicate>() };
+                    predicateGroup.Predicates.Add(Predicates.Field<Team>(t => t.Name, Operator.Eq, name));
+                    List<Team> lstTeam = sqlConnection.GetList<Team>(predicateGroup).ToList();
+                    if (lstTeam != null && lstTeam.Count > 0)
+                        team = lstTeam[0];
+                    sqlConnection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return team;
+        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿@{
     ViewBag.Title = "Strength Tracker | Registration";
 	Layout = "~/Views/Registration/_Layout.cshtml";
+
+    var dateBeforeYear = new DateTime(DateTime.Now.Year, 1, 1).AddYears(-25);
 }
 <style>
     .hideOtherGrade {
@@ -101,8 +103,8 @@
                 <!-- For some reason drop down has to be placed after the text box for select to be displayed on left. Same as Gender -->
                 <select name="DOBIsBefore94" mandatory id="DOBIsBefore94" style="float:left;width:45%;border:thin solid #bed2e5;height:42px;padding:10px; margin-top: 10px;" tabindex="15">
                     <option selected="selected" value="0">Select Birth Year *</option>
-                    <option value="2">After 1994</option>
-                    <option value="1">Before 1994</option>
+                    <option value="2">After @dateBeforeYear.ToString("yyyy")</option>
+                    <option value="1">Before @dateBeforeYear.ToString("yyyy")</option>
                 </select>
             </div>
             <div class="form-block">

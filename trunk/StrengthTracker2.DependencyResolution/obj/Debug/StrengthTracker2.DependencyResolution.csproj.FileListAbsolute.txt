@@ -102,6 +102,11 @@ C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.DependencyResolution\bin\Debug\
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.DependencyResolution\bin\Debug\DapperExtensions.pdb
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.DependencyResolution\bin\Debug\StrengthTracker2.Common.pdb
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.DependencyResolution\bin\Debug\Dapper.xml
+C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.DependencyResolution\bin\Debug\ru\Microsoft.SqlServer.Smo.resources.dll
+C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.DependencyResolution\bin\Debug\ru\Microsoft.SqlServer.ConnectionInfo.resources.dll
+C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.DependencyResolution\bin\Debug\ru\Microsoft.SqlServer.Management.Sdk.Sfc.resources.dll
+C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.DependencyResolution\bin\Debug\ru\Microsoft.SqlServer.SqlEnum.resources.dll
+C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.DependencyResolution\bin\Debug\ru\Microsoft.SqlServer.ServiceBrokerEnum.resources.dll
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.DependencyResolution\obj\Debug\StrengthTracker2.DependencyResolution.csprojResolveAssemblyReference.cache
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.DependencyResolution\obj\Debug\StrengthTracker2.DependencyResolution.csproj.CoreCompileInputs.cache
 C:\Users\Home\Desktop\KTG\trunk\StrengthTracker2.DependencyResolution\obj\Debug\StrengthTracker2.DependencyResolution.dll

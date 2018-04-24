@@ -105,8 +105,9 @@ namespace StrengthTracker2.Web.Controllers
                 var firstRoleId = customerLocationRoles.Count > 0 ? Convert.ToInt32(customerLocationRoles[0].RoleId.Split(';')[0]) : -1 ;
                 var roleDetails = _iRoleManagement.GetRoleInfo(firstRoleId);
                 Session["UserRole"] = roleDetails;
+                Session["RoleType"] = roleDetails.Role.RoleType;
 
-                if(authenticatedUser.ShowWelcome == true)
+                if (authenticatedUser.ShowWelcome == true)
                 {
                     returnObjectModel.Status = ReturnStatus.Redirect;
                     returnObjectModel.RedirectLocation = Helpers.Common.WebsiteRoot + "Admin/Welcome";

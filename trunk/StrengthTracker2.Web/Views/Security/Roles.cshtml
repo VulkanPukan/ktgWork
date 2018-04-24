@@ -613,9 +613,13 @@
                 logic: "and",
                 filters: filters
             });
-
+            var rType = @Session["RoleType"];
             $("#rolesGrid").data("kendoGrid").setDataSource(rolesdataSource);
             $('#rolesGrid').data('kendoGrid').refresh();
+            if (rType != null&&rType == 1) {
+                var gRole = $('#rolesGrid').data('kendoGrid');
+                gRole.hideColumn(4);
+            }
         }
 
     </script>

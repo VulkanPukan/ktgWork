@@ -97,7 +97,7 @@
                                     <div class="form-group">
                                        <label>Training Season*</label>
                                        <div class="controls">
-                                           @Html.DropDownList("lstTrainingSeason", new List<SelectListItem>() { new SelectListItem { Text = "Select Season", Selected = true }, new SelectListItem { Text = "In Season", Value = "1", Selected = true }, new SelectListItem { Text = "Off Season", Value = "2", Selected = true } }, new { @class="form-control m-b" })
+                                           @Html.DropDownList("lstTrainingSeason", new List<SelectListItem>() { new SelectListItem { Text = "Select Season", Selected = true }, new SelectListItem { Text = "In Season", Value = "1"@*, Selected = true*@ }, new SelectListItem { Text = "Off Season", Value = "2"@*, Selected = true*@ } }, new { @class="form-control m-b" })
                                        </div>
                                     </div>
                                  </div>
@@ -286,7 +286,7 @@
                             return false;
                         }
                         if (result.Programs[0].IsActive == true) {
-                            alert("Active Programs are ‘view only’.  Please Deactivate this Program to edit it.  If an Athlete is using the Program, copy and rename the Program then edit the renamed Program");
+                            //alert("Active Programs are ‘view only’.  Please Deactivate this Program to edit it.  If an Athlete is using the Program, copy and rename the Program then edit the renamed Program");
                             $("#btnSaveProgramInfo").attr("disabled", true);
                         }
                         else {

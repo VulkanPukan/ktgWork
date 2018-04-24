@@ -754,6 +754,7 @@
     <Content Include="Scripts\mustang\js\flot\custom\stacked-area.js" />
     <Content Include="Scripts\mustang\js\flot\custom\stacked-horizontal.js" />
     <Content Include="Scripts\StrengthTracker2\Assessment.js" />
+    <Content Include="Scripts\StrengthTracker2\AthleteProfile.js" />
     <Content Include="Scripts\StrengthTracker2\athletesLeaderboardGrid.js" />
     <Content Include="Scripts\StrengthTracker2\Charts\ActiveAthletesByTeamChart.js" />
     <Content Include="Scripts\StrengthTracker2\Charts\AthletesBySportChart.js" />
