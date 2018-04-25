@@ -95,9 +95,11 @@
         margin: 0;
         padding: 5px 10px;
     }
-    .custom-combobox{
+
+    .custom-combobox {
         padding: 0px;
     }
+
     .ui-autocomplete-input {
         border-right: none !important;
         margin: 0px !important;
@@ -106,10 +108,11 @@
         height: 32px !important;
         border: none !important;
         margin-left: 1px !important;
-        padding-left: 8px !important;    
-        width: calc(100% - 20px) !important; 
-        background: #ffffff !important;    
+        padding-left: 8px !important;
+        width: calc(100% - 20px) !important;
+        background: #ffffff !important;
     }
+
     .custom-combobox-toggle {
         padding-left: 4px;
         padding-top: 6px;
@@ -146,7 +149,16 @@
         @if (showCheckbox)
         {
             <div class="pull-right" style="padding: 30px; font-size: 20px;">
-                <label >Do not show Welcome page again on next logon <input type="checkbox" id="chkShowWelcome">
+                <label>
+                    Show Welcome page again on next logon
+                    @if (ViewBag.Welcome != false)
+                    {
+                        <input type="checkbox" id="showWelcomeCheckbox" checked>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="showWelcomeCheckbox">
+                    }
                 </label>
             </div>
         }
@@ -158,9 +170,9 @@
                     <label style="text-decoration:underline;"></label>
                     @if (canAddUser)
                     {
-                    <button type="button" onclick="AddUser();" class="btn btn-primary pull-right  mb-sm" style="margin-top: 50px;" id="btnAddUser">
-                        <em class="fa fa-plus-circle fa-fw mr-sm"></em>Add User
-                    </button>
+                        <button type="button" onclick="AddUser();" class="btn btn-primary pull-right  mb-sm" style="margin-top: 50px;" id="btnAddUser">
+                            <em class="fa fa-plus-circle fa-fw mr-sm"></em>Add User
+                        </button>
                     }
                     <div class="form-group">
                         <label class="control-label">Filter By Status</label>
@@ -186,115 +198,115 @@
                     </div>
                     @using (Ajax.BeginForm("editAdminUserForm", "Admin", new AjaxOptions { HttpMethod = "POST", OnSuccess = "editUserResult" }, new { id = "editAdminUserForm" }))
                     {
-                    <div class="panel-body">
-                        <div class="form-group col-lg-6">
-                            <label class="col-lg-5 control-label">First Name *</label>
-                            <div class="col-lg-7">
-                                <input type="text" data-requiredFld="true" id="txtEditUserFirstName" class="form-control" /><input type="hidden" id="hdUserID" />
+                        <div class="panel-body">
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">First Name *</label>
+                                <div class="col-lg-7">
+                                    <input type="text" data-requiredFld="true" id="txtEditUserFirstName" class="form-control" /><input type="hidden" id="hdUserID" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label class="col-lg-5 control-label">Last Name *</label>
-                            <div class="col-lg-7">
-                                <input type="text" data-requiredFld="true" id="txtEditUserLastName" class="form-control" /> <input type="hidden" id="hdContactID" />
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">Last Name *</label>
+                                <div class="col-lg-7">
+                                    <input type="text" data-requiredFld="true" id="txtEditUserLastName" class="form-control" /> <input type="hidden" id="hdContactID" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label class="col-lg-5 control-label">Username *</label>
-                            <div class="col-lg-7">
-                                <input data-requiredFld="true" type="text" id="txtEditUserName" class="form-control" />
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">Username *</label>
+                                <div class="col-lg-7">
+                                    <input data-requiredFld="true" type="text" id="txtEditUserName" class="form-control" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label class="col-lg-5 control-label">Email *</label>
-                            <div class="col-lg-7">
-                                <input type="text" data-requiredFld="true" id="txtEditUserEmail" class="form-control" />
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">Email *</label>
+                                <div class="col-lg-7">
+                                    <input type="text" data-requiredFld="true" id="txtEditUserEmail" class="form-control" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label class="col-lg-5 control-label">DOB *</label>
-                            <div class="col-lg-7">
-                                <div id="userEditDatepicker" class="input-group date datetimepicker1">
-                                    @Html.TextBox("txtEditDOB", "", new { @class = "form-control" })
-                                    <span class="input-group-addon">
-                                        <span class="fa-calendar fa"></span>
-                                    </span>
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">DOB *</label>
+                                <div class="col-lg-7">
+                                    <div id="userEditDatepicker" class="input-group date datetimepicker1">
+                                        @Html.TextBox("txtEditDOB", "", new { @class = "form-control" })
+                                        <span class="input-group-addon">
+                                            <span class="fa-calendar fa"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">Gender *</label>
+                                <div class="col-lg-7">
+                                    <select name="Gender" id="rbtnEditGender" class="form-control m-b">
+                                        <option>Male</option>
+                                        <option>Female</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">Address1 *</label>
+                                <div class="col-lg-7">
+                                    <textarea id="txtEditAddress1" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">Address2</label>
+                                <div class="col-lg-7">
+                                    <textarea id="txtEditAddress2" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">City</label>
+                                <div class="col-lg-7">
+                                    <input type="text" id="txtEditUserCity" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>State</label>
+                                <div class="col-lg-7">
+                                    <select name="state" class="form-control m-b state-select" id="ddlAthleteState">
+                                        <option>Select State</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">Zip</label>
+                                <div class="col-lg-7">
+                                    <input type="text" id="txtEditUserZip" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">Password *</label>
+                                <div class="col-lg-7">
+                                    <input data-requiredFld="true" type="password" id="txtEditUserPassword" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="col-lg-5 control-label">Confirm Password *</label>
+                                <div class="col-lg-7">
+                                    <input data-requiredFld="true" type="password" id="txtEditUserConfirmPassword" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-12" style="width:96% !important;" id="locationRoleAdd">
+                                Location - Role Configuration @*style="display:none;">*@
+                                <button type="button" onclick="ShowAddEditLocation();" class="btn btn-primary pull-right  mb-sm">
+                                    <em class="fa fa-plus-circle fa-fw mr-sm"></em>Add Location
+                                </button>
+                            </div>
+                            <div class="form-group col-lg-12" style="display:none;">
+                                <div class="col-lg-12">
+                                    <div id="locationsGrid" style="margin-top:15px; margin-left:85px !important; width: 87% !important; overflow:visible !important;" class="clearfix"></div>
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">&nbsp;</div>
+                            <div class="form-group col-lg-12" style="width:98.5% !important;">
+                                <div class="col-lg-5">&nbsp;</div>
+                                <div class="pull-right">
+                                    <button type="button" id="btnCancelEditUser" onclick="ShowUserGrid();" class="btn btn-sm btn-default">Cancel</button>
+                                    <button type="button" id="btnSaveEditUser" value="Ok" class="btn btn-primary btn-sm" onclick="SaveAdminUser();">Save1</button>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group col-lg-6">
-                            <label class="col-lg-5 control-label">Gender *</label>
-                            <div class="col-lg-7">
-                                <select name="Gender" id="rbtnEditGender" class="form-control m-b">
-                                    <option>Male</option>
-                                    <option>Female</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label class="col-lg-5 control-label">Address1 *</label>
-                            <div class="col-lg-7">
-                                <textarea id="txtEditAddress1" class="form-control"></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label class="col-lg-5 control-label">Address2</label>
-                            <div class="col-lg-7">
-                                <textarea id="txtEditAddress2" class="form-control"></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label class="col-lg-5 control-label">City</label>
-                            <div class="col-lg-7">
-                                <input type="text" id="txtEditUserCity" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label>State</label>
-                            <div class="col-lg-7">
-                                <select name="state" class="form-control m-b state-select" id="ddlAthleteState">
-                                    <option>Select State</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label class="col-lg-5 control-label">Zip</label>
-                            <div class="col-lg-7">
-                                <input type="text" id="txtEditUserZip" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label class="col-lg-5 control-label">Password *</label>
-                            <div class="col-lg-7">
-                                <input data-requiredFld="true" type="password" id="txtEditUserPassword" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label class="col-lg-5 control-label">Confirm Password *</label>
-                            <div class="col-lg-7">
-                                <input data-requiredFld="true" type="password" id="txtEditUserConfirmPassword" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-12" style="width:96% !important;" id="locationRoleAdd">
-                            Location - Role Configuration @*style="display:none;">*@
-                            <button type="button" onclick="ShowAddEditLocation();" class="btn btn-primary pull-right  mb-sm">
-                                <em class="fa fa-plus-circle fa-fw mr-sm"></em>Add Location
-                            </button>
-                        </div>
-                        <div class="form-group col-lg-12" style="display:none;">
-                            <div class="col-lg-12">
-                                <div id="locationsGrid" style="margin-top:15px; margin-left:85px !important; width: 87% !important; overflow:visible !important;" class="clearfix"></div>
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-6">&nbsp;</div>
-                        <div class="form-group col-lg-12" style="width:98.5% !important;">
-                            <div class="col-lg-5">&nbsp;</div>
-                            <div class="pull-right">
-                                <button type="button" id="btnCancelEditUser" onclick="ShowUserGrid();" class="btn btn-sm btn-default">Cancel</button>
-                                <button type="button" id="btnSaveEditUser" value="Ok" class="btn btn-primary btn-sm" onclick="SaveAdminUser();">Save1</button>
-                            </div>
-                        </div>
-                    </div>
                     }
                 </div>
             </div>
@@ -383,11 +395,11 @@
                                     <select name="state" class="form-control m-b country-select" id="ddlCountry">
                                         <option>Select Country</option>
                                         @*<option value="3">Belgium</option>
-                                        <option value="2">Canada</option>
-                                        <option value="4">France</option>
-                                        <option value="5">Germany</option>
-                                        <option value="6">UK</option>
-                                        <option value="1">US</option>*@
+                                            <option value="2">Canada</option>
+                                            <option value="4">France</option>
+                                            <option value="5">Germany</option>
+                                            <option value="6">UK</option>
+                                            <option value="1">US</option>*@
                                     </select>
                                 </div>
                             </div>
@@ -465,17 +477,17 @@
                                         Role
                                     </div>
                                     <div class="panel-body">
-                                            <div class="form-group col-lg-6">
-                                                <label class="col-lg-5 control-label">Role</label>
-                                                <div class="col-lg-7">
-                                                    @Html.DropDownList("lstRole", new System.Web.Mvc.SelectList(ViewBag.RoleList, "RoleID", "RoleName"), new { @class = "form-control combobox" })
-                                                </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="col-lg-5 control-label">Role</label>
+                                            <div class="col-lg-7">
+                                                @Html.DropDownList("lstRole", new System.Web.Mvc.SelectList(ViewBag.RoleList, "RoleID", "RoleName"), new { @class = "form-control combobox" })
                                             </div>
-                                            <div class="form-group col-lg-12">
-                                                Note: Roles and Created, Edited, and Viewed in Roles tab. A Role is created to determine which parts of StrengthTracker someone with that
-                                                Role has access to. Essentially, this means which Modules (tabs) they are authorized to select and whether they can View, Edit, Create and/or Delete
-                                                information within that Module (tab).
-                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-12">
+                                            Note: Roles and Created, Edited, and Viewed in Roles tab. A Role is created to determine which parts of StrengthTracker someone with that
+                                            Role has access to. Essentially, this means which Modules (tabs) they are authorized to select and whether they can View, Edit, Create and/or Delete
+                                            information within that Module (tab).
+                                        </div>
                                         <div class="form-group col-lg-12">
                                             <div class="col-lg-7 pull-right">
                                                 <div class="pull-right">
@@ -769,6 +781,31 @@
         userdataSource.read();
         locdataSource.read();
 
+
+
+        $("#showWelcomeCheckbox").change(function () {
+            var value = $("#showWelcomeCheckbox")[0].checked;
+            loading_img(true);
+            $.ajax({
+                url: "../Admin/SetShowWelcome",
+                type: "POST",
+                data: JSON.stringify({
+                    'ShowWelcome': value,
+                }),
+                contentType: 'application/json',
+                dataType: "json",
+                success: function (result) {
+                    loading_img(false);
+                    console.log("showWelcomeCheckbox success!");
+                },
+                error: function () {
+                    loading_img(false);
+                    console.log("showWelcomeCheckbox error!");
+                }
+            });
+        })
+
+
         $("#my_file").change(function () {
             var reader = new FileReader();
             reader.onload = function (e) {
@@ -873,7 +910,7 @@
                         //})
                         .append('<span class="ui-button-icon ui-icon ui-icon-triangle-1-s"></span>')
                         .removeClass("ui-corner-all")
-                      
+
                         .on("mousedown", function () {
                             wasOpen = input.autocomplete("widget").is(":visible");
                         })

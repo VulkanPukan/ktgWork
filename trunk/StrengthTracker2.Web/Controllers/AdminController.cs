@@ -141,6 +141,10 @@ namespace StrengthTracker2.Web.Controllers
 
             var lstSport = _iSportMgmtRepository.ListSports(true);
             ViewBag.SportsList = lstSport;
+
+            var currentUser = ((User)(Session["AuthenticatedUser"]));
+            ViewBag.Welcome = currentUser.ShowWelcome;
+
             Session["PersonalPrefix"] = Convert.ToString(ConfigurationManager.AppSettings["PersonalPrefix"]) + Convert.ToString(Session["CustomerName"]);
             return View();
         }
